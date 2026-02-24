@@ -1,0 +1,35 @@
+[
+  {
+    "id": "objecion-precio",
+    "title": "Maneja la objeción del precio",
+    "description": "El cliente dice que es muy caro. ¿Sabes cómo responder?",
+    "difficulty": "beginner",
+    "xpReward": 100,
+    "badgeId": "price-handler",
+    "conversationId": "objecion-precio",
+    "isLocked": false,
+    "tags": ["precio", "objeciones", "valor"]
+  },
+  {
+    "id": "objecion-tiempo",
+    "title": "El cliente no tiene tiempo",
+    "description": "Clásico: 'ahora mismo no es el momento'. Aprende a superarlo.",
+    "difficulty": "beginner",
+    "xpReward": 120,
+    "badgeId": "time-master",
+    "conversationId": "objecion-tiempo",
+    "isLocked": true,
+    "tags": ["tiempo", "urgencia", "objeciones"]
+  },
+  {
+    "id": "objecion-competencia",
+    "title": "Vendiendo contra la competencia",
+    "description": "El cliente ya trabaja con otro proveedor. ¿Cómo diferenciarte?",
+    "difficulty": "intermediate",
+    "xpReward": 200,
+    "badgeId": "competitor-killer",
+    "conversationId": "objecion-competencia",
+    "isLocked": true,
+    "tags": ["competencia", "diferenciación", "valor"]
+  }
+]

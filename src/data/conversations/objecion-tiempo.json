@@ -1,0 +1,159 @@
+{
+  "id": "objecion-tiempo",
+  "clientName": "Laura",
+  "clientRole": "CEO de startup, 50 empleados",
+  "clientAvatar": "👩‍💼",
+  "context": "Laura tiene interés pero siempre está 'ocupada'. Lleva 3 semanas posponiendo.",
+  "initialNode": "start",
+  "nodes": {
+    "start": {
+      "clientMessage": "Mira, me parece interesante, pero ahora mismo no es buen momento. Estamos a tope con el trimestre.",
+      "hint": "No aceptes el 'no es buen momento'. Conecta con el coste de esperar.",
+      "keywords": {
+        "positive": ["esperar", "coste", "cada día", "mientras", "perdiendo", "cuánto tiempo", "urgente", "ahora"],
+        "negative": ["tranquila", "cuando puedas", "sin prisa", "no pasa nada", "entiendo"]
+      },
+      "onKeywordMatch": {
+        "positive": "node-cost-of-waiting",
+        "negative": "node-too-nice",
+        "nomatch": "node-confused"
+      },
+      "scoreImpact": 0
+    },
+
+    "node-cost-of-waiting": {
+      "clientMessage": "Hmm... ¿coste de esperar? ¿A qué te refieres exactamente?",
+      "hint": "Perfecto, la tienes interesada. Haz números concretos.",
+      "keywords": {
+        "positive": ["mes", "semana", "horas", "dinero", "equipo", "manual", "proceso", "€", "euros"],
+        "negative": ["no sé", "depende", "bueno"]
+      },
+      "onKeywordMatch": {
+        "positive": "node-numbers",
+        "negative": "node-vague",
+        "nomatch": "node-confused"
+      },
+      "scoreImpact": 30
+    },
+
+    "node-too-nice": {
+      "clientMessage": "Genial, pues ya te llamo yo cuando tenga un hueco. ¡Gracias!",
+      "hint": "⚠️ Fuiste demasiado complaciente. Nunca te va a llamar.",
+      "keywords": {
+        "positive": ["espera", "antes de colgar", "un momento", "rápido", "solo", "minuto"],
+        "negative": ["perfecto", "vale", "ok", "claro"]
+      },
+      "onKeywordMatch": {
+        "positive": "node-rescue",
+        "negative": "node-lost",
+        "nomatch": "node-lost"
+      },
+      "scoreImpact": -20
+    },
+
+    "node-numbers": {
+      "clientMessage": "Es verdad que perdemos unas 20 horas semanales en reporting manual... nunca lo había calculado así.",
+      "hint": "🎯 Tiene los datos delante. Ahora propón acción CONCRETA y RÁPIDA.",
+      "keywords": {
+        "positive": ["demo", "15 minutos", "rápido", "esta semana", "mañana", "piloto", "prueba"],
+        "negative": ["cuando quieras", "sin prisa", "piénsalo"]
+      },
+      "onKeywordMatch": {
+        "positive": "node-win",
+        "negative": "node-stall",
+        "nomatch": "node-confused"
+      },
+      "scoreImpact": 40
+    },
+
+    "node-rescue": {
+      "clientMessage": "Bueno, dime rápido, tengo 2 minutos.",
+      "hint": "Tienes 2 minutos. Ve al grano: problema + coste + solución.",
+      "keywords": {
+        "positive": ["20 horas", "reporting", "manual", "automatizar", "ahorrar", "resultado"],
+        "negative": ["es que", "verás", "bueno"]
+      },
+      "onKeywordMatch": {
+        "positive": "node-numbers",
+        "negative": "node-lost",
+        "nomatch": "node-lost"
+      },
+      "scoreImpact": 15
+    },
+
+    "node-vague": {
+      "clientMessage": "Ya... eso suena muy genérico. Todos dicen lo mismo. Tengo que irme.",
+      "hint": "Fuiste demasiado vago. Necesitabas datos concretos.",
+      "keywords": {
+        "positive": ["específicamente", "tu caso", "20 horas", "reporting"],
+        "negative": []
+      },
+      "onKeywordMatch": {
+        "positive": "node-numbers",
+        "negative": "node-lost",
+        "nomatch": "node-lost"
+      },
+      "scoreImpact": -15
+    },
+
+    "node-win": {
+      "clientMessage": "¿15 minutos de demo? Eso sí puedo. El jueves a las 9h, ¿te va?",
+      "hint": null,
+      "isEndNode": true,
+      "endType": "success",
+      "scoreImpact": 30
+    },
+
+    "node-lost": {
+      "clientMessage": "Bueno, ya te contactaré si me interesa. Adiós.",
+      "hint": null,
+      "isEndNode": true,
+      "endType": "failure",
+      "scoreImpact": 0
+    },
+
+    "node-stall": {
+      "clientMessage": "Sí, tiene sentido... pero ahora no puedo. Mándame un email y lo miro.",
+      "hint": null,
+      "isEndNode": true,
+      "endType": "partial",
+      "scoreImpact": 10
+    },
+
+    "node-confused": {
+      "clientMessage": "Perdona, no te sigo. ¿Qué me quieres decir?",
+      "hint": "Sé más directo. Habla del coste de NO actuar ahora.",
+      "keywords": {
+        "positive": ["esperar", "coste", "perdiendo", "cada día", "semana"],
+        "negative": []
+      },
+      "onKeywordMatch": {
+        "positive": "node-cost-of-waiting",
+        "negative": "node-lost",
+        "nomatch": "node-lost"
+      },
+      "scoreImpact": -10
+    }
+  },
+
+  "endResults": {
+    "success": {
+      "title": "¡Demo conseguida! 🎉",
+      "message": "Convertiste un 'no tengo tiempo' en una reunión concreta. Técnica del coste de esperar dominada.",
+      "xpEarned": 120,
+      "unlocksBadge": "time-master"
+    },
+    "partial": {
+      "title": "Email... probablemente al spam 😅",
+      "message": "No lograste compromiso real. El email rara vez funciona.",
+      "xpEarned": 40,
+      "unlocksBadge": null
+    },
+    "failure": {
+      "title": "Cliente perdido 😬",
+      "message": "Fuiste demasiado pasivo o vago. En ventas, la urgencia la creas tú.",
+      "xpEarned": 10,
+      "unlocksBadge": null
+    }
+  }
+}

@@ -1,0 +1,189 @@
+{
+  "id": "objecion-competencia",
+  "clientName": "Miguel",
+  "clientRole": "Director de Operaciones, empresa industrial",
+  "clientAvatar": "🧔",
+  "context": "Miguel lleva 2 años trabajando con tu competidor. No está descontento, pero aceptó la llamada.",
+  "initialNode": "start",
+  "nodes": {
+    "start": {
+      "clientMessage": "Te soy sincero: ya trabajo con [Competidor X] y estoy bastante contento. No sé qué me puedes ofrecer que no tenga ya.",
+      "hint": "NO ataques al competidor. Pregunta por lo que NO está cubierto.",
+      "keywords": {
+        "positive": ["qué tal", "cómo te va", "satisfecho", "falta", "mejorar", "gustaría", "ideal", "perfecto"],
+        "negative": ["mejor", "peor", "malo", "caro", "problema con ellos", "competidor"]
+      },
+      "onKeywordMatch": {
+        "positive": "node-gap-discovery",
+        "negative": "node-attack-fail",
+        "nomatch": "node-confused"
+      },
+      "scoreImpact": 0
+    },
+
+    "node-gap-discovery": {
+      "clientMessage": "Pues mira... en general bien, pero hay una cosa que siempre me ha fastidiado: el soporte es lentísimo. A veces tardo 3 días en que me respondan.",
+      "hint": "🎯 Encontraste el gap. Ahora conecta ESE dolor con tu solución.",
+      "keywords": {
+        "positive": ["soporte", "respuesta", "horas", "24h", "inmediato", "dedicado", "nuestro equipo"],
+        "negative": ["típico", "normal", "todos igual", "nosotros también"]
+      },
+      "onKeywordMatch": {
+        "positive": "node-differentiation",
+        "negative": "node-missed-gap",
+        "nomatch": "node-confused"
+      },
+      "scoreImpact": 35
+    },
+
+    "node-attack-fail": {
+      "clientMessage": "Oye, no me hables mal de ellos. Son buena gente y me han tratado bien. Creo que no tiene sentido seguir esta conversación.",
+      "hint": "⚠️ Nunca ataques al competidor. Genera rechazo inmediato.",
+      "keywords": {
+        "positive": ["perdona", "disculpa", "tienes razón", "no quería", "respeto"],
+        "negative": ["pero", "es que", "la verdad"]
+      },
+      "onKeywordMatch": {
+        "positive": "node-recovery",
+        "negative": "node-lost",
+        "nomatch": "node-lost"
+      },
+      "scoreImpact": -30
+    },
+
+    "node-differentiation": {
+      "clientMessage": "¿Soporte en menos de 2 horas? ¿Con un equipo dedicado? Eso sí que me interesa... Pero cambiar de proveedor es un dolor de cabeza.",
+      "hint": "Reconoce el dolor del cambio y ofrece facilitar la transición.",
+      "keywords": {
+        "positive": ["transición", "migración", "acompañar", "paso a paso", "sin riesgo", "paralelo", "piloto"],
+        "negative": ["fácil", "no pasa nada", "rápido", "sin problema"]
+      },
+      "onKeywordMatch": {
+        "positive": "node-transition",
+        "negative": "node-minimize-fail",
+        "nomatch": "node-confused"
+      },
+      "scoreImpact": 40
+    },
+
+    "node-transition": {
+      "clientMessage": "¿Piloto en paralelo sin cortar con mi proveedor actual? Eso reduce mucho el riesgo... Me gusta.",
+      "hint": "¡Cierre! Propón fecha y acción concreta.",
+      "keywords": {
+        "positive": ["reunión", "siguiente paso", "empezar", "esta semana", "cuándo", "arrancar", "fecha"],
+        "negative": ["piénsalo", "ya veremos", "cuando quieras"]
+      },
+      "onKeywordMatch": {
+        "positive": "node-win",
+        "negative": "node-stall",
+        "nomatch": "node-confused"
+      },
+      "scoreImpact": 40
+    },
+
+    "node-recovery": {
+      "clientMessage": "Bueno, vale, acepto que no era tu intención. Pero entonces, ¿qué tienes que me pueda interesar?",
+      "hint": "Segunda oportunidad. Pregunta por sus necesidades, no hables de ti.",
+      "keywords": {
+        "positive": ["qué necesitas", "qué te falta", "mejorar", "ideal", "gustaría"],
+        "negative": ["somos mejores", "nuestro producto", "tenemos"]
+      },
+      "onKeywordMatch": {
+        "positive": "node-gap-discovery",
+        "negative": "node-lost",
+        "nomatch": "node-confused"
+      },
+      "scoreImpact": 10
+    },
+
+    "node-minimize-fail": {
+      "clientMessage": "Ya... eso dicen todos. 'Es fácil'. Luego son 3 meses de pesadilla. No me convence.",
+      "hint": "Minimizaste el dolor del cambio. El cliente no te cree.",
+      "keywords": {
+        "positive": ["entiendo", "razón", "piloto", "paralelo", "sin cortar"],
+        "negative": []
+      },
+      "onKeywordMatch": {
+        "positive": "node-transition",
+        "negative": "node-stall",
+        "nomatch": "node-stall"
+      },
+      "scoreImpact": -15
+    },
+
+    "node-missed-gap": {
+      "clientMessage": "Bueno, entonces si es todo igual que lo que tengo... ¿para qué cambiar?",
+      "hint": "Tenías el gap (soporte lento) y no lo usaste.",
+      "keywords": {
+        "positive": ["soporte", "3 días", "respuesta", "rápido"],
+        "negative": []
+      },
+      "onKeywordMatch": {
+        "positive": "node-differentiation",
+        "negative": "node-lost",
+        "nomatch": "node-lost"
+      },
+      "scoreImpact": -20
+    },
+
+    "node-win": {
+      "clientMessage": "Perfecto. Hagamos una reunión técnica con mi equipo para ver la integración. ¿Miércoles?",
+      "hint": null,
+      "isEndNode": true,
+      "endType": "success",
+      "scoreImpact": 30
+    },
+
+    "node-lost": {
+      "clientMessage": "Mira, prefiero quedarme con lo que tengo. Gracias por la llamada.",
+      "hint": null,
+      "isEndNode": true,
+      "endType": "failure",
+      "scoreImpact": 0
+    },
+
+    "node-stall": {
+      "clientMessage": "Interesante... déjame hablarlo con mi equipo y te digo algo.",
+      "hint": null,
+      "isEndNode": true,
+      "endType": "partial",
+      "scoreImpact": 10
+    },
+
+    "node-confused": {
+      "clientMessage": "No te pillo... ¿qué me estás preguntando?",
+      "hint": "Sé claro. Pregunta qué le falta o qué mejoraría de su proveedor actual.",
+      "keywords": {
+        "positive": ["falta", "mejorar", "gustaría", "soporte", "satisfecho"],
+        "negative": []
+      },
+      "onKeywordMatch": {
+        "positive": "node-gap-discovery",
+        "negative": "node-lost",
+        "nomatch": "node-lost"
+      },
+      "scoreImpact": -10
+    }
+  },
+
+  "endResults": {
+    "success": {
+      "title": "¡Reunión técnica cerrada! 🎉",
+      "message": "Encontraste el gap del competidor sin atacarlo y ofreciste una transición sin riesgo. Impecable.",
+      "xpEarned": 200,
+      "unlocksBadge": "competitor-killer"
+    },
+    "partial": {
+      "title": "Tibio... 😅",
+      "message": "El cliente tiene interés pero no se comprometió. Faltó urgencia o propuesta concreta.",
+      "xpEarned": 60,
+      "unlocksBadge": null
+    },
+    "failure": {
+      "title": "Se quedó con el competidor 😬",
+      "message": "O atacaste al competidor o no encontraste su punto débil. Repasa la técnica del gap.",
+      "xpEarned": 15,
+      "unlocksBadge": null
+    }
+  }
+}

@@ -1,0 +1,32 @@
+[
+  {
+    "id": "price-handler",
+    "name": "Price Handler",
+    "icon": "💰",
+    "description": "Superaste la objeción del precio con el argumento del ROI"
+  },
+  {
+    "id": "time-master",
+    "name": "Time Master",
+    "icon": "⏰",
+    "description": "Convenciste a un cliente que 'no tenía tiempo'"
+  },
+  {
+    "id": "competitor-killer",
+    "name": "Competitor Killer",
+    "icon": "⚔️",
+    "description": "Ganaste una venta frente a la competencia"
+  },
+  {
+    "id": "perfect-score",
+    "name": "Puntuación Perfecta",
+    "icon": "🌟",
+    "description": "Consigue más de 150 puntos en una lección"
+  },
+  {
+    "id": "first-win",
+    "name": "Primera Venta",
+    "icon": "🎉",
+    "description": "Completa tu primera lección con éxito"
+  }
+]

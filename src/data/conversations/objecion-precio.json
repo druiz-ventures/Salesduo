@@ -1,0 +1,184 @@
+{
+  "id": "objecion-precio",
+  "clientName": "Carlos",
+  "clientRole": "Director de Compras, empresa mediana",
+  "clientAvatar": "👨‍💼",
+  "context": "Carlos lleva 10 minutos escuchándote. Parece interesado pero...",
+  "initialNode": "start",
+  "nodes": {
+    "start": {
+      "clientMessage": "Mira, el producto me gusta, pero sinceramente... es demasiado caro para nosotros ahora mismo.",
+      "hint": "Responde sin atacar el precio directamente. Piensa en el VALOR que aporta.",
+      "keywords": {
+        "positive": ["valor", "inversión", "retorno", "roi", "beneficio", "ahorro", "resultado", "amortizar", "amortizado", "agilizar", "proceso", "productividad", "rentable", "rentabilidad", "ganar", "generar", "aporta", "merece la pena", "a largo plazo", "recuperar"],
+        "negative": ["te hago descuento", "te bajo el precio", "precio especial", "te lo dejo en", "rebaja", "reducir el precio", "más barato"]
+      },
+      "onKeywordMatch": {
+        "positive": "node-empathy",
+        "negative": "node-price-trap",
+        "nomatch": "node-confused"
+      },
+      "scoreImpact": 0
+    },
+    "node-empathy": {
+      "clientMessage": "Hmm... ¿y qué pasaría si os ayudara a ahorrar más de lo que cuesta?",
+      "hint": "Bien. Ahora pregúntale por su situación actual. ¿Qué problemas tiene HOY?",
+      "keywords": {
+        "positive": ["cuánto", "problema", "actualmente", "situación", "ahora", "pierdes", "cuesta", "tiempo", "horas", "proceso", "manual", "equipo", "día a día", "cómo lo hacéis"],
+        "negative": ["te lo garantizo", "gratis", "sin coste", "prueba gratuita", "no pagas nada"]
+      },
+      "onKeywordMatch": {
+        "positive": "node-discovery",
+        "negative": "node-commitment-fear",
+        "nomatch": "node-confused"
+      },
+      "scoreImpact": 30
+    },
+    "node-price-trap": {
+      "clientMessage": "Hmm... si me haces descuento, igual me lo pienso, pero necesitaría al menos un 30% menos.",
+      "hint": "⚠️ Caíste en la trampa del precio. Reconducir hacia el valor. Habla de resultados, no de números.",
+      "keywords": {
+        "positive": ["valor", "resultado", "problema", "necesidad", "ahorro", "retorno", "inversión", "beneficio", "lo que te aporta"],
+        "negative": ["te hago el 30", "vale te lo bajo", "descuento", "te lo dejo", "precio especial"]
+      },
+      "onKeywordMatch": {
+        "positive": "node-recovery",
+        "negative": "node-lost",
+        "nomatch": "node-confused"
+      },
+      "scoreImpact": -20
+    },
+    "node-discovery": {
+      "clientMessage": "Bueno... actualmente perdemos unas 3 horas al día en procesos manuales que vuestro sistema automatizaría.",
+      "hint": "🎯 ¡Perfecto! Tiene un dolor real. Ahora haz el cálculo delante de él: horas × días × coste/hora.",
+      "keywords": {
+        "positive": ["3 horas", "calcular", "calculemos", "mes", "año", "cuánto representa", "coste real", "multiplicar", "días", "horas al año", "euros", "al mes", "supone"],
+        "negative": ["vaya", "no sabía", "interesante", "ya veo", "entiendo"]
+      },
+      "onKeywordMatch": {
+        "positive": "node-roi-close",
+        "negative": "node-missed-opportunity",
+        "nomatch": "node-confused"
+      },
+      "scoreImpact": 40
+    },
+    "node-roi-close": {
+      "clientMessage": "Oye... no lo había visto así. 3h/día × 25 días × 12 meses = 900 horas al año. A 30€/hora son 27.000€ perdidos. Y vuestro producto cuesta 4.800€/año... tiene sentido.",
+      "hint": "¡Cierre cerca! Propón una acción CONCRETA: reunión, demo, piloto. Con FECHA.",
+      "keywords": {
+        "positive": ["reunión", "demo", "piloto", "prueba", "empezar", "contrato", "siguiente paso", "esta semana", "mañana", "cuándo empezamos", "arrancar", "firmar", "fecha"],
+        "negative": ["piénsalo", "cuando puedas", "ya me dirás", "sin prisa", "tómate tu tiempo"]
+      },
+      "onKeywordMatch": {
+        "positive": "node-win",
+        "negative": "node-stall",
+        "nomatch": "node-confused"
+      },
+      "scoreImpact": 50
+    },
+    "node-win": {
+      "clientMessage": "Perfecto. La semana que viene tengo hueco el martes a las 11h. ¿Te va bien?",
+      "hint": null,
+      "isEndNode": true,
+      "endType": "success",
+      "scoreImpact": 30
+    },
+    "node-lost": {
+      "clientMessage": "Mira, si solo puedes competir en precio, voy a hablar con otros proveedores. Gracias.",
+      "hint": null,
+      "isEndNode": true,
+      "endType": "failure",
+      "scoreImpact": 0
+    },
+    "node-stall": {
+      "clientMessage": "Bueno... déjame pensarlo y ya te llamo.",
+      "hint": null,
+      "isEndNode": true,
+      "endType": "partial",
+      "scoreImpact": 10
+    },
+    "node-confused": {
+      "clientMessage": "No te acabo de entender... ¿a qué te refieres exactamente?",
+      "hint": "El cliente no pilla tu respuesta. Sé más directo y habla de valor o de su problema.",
+      "keywords": {
+        "positive": ["valor", "inversión", "retorno", "problema", "resultado", "ahorro", "beneficio", "situación"],
+        "negative": []
+      },
+      "onKeywordMatch": {
+        "positive": "node-empathy",
+        "negative": "node-confused-2",
+        "nomatch": "node-confused-2"
+      },
+      "scoreImpact": -10
+    },
+    "node-confused-2": {
+      "clientMessage": "Lo siento, creo que no estamos llegando a ningún lado. Voy a cortar aquí.",
+      "hint": null,
+      "isEndNode": true,
+      "endType": "failure",
+      "scoreImpact": 0
+    },
+    "node-recovery": {
+      "clientMessage": "Tienes razón, me estaba centrando demasiado en el número. Cuéntame más sobre lo que ofrecéis.",
+      "hint": "Buena recuperación. Ahora pregúntale por su problema actual para llevar la conversación al valor.",
+      "keywords": {
+        "positive": ["cuánto", "problema", "actualmente", "situación", "proceso", "manual", "tiempo", "equipo"],
+        "negative": []
+      },
+      "onKeywordMatch": {
+        "positive": "node-discovery",
+        "negative": "node-confused",
+        "nomatch": "node-confused"
+      },
+      "scoreImpact": 15
+    },
+    "node-commitment-fear": {
+      "clientMessage": "No soy ingenuo. Solo quiero asegurarme de que vale lo que cuesta.",
+      "hint": "Reconoce su postura y llévalo a hablar de su situación actual.",
+      "keywords": {
+        "positive": ["claro", "entiendo", "lógico", "resultado", "demostrar", "enseñar", "caso real", "ejemplo", "datos"],
+        "negative": []
+      },
+      "onKeywordMatch": {
+        "positive": "node-discovery",
+        "negative": "node-confused",
+        "nomatch": "node-confused"
+      },
+      "scoreImpact": -5
+    },
+    "node-missed-opportunity": {
+      "clientMessage": "Sí, interesante... pero sigo sin ver claro el retorno.",
+      "hint": "Tenías los datos (3 horas/día) y no los usaste para calcular. ¡Haz las cuentas!",
+      "keywords": {
+        "positive": ["calcular", "calculemos", "3 horas", "coste", "horas al año", "multiplicar", "euros"],
+        "negative": []
+      },
+      "onKeywordMatch": {
+        "positive": "node-roi-close",
+        "negative": "node-stall",
+        "nomatch": "node-stall"
+      },
+      "scoreImpact": -15
+    }
+  },
+  "endResults": {
+    "success": {
+      "title": "¡Venta conseguida! 🎉",
+      "message": "Dominaste la objeción del precio con el argumento del ROI. Así se vende.",
+      "xpEarned": 100,
+      "unlocksBadge": "price-handler"
+    },
+    "partial": {
+      "title": "Casi... 😅",
+      "message": "El cliente está tibio. No lograste urgencia ni compromiso concreto. Necesitas proponer una acción con fecha.",
+      "xpEarned": 40,
+      "unlocksBadge": null
+    },
+    "failure": {
+      "title": "Venta perdida 😬",
+      "message": "Repasa la técnica del ROI: pregunta por el problema → calcula el coste → propón solución.",
+      "xpEarned": 10,
+      "unlocksBadge": null
+    }
+  }
+}

@@ -1,0 +1,1396 @@
+/* ===== TOPBAR ===== */
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #1e293b, #334155);
+  border-bottom: 1px solid #475569;
+}
+
+.topbar-logo {
+  font-size: 20px;
+  font-weight: 800;
+  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.topbar-stats {
+  display: flex;
+  gap: 16px;
+  font-size: 14px;
+  color: #94a3b8;
+}
+
+.topbar-stat {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.topbar-stat strong {
+  color: #f1f5f9;
+}
+
+/* ===== LESSON SELECTOR ===== */
+.lesson-selector {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+.lesson-selector h1 {
+  text-align: center;
+  font-size: 32px;
+  font-weight: 800;
+  margin-bottom: 8px;
+  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.lesson-selector .subtitle {
+  text-align: center;
+  color: #94a3b8;
+  font-size: 16px;
+  margin-bottom: 40px;
+}
+
+.lesson-card {
+  border: 1px solid #334155;
+  border-radius: 16px;
+  padding: 20px 24px;
+  margin-bottom: 16px;
+  cursor: pointer;
+  background: #1e293b;
+  transition: all 0.2s;
+}
+
+.lesson-card:hover:not(.locked) {
+  transform: translateY(-2px);
+  border-color: #3b82f6;
+  box-shadow: 0 4px 20px rgba(59, 130, 246, 0.15);
+}
+
+.lesson-card.locked {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.lesson-card.completed {
+  border-color: #22c55e;
+  background: linear-gradient(135deg, #1e293b, #14332a);
+}
+
+.lesson-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.lesson-card h3 {
+  font-size: 17px;
+  font-weight: 700;
+  color: #f1f5f9;
+  margin-bottom: 6px;
+}
+
+.lesson-card p {
+  color: #94a3b8;
+  font-size: 14px;
+}
+
+.lesson-badge {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.badge-beginner {
+  background: rgba(34, 197, 94, 0.15);
+  color: #22c55e;
+}
+
+.badge-intermediate {
+  background: rgba(245, 158, 11, 0.15);
+  color: #f59e0b;
+}
+
+.badge-hard {
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+}
+
+.lesson-xp {
+  font-size: 13px;
+  font-weight: 700;
+  color: #8b5cf6;
+  margin-top: 6px;
+  text-align: right;
+}
+
+/* ===== CHAT ===== */
+.chat-container {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 20px;
+  min-height: calc(100vh - 60px);
+  display: flex;
+  flex-direction: column;
+}
+
+.chat-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.chat-header h2 {
+  font-size: 22px;
+  font-weight: 800;
+  color: #f1f5f9;
+}
+
+.chat-score {
+  font-size: 18px;
+  font-weight: 700;
+  color: #f59e0b;
+}
+
+.chat-role {
+  color: #94a3b8;
+  font-size: 14px;
+  margin-bottom: 2px;
+}
+
+.chat-context {
+  color: #64748b;
+  font-style: italic;
+  font-size: 13px;
+  margin-bottom: 16px;
+}
+
+.chat-messages {
+  flex: 1;
+  border: 1px solid #334155;
+  border-radius: 16px;
+  padding: 20px;
+  overflow-y: auto;
+  background: #1e293b;
+  min-height: 400px;
+  max-height: 500px;
+}
+
+.message {
+  margin-bottom: 14px;
+  display: flex;
+}
+
+.message.user {
+  justify-content: flex-end;
+}
+
+.message.client {
+  justify-content: flex-start;
+}
+
+.message.hint {
+  justify-content: flex-start;
+}
+
+.message-bubble {
+  max-width: 80%;
+  padding: 10px 16px;
+  border-radius: 18px;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.message.user .message-bubble {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  color: white;
+  border-bottom-right-radius: 4px;
+}
+
+.message.client .message-bubble {
+  background: #334155;
+  color: #e2e8f0;
+  border-bottom-left-radius: 4px;
+}
+
+.message.hint .message-bubble {
+  background: rgba(245, 158, 11, 0.12);
+  color: #fbbf24;
+  font-size: 13px;
+  border: 1px solid rgba(245, 158, 11, 0.25);
+}
+
+.chat-input-area {
+  display: flex;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.chat-input {
+  flex: 1;
+  padding: 12px 18px;
+  border-radius: 24px;
+  border: 1px solid #475569;
+  background: #1e293b;
+  color: #f1f5f9;
+  font-size: 15px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.chat-input:focus {
+  border-color: #3b82f6;
+}
+
+.chat-input::placeholder {
+  color: #64748b;
+}
+
+.btn-send {
+  padding: 12px 24px;
+  border-radius: 24px;
+  border: none;
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  color: white;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-send:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+}
+
+/* ===== RESULT CARD ===== */
+.result-card {
+  margin-top: 20px;
+  padding: 28px;
+  border-radius: 16px;
+  text-align: center;
+}
+
+.result-card.success {
+  background: linear-gradient(135deg, #14532d, #1e293b);
+  border: 1px solid #22c55e;
+}
+
+.result-card.partial {
+  background: linear-gradient(135deg, #422006, #1e293b);
+  border: 1px solid #f59e0b;
+}
+
+.result-card.failure {
+  background: linear-gradient(135deg, #450a0a, #1e293b);
+  border: 1px solid #ef4444;
+}
+
+.result-card h3 {
+  font-size: 24px;
+  margin-bottom: 8px;
+  color: #f1f5f9;
+}
+
+.result-card p {
+  color: #94a3b8;
+  margin-bottom: 6px;
+}
+
+.result-card .result-xp {
+  font-size: 18px;
+  font-weight: 700;
+  color: #8b5cf6;
+  margin-top: 12px;
+}
+
+.btn-back {
+  margin-top: 16px;
+  padding: 12px 32px;
+  border-radius: 24px;
+  border: none;
+  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+  color: white;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-back:hover {
+  transform: scale(1.05);
+}
+
+/* ===== ONBOARDING ===== */
+.onboarding-overlay {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: radial-gradient(ellipse at top, #1e293b, #0f172a);
+}
+
+.onboarding-card {
+  max-width: 500px;
+  width: 100%;
+  text-align: center;
+  padding: 48px 36px;
+  background: linear-gradient(145deg, #1e293b, #0f172a);
+  border: 1px solid #334155;
+  border-radius: 24px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+}
+
+.onboarding-dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 36px;
+}
+
+.onboarding-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #334155;
+  transition: all 0.3s;
+}
+
+.onboarding-dot.active {
+  background: #3b82f6;
+  transform: scale(1.3);
+}
+
+.onboarding-dot.done {
+  background: #22c55e;
+}
+
+.onboarding-emoji {
+  font-size: 64px;
+  margin-bottom: 20px;
+}
+
+.onboarding-title {
+  font-size: 28px;
+  font-weight: 800;
+  color: #f1f5f9;
+  margin-bottom: 16px;
+}
+
+.onboarding-description {
+  font-size: 16px;
+  color: #94a3b8;
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+.onboarding-highlight {
+  display: inline-block;
+  padding: 8px 20px;
+  border-radius: 20px;
+  background: rgba(59, 130, 246, 0.12);
+  color: #60a5fa;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 36px;
+}
+
+.onboarding-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+.btn-skip {
+  padding: 12px 24px;
+  border-radius: 24px;
+  border: 1px solid #475569;
+  background: transparent;
+  color: #94a3b8;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-skip:hover {
+  border-color: #64748b;
+  color: #e2e8f0;
+}
+
+.btn-next {
+  padding: 12px 32px;
+  border-radius: 24px;
+  border: none;
+  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+  color: white;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-next:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 20px rgba(59, 130, 246, 0.3);
+}
+
+/* ===== DASHBOARD ===== */
+.dashboard-overlay {
+  min-height: 100vh;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 40px 20px;
+  background: rgba(15, 23, 42, 0.95);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 100;
+  overflow-y: auto;
+}
+
+.dashboard-card {
+  max-width: 600px;
+  width: 100%;
+  padding: 36px;
+  background: linear-gradient(145deg, #1e293b, #0f172a);
+  border: 1px solid #334155;
+  border-radius: 24px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  position: relative;
+}
+
+.dashboard-close {
+  position: absolute;
+  top: 16px;
+  right: 20px;
+  background: none;
+  border: none;
+  color: #64748b;
+  font-size: 22px;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.dashboard-close:hover {
+  color: #f1f5f9;
+}
+
+.dashboard-title {
+  text-align: center;
+  font-size: 26px;
+  font-weight: 800;
+  color: #f1f5f9;
+  margin-bottom: 28px;
+}
+
+/* Level Section */
+.dashboard-level-section {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin-bottom: 28px;
+  padding: 20px;
+  background: rgba(59, 130, 246, 0.08);
+  border: 1px solid rgba(59, 130, 246, 0.2);
+  border-radius: 16px;
+}
+
+.dashboard-level-circle {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.dashboard-level-number {
+  font-size: 28px;
+  font-weight: 800;
+  color: white;
+  line-height: 1;
+}
+
+.dashboard-level-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.7);
+  letter-spacing: 1px;
+}
+
+.dashboard-level-info {
+  flex: 1;
+}
+
+.dashboard-xp-total {
+  font-size: 18px;
+  font-weight: 700;
+  color: #f1f5f9;
+  margin-bottom: 8px;
+}
+
+.dashboard-progress-bar {
+  height: 10px;
+  background: #334155;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 6px;
+}
+
+.dashboard-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+  border-radius: 10px;
+  transition: width 0.5s ease;
+}
+
+.dashboard-xp-next {
+  font-size: 13px;
+  color: #64748b;
+}
+
+/* Stats */
+.dashboard-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 28px;
+}
+
+.dashboard-stat-box {
+  text-align: center;
+  padding: 16px 8px;
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 12px;
+}
+
+.dashboard-stat-number {
+  display: block;
+  font-size: 28px;
+  font-weight: 800;
+  color: #f1f5f9;
+  margin-bottom: 4px;
+}
+
+.dashboard-stat-label {
+  font-size: 11px;
+  color: #64748b;
+  line-height: 1.3;
+}
+
+/* Badges */
+.dashboard-badges-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #f1f5f9;
+  margin-bottom: 16px;
+}
+
+.dashboard-badges-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.dashboard-badge {
+  padding: 16px;
+  border-radius: 12px;
+  text-align: center;
+  border: 1px solid #334155;
+  transition: all 0.2s;
+}
+
+.dashboard-badge.unlocked {
+  background: linear-gradient(145deg, #1e293b, #14332a);
+  border-color: #22c55e;
+}
+
+.dashboard-badge.locked {
+  background: #1e293b;
+  opacity: 0.5;
+}
+
+.dashboard-badge-icon {
+  display: block;
+  font-size: 32px;
+  margin-bottom: 6px;
+}
+
+.dashboard-badge-name {
+  display: block;
+  font-size: 14px;
+  font-weight: 700;
+  color: #f1f5f9;
+  margin-bottom: 4px;
+}
+
+.dashboard-badge-desc {
+  display: block;
+  font-size: 11px;
+  color: #64748b;
+  line-height: 1.3;
+}
+
+/* Topbar dashboard button */
+.btn-dashboard {
+  background: none;
+  border: 1px solid #475569;
+  color: #94a3b8;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-dashboard:hover {
+  border-color: #3b82f6;
+  color: #60a5fa;
+}
+
+/* ...existing code... */
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  /* Topbar */
+  .topbar {
+    flex-direction: column;
+    gap: 8px;
+    padding: 10px 16px;
+  }
+
+  .topbar-stats {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  /* Onboarding */
+  .onboarding-card {
+    padding: 32px 20px;
+    margin: 0 10px;
+  }
+
+  .onboarding-emoji {
+    font-size: 48px;
+  }
+
+  .onboarding-title {
+    font-size: 22px;
+  }
+
+  .onboarding-description {
+    font-size: 14px;
+  }
+
+  .onboarding-buttons {
+    flex-direction: column;
+  }
+
+  .btn-next,
+  .btn-skip {
+    width: 100%;
+  }
+
+  /* Lesson Selector */
+  .lesson-selector {
+    padding: 24px 16px;
+  }
+
+  .lesson-selector h1 {
+    font-size: 26px;
+  }
+
+  .lesson-card {
+    padding: 16px;
+  }
+
+  .lesson-card-header {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .lesson-card-header > div:last-child {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  /* Chat */
+  .chat-container {
+    padding: 12px;
+  }
+
+  .chat-header h2 {
+    font-size: 18px;
+  }
+
+  .chat-messages {
+    min-height: 300px;
+    max-height: 55vh;
+    padding: 12px;
+  }
+
+  .message-bubble {
+    max-width: 90%;
+    font-size: 14px;
+    padding: 8px 12px;
+  }
+
+  .chat-input {
+    padding: 10px 14px;
+    font-size: 14px;
+  }
+
+  .btn-send {
+    padding: 10px 16px;
+    font-size: 14px;
+  }
+
+  .result-card {
+    padding: 20px 16px;
+  }
+
+  .result-card h3 {
+    font-size: 20px;
+  }
+
+  /* Dashboard */
+  .dashboard-card {
+    padding: 24px 16px;
+    margin: 0 10px;
+  }
+
+  .dashboard-title {
+    font-size: 22px;
+  }
+
+  .dashboard-level-section {
+    flex-direction: column;
+    text-align: center;
+    gap: 16px;
+    padding: 16px;
+  }
+
+  .dashboard-stats {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+
+  .dashboard-stat-number {
+    font-size: 22px;
+  }
+
+  .dashboard-stat-label {
+    font-size: 10px;
+  }
+
+  .dashboard-badges-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .dashboard-badge {
+    padding: 12px 8px;
+  }
+
+  .dashboard-badge-icon {
+    font-size: 26px;
+  }
+
+  .dashboard-badge-name {
+    font-size: 12px;
+  }
+}
+
+/* Extra small screens */
+@media (max-width: 380px) {
+  .topbar-stats {
+    font-size: 12px;
+    gap: 6px;
+  }
+
+  .lesson-selector h1 {
+    font-size: 22px;
+  }
+
+  .lesson-card h3 {
+    font-size: 15px;
+  }
+
+  .chat-messages {
+    max-height: 50vh;
+  }
+
+  .dashboard-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .dashboard-badges-grid {
+    grid-template-columns: 1fr;
+  }
+}/* ...existing code... */
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  /* Topbar */
+  .topbar {
+    flex-direction: column;
+    gap: 8px;
+    padding: 10px 16px;
+  }
+
+  .topbar-stats {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  /* Onboarding */
+  .onboarding-card {
+    padding: 32px 20px;
+    margin: 0 10px;
+  }
+
+  .onboarding-emoji {
+    font-size: 48px;
+  }
+
+  .onboarding-title {
+    font-size: 22px;
+  }
+
+  .onboarding-description {
+    font-size: 14px;
+  }
+
+  .onboarding-buttons {
+    flex-direction: column;
+  }
+
+  .btn-next,
+  .btn-skip {
+    width: 100%;
+  }
+
+  /* Lesson Selector */
+  .lesson-selector {
+    padding: 24px 16px;
+  }
+
+  .lesson-selector h1 {
+    font-size: 26px;
+  }
+
+  .lesson-card {
+    padding: 16px;
+  }
+
+  .lesson-card-header {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .lesson-card-header > div:last-child {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  /* Chat */
+  .chat-container {
+    padding: 12px;
+  }
+
+  .chat-header h2 {
+    font-size: 18px;
+  }
+
+  .chat-messages {
+    min-height: 300px;
+    max-height: 55vh;
+    padding: 12px;
+  }
+
+  .message-bubble {
+    max-width: 90%;
+    font-size: 14px;
+    padding: 8px 12px;
+  }
+
+  .chat-input {
+    padding: 10px 14px;
+    font-size: 14px;
+  }
+
+  .btn-send {
+    padding: 10px 16px;
+    font-size: 14px;
+  }
+
+  .result-card {
+    padding: 20px 16px;
+  }
+
+  .result-card h3 {
+    font-size: 20px;
+  }
+
+  /* Dashboard */
+  .dashboard-card {
+    padding: 24px 16px;
+    margin: 0 10px;
+  }
+
+  .dashboard-title {
+    font-size: 22px;
+  }
+
+  .dashboard-level-section {
+    flex-direction: column;
+    text-align: center;
+    gap: 16px;
+    padding: 16px;
+  }
+
+  .dashboard-stats {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+
+  .dashboard-stat-number {
+    font-size: 22px;
+  }
+
+  .dashboard-stat-label {
+    font-size: 10px;
+  }
+
+  .dashboard-badges-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .dashboard-badge {
+    padding: 12px 8px;
+  }
+
+  .dashboard-badge-icon {
+    font-size: 26px;
+  }
+
+  .dashboard-badge-name {
+    font-size: 12px;
+  }
+}
+
+/* Extra small screens */
+@media (max-width: 380px) {
+  .topbar-stats {
+    font-size: 12px;
+    gap: 6px;
+  }
+
+  .lesson-selector h1 {
+    font-size: 22px;
+  }
+
+  .lesson-card h3 {
+    font-size: 15px;
+  }
+
+  .chat-messages {
+    max-height: 50vh;
+  }
+
+  .dashboard-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .dashboard-badges-grid {
+    grid-template-columns: 1fr;
+  }
+}/* ...existing code... */
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  /* Topbar */
+  .topbar {
+    flex-direction: column;
+    gap: 8px;
+    padding: 10px 16px;
+  }
+
+  .topbar-stats {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  /* Onboarding */
+  .onboarding-card {
+    padding: 32px 20px;
+    margin: 0 10px;
+  }
+
+  .onboarding-emoji {
+    font-size: 48px;
+  }
+
+  .onboarding-title {
+    font-size: 22px;
+  }
+
+  .onboarding-description {
+    font-size: 14px;
+  }
+
+  .onboarding-buttons {
+    flex-direction: column;
+  }
+
+  .btn-next,
+  .btn-skip {
+    width: 100%;
+  }
+
+  /* Lesson Selector */
+  .lesson-selector {
+    padding: 24px 16px;
+  }
+
+  .lesson-selector h1 {
+    font-size: 26px;
+  }
+
+  .lesson-card {
+    padding: 16px;
+  }
+
+  .lesson-card-header {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .lesson-card-header > div:last-child {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  /* Chat */
+  .chat-container {
+    padding: 12px;
+  }
+
+  .chat-header h2 {
+    font-size: 18px;
+  }
+
+  .chat-messages {
+    min-height: 300px;
+    max-height: 55vh;
+    padding: 12px;
+  }
+
+  .message-bubble {
+    max-width: 90%;
+    font-size: 14px;
+    padding: 8px 12px;
+  }
+
+  .chat-input {
+    padding: 10px 14px;
+    font-size: 14px;
+  }
+
+  .btn-send {
+    padding: 10px 16px;
+    font-size: 14px;
+  }
+
+  .result-card {
+    padding: 20px 16px;
+  }
+
+  .result-card h3 {
+    font-size: 20px;
+  }
+
+  /* Dashboard */
+  .dashboard-card {
+    padding: 24px 16px;
+    margin: 0 10px;
+  }
+
+  .dashboard-title {
+    font-size: 22px;
+  }
+
+  .dashboard-level-section {
+    flex-direction: column;
+    text-align: center;
+    gap: 16px;
+    padding: 16px;
+  }
+
+  .dashboard-stats {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+
+  .dashboard-stat-number {
+    font-size: 22px;
+  }
+
+  .dashboard-stat-label {
+    font-size: 10px;
+  }
+
+  .dashboard-badges-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .dashboard-badge {
+    padding: 12px 8px;
+  }
+
+  .dashboard-badge-icon {
+    font-size: 26px;
+  }
+
+  .dashboard-badge-name {
+    font-size: 12px;
+  }
+}
+
+/* Extra small screens */
+@media (max-width: 380px) {
+  .topbar-stats {
+    font-size: 12px;
+    gap: 6px;
+  }
+
+  .lesson-selector h1 {
+    font-size: 22px;
+  }
+
+  .lesson-card h3 {
+    font-size: 15px;
+  }
+
+  .chat-messages {
+    max-height: 50vh;
+  }
+
+  .dashboard-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .dashboard-badges-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  /* Topbar */
+  .topbar {
+    flex-direction: column;
+    gap: 8px;
+    padding: 10px 16px;
+  }
+
+  .topbar-stats {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  /* Onboarding */
+  .onboarding-card {
+    padding: 32px 20px;
+    margin: 0 10px;
+  }
+
+  .onboarding-emoji {
+    font-size: 48px;
+  }
+
+  .onboarding-title {
+    font-size: 22px;
+  }
+
+  .onboarding-description {
+    font-size: 14px;
+  }
+
+  .onboarding-buttons {
+    flex-direction: column;
+  }
+
+  .btn-next,
+  .btn-skip {
+    width: 100%;
+  }
+
+  /* Lesson Selector */
+  .lesson-selector {
+    padding: 24px 16px;
+  }
+
+  .lesson-selector h1 {
+    font-size: 26px;
+  }
+
+  .lesson-card {
+    padding: 16px;
+  }
+
+  .lesson-card-header {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .lesson-card-header > div:last-child {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  /* Chat */
+  .chat-container {
+    padding: 12px;
+  }
+
+  .chat-header h2 {
+    font-size: 18px;
+  }
+
+  .chat-messages {
+    min-height: 300px;
+    max-height: 55vh;
+    padding: 12px;
+  }
+
+  .message-bubble {
+    max-width: 90%;
+    font-size: 14px;
+    padding: 8px 12px;
+  }
+
+  .chat-input {
+    padding: 10px 14px;
+    font-size: 14px;
+  }
+
+  .btn-send {
+    padding: 10px 16px;
+    font-size: 14px;
+  }
+
+  .result-card {
+    padding: 20px 16px;
+  }
+
+  .result-card h3 {
+    font-size: 20px;
+  }
+
+  /* Dashboard */
+  .dashboard-card {
+    padding: 24px 16px;
+    margin: 0 10px;
+  }
+
+  .dashboard-title {
+    font-size: 22px;
+  }
+
+  .dashboard-level-section {
+    flex-direction: column;
+    text-align: center;
+    gap: 16px;
+    padding: 16px;
+  }
+
+  .dashboard-stats {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+
+  .dashboard-stat-number {
+    font-size: 22px;
+  }
+
+  .dashboard-stat-label {
+    font-size: 10px;
+  }
+
+  .dashboard-badges-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .dashboard-badge {
+    padding: 12px 8px;
+  }
+
+  .dashboard-badge-icon {
+    font-size: 26px;
+  }
+
+  .dashboard-badge-name {
+    font-size: 12px;
+  }
+}
+
+/* Extra small screens */
+@media (max-width: 380px) {
+  .topbar-stats {
+    font-size: 12px;
+    gap: 6px;
+  }
+
+  .lesson-selector h1 {
+    font-size: 22px;
+  }
+
+  .lesson-card h3 {
+    font-size: 15px;
+  }
+
+  .chat-messages {
+    max-height: 50vh;
+  }
+
+  .dashboard-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .dashboard-badges-grid {
+    grid-template-columns: 1fr;
+  }
+}
