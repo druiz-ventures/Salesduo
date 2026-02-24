@@ -1394,3 +1394,21 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* ===== ONBOARDING FIX: centrar y prioridad z ===== */
+.onboarding-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: radial-gradient(ellipse at top, #1e293b, #0f172a);
+  z-index: 80;
+}
+
+.onboarding-card {
+  margin: 0 auto;
+  max-width: 520px;
+  width: 100%;
+}
