@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import "./App.css";
 import Onboarding from "./components/Onboarding";
-import LessonSelector from "./components/LessonSelector";
+import LessonMap from "./components/LessonMap";
+import TheoryScreen from "./components/TheoryScreen";
 import ChatSimulator from "./components/ChatSimulator";
 import Dashboard from "./components/Dashboard";
 
@@ -17,17 +18,20 @@ const conversationsMap = {
 
 function App() {
   const [currentScreen, setCurrentScreen] = useState("loading");
+  const [selectedLesson, setSelectedLesson] = useState(null);
   const [selectedConversation, setSelectedConversation] = useState(null);
   const [completedLessons, setCompletedLessons] = useState([]);
+  const [theoriesRead, setTheoriesRead] = useState([]);
   const [totalXP, setTotalXP] = useState(0);
   const [badges, setBadges] = useState([]);
   const [showDashboard, setShowDashboard] = useState(false);
 
   useEffect(() => {
-    const saved = localStorage.getItem("salesduo-progress");
+    const saved = localStorage.getItem("duosales-progress");
     if (saved) {
       const data = JSON.parse(saved);
       setCompletedLessons(data.completedLessons || []);
+      setTheoriesRead(data.theoriesRead || []);
       setTotalXP(data.totalXP || 0);
       setBadges(data.badges || []);
       setCurrentScreen("menu");
@@ -36,21 +40,42 @@ function App() {
     }
   }, []);
 
-  const saveProgress = (newCompleted, newXP, newBadges) => {
-    const data = {
-      completedLessons: newCompleted,
-      totalXP: newXP,
-      badges: newBadges,
-    };
-    localStorage.setItem("salesduo-progress", JSON.stringify(data));
+  const saveProgress = (newCompleted, newTheories, newXP, newBadges) => {
+    localStorage.setItem(
+      "duosales-progress",
+      JSON.stringify({
+        completedLessons: newCompleted,
+        theoriesRead: newTheories,
+        totalXP: newXP,
+        badges: newBadges,
+      })
+    );
   };
 
   const handleOnboardingComplete = () => {
     setCurrentScreen("menu");
   };
 
-  const handleSelectLesson = (lesson) => {
-    const conversation = conversationsMap[lesson.conversationId];
+  // Called from LessonMap with the lesson + mode ("theory" or "practice")
+  const handleSelectLesson = (lesson, mode) => {
+    setSelectedLesson(lesson);
+    if (mode === "theory") {
+      setCurrentScreen("theory");
+    } else {
+      const conversation = conversationsMap[lesson.conversationId];
+      if (conversation) {
+        setSelectedConversation(conversation);
+        setCurrentScreen("chat");
+      }
+    }
+  };
+
+  const handleTheoryComplete = () => {
+    const newTheories = [...new Set([...theoriesRead, selectedLesson.id])];
+    setTheoriesRead(newTheories);
+    saveProgress(completedLessons, newTheories, totalXP, badges);
+    // Go straight to practice
+    const conversation = conversationsMap[selectedLesson.conversationId];
     if (conversation) {
       setSelectedConversation(conversation);
       setCurrentScreen("chat");
@@ -64,17 +89,12 @@ function App() {
     ];
     let newBadges = [...badges];
 
-    // Badge de la lección
     if (results.badgeUnlocked) {
       newBadges = [...new Set([...newBadges, results.badgeUnlocked])];
     }
-
-    // Badge "primera venta"
     if (results.endType === "success" && !badges.includes("first-win")) {
       newBadges = [...new Set([...newBadges, "first-win"])];
     }
-
-    // Badge "puntuación perfecta"
     if (results.score >= 150 && !badges.includes("perfect-score")) {
       newBadges = [...new Set([...newBadges, "perfect-score"])];
     }
@@ -82,30 +102,38 @@ function App() {
     setTotalXP(newXP);
     setCompletedLessons(newCompleted);
     setBadges(newBadges);
-    saveProgress(newCompleted, newXP, newBadges);
-
+    saveProgress(newCompleted, theoriesRead, newXP, newBadges);
     setCurrentScreen("menu");
     setSelectedConversation(null);
+    setSelectedLesson(null);
   };
 
-  if (currentScreen === "loading") {
-    return null;
-  }
+  if (currentScreen === "loading") return null;
 
   if (currentScreen === "onboarding") {
     return <Onboarding onComplete={handleOnboardingComplete} />;
   }
 
+  if (currentScreen === "theory" && selectedLesson) {
+    return (
+      <TheoryScreen
+        lesson={selectedLesson}
+        onComplete={handleTheoryComplete}
+        onBack={() => setCurrentScreen("menu")}
+      />
+    );
+  }
+
   return (
     <div>
       <div className="topbar">
-        <span className="topbar-logo">SalesDuo</span>
+        <span className="topbar-logo">Duosales</span>
         <div className="topbar-stats">
           <span className="topbar-stat">
             ⭐ <strong>{totalXP}</strong> XP
           </span>
           <span className="topbar-stat">
-            🏅 <strong>{badges.length}</strong> badges
+            🏅 <strong>{badges.length}</strong>
           </span>
           <span className="topbar-stat">
             ✅ <strong>{completedLessons.length}</strong>
@@ -114,7 +142,7 @@ function App() {
             className="btn-dashboard"
             onClick={() => setShowDashboard(true)}
           >
-            📊 Mi Progreso
+            📊 Progreso
           </button>
         </div>
       </div>
@@ -135,9 +163,10 @@ function App() {
           onFinish={handleFinishLesson}
         />
       ) : (
-        <LessonSelector
+        <LessonMap
           onSelectLesson={handleSelectLesson}
           completedLessons={completedLessons}
+          theoriesRead={theoriesRead}
         />
       )}
     </div>

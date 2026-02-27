@@ -1,35 +1,158 @@
 [
   {
     "id": "objecion-precio",
-    "title": "Maneja la objeción del precio",
-    "description": "El cliente dice que es muy caro. ¿Sabes cómo responder?",
+    "title": "La objeción del precio",
+    "description": "El cliente dice que es muy caro. Aprende a girarlo hacia el valor.",
     "difficulty": "beginner",
     "xpReward": 100,
     "badgeId": "price-handler",
     "conversationId": "objecion-precio",
     "isLocked": false,
-    "tags": ["precio", "objeciones", "valor"]
+    "tags": ["precio", "objeciones", "valor"],
+    "theory": {
+      "title": "Cómo manejar la objeción del precio",
+      "slides": [
+        {
+          "id": 1,
+          "emoji": "🧠",
+          "title": "El error que comete el 90% de los vendedores",
+          "body": "Cuando el cliente dice 'es muy caro', el instinto natural es defender el precio, justificarlo o bajar la propuesta. Ese es exactamente el movimiento que destruye la venta.",
+          "highlight": "Nunca defiendas el precio antes de establecer el valor."
+        },
+        {
+          "id": 2,
+          "emoji": "🎯",
+          "title": "Patrón de interrupción (Brian Tracy)",
+          "body": "En vez de responder al precio, interrumpe el patrón mental del cliente con una pregunta inesperada. El objetivo: hacer que piense en el coste de su situación actual, no en el precio de tu solución.",
+          "highlight": "Ejemplo: '¿Puedo preguntarte cuánto os está costando no tener esto resuelto ahora mismo?'",
+          "technique": "Brian Tracy — Patrón de interrupción"
+        },
+        {
+          "id": 3,
+          "emoji": "❤️",
+          "title": "Feel-Felt-Found",
+          "body": "Una vez interrumpido el patrón, usa esta estructura para conectar emocionalmente antes de entrar en datos: 'Entiendo cómo te sientes... otros clientes se sentían igual... lo que encontraron fue...'",
+          "highlight": "Primero empatía, luego lógica. El cerebro compra con emoción y justifica con razón.",
+          "technique": "Brian Tracy — Feel-Felt-Found"
+        },
+        {
+          "id": 4,
+          "emoji": "🔍",
+          "title": "SPIN Selling: las 4 preguntas",
+          "body": "SPIN es la metodología de ventas más estudiada del mundo (Neil Rackham, 35.000 llamadas analizadas). Estructura: Situación → Problema → Implicación → Necesidad-Beneficio. Cada pregunta profundiza más en el dolor.",
+          "highlight": "No listes características. Haz preguntas que lleven al cliente a descubrir el problema él solo.",
+          "technique": "Neil Rackham — SPIN Selling"
+        },
+        {
+          "id": 5,
+          "emoji": "📊",
+          "title": "El cálculo de ROI en voz alta",
+          "body": "El número que sale de la boca del cliente vale 10 veces más que el que dices tú. Cuando el cliente cuantifica su propio problema (horas × coste × frecuencia), la comparación con tu precio la hace él solo.",
+          "highlight": "Objetivo: que el cliente diga 'nunca lo había calculado así' antes de que tú menciones tu precio.",
+          "technique": "ROI Anchoring"
+        },
+        {
+          "id": 6,
+          "emoji": "📅",
+          "title": "Cierre con fecha concreta",
+          "body": "El peor cierre es 'piénsatelo'. Siempre termina con una acción específica: 'El martes a las 11, ¿te va bien?' No 'cuando puedas' ni 'sin prisa'. La urgencia no aparece sola: la creas tú.",
+          "highlight": "Un cliente que 'te llama' raramente lo hace. Tú propones la fecha, él dice sí o no.",
+          "technique": "Grant Cardone — Cierre por acción concreta"
+        }
+      ]
+    }
   },
   {
     "id": "objecion-tiempo",
     "title": "El cliente no tiene tiempo",
-    "description": "Clásico: 'ahora mismo no es el momento'. Aprende a superarlo.",
+    "description": "Clásico: 'ahora no es el momento'. Aprende a crear urgencia real.",
     "difficulty": "beginner",
     "xpReward": 120,
     "badgeId": "time-master",
     "conversationId": "objecion-tiempo",
     "isLocked": true,
-    "tags": ["tiempo", "urgencia", "objeciones"]
+    "tags": ["tiempo", "urgencia", "objeciones"],
+    "theory": {
+      "title": "Cómo convertir el 'no tengo tiempo' en una reunión",
+      "slides": [
+        {
+          "id": 1,
+          "emoji": "⏰",
+          "title": "El 'no tengo tiempo' casi nunca es real",
+          "body": "Cuando alguien dice 'ahora no es buen momento', en el 80% de los casos significa 'no veo suficiente valor como para hacer un hueco'. El problema no es su agenda: es que no has hecho visible el coste de esperar.",
+          "highlight": "No hay personas sin tiempo. Hay personas que no ven la urgencia."
+        },
+        {
+          "id": 2,
+          "emoji": "💸",
+          "title": "El coste de la inacción",
+          "body": "Cada semana que el cliente espera para tomar una decisión, el problema le sigue costando dinero, tiempo o energía. Tu trabajo es hacer ese coste visible y concreto, no invisible y abstracto.",
+          "highlight": "Técnica: '¿Cuánto tiempo pierde tu equipo en esto cada semana? ¿Y eso cuánto representa al mes?'",
+          "technique": "Cost of Inaction — Jeb Blount"
+        },
+        {
+          "id": 3,
+          "emoji": "🚫",
+          "title": "El error de ser demasiado complaciente",
+          "body": "Si el cliente dice 'te llamo yo', y tú respondes 'perfecto, cuando quieras', la venta está muerta. Eso no es respeto por su tiempo: es rendirse. Un buen vendedor siempre propone un paso concreto antes de cerrar la llamada.",
+          "highlight": "Nunca salgas de una llamada sin un siguiente paso acordado con fecha."
+        },
+        {
+          "id": 4,
+          "emoji": "⚡",
+          "title": "Propuesta pequeña, fricción mínima",
+          "body": "No pidas una hora de reunión cuando puedes pedir 15 minutos de demo. Cuanto más pequeño el compromiso que pides, más fácil es que diga sí. Entra por la puerta pequeña.",
+          "highlight": "'¿Tienes 15 minutos el jueves a las 9?' es infinitamente más fácil de aceptar que 'necesito que vengas a una presentación'.",
+          "technique": "Foot-in-the-door — Cialdini"
+        }
+      ]
+    }
   },
   {
     "id": "objecion-competencia",
     "title": "Vendiendo contra la competencia",
-    "description": "El cliente ya trabaja con otro proveedor. ¿Cómo diferenciarte?",
+    "description": "El cliente ya trabaja con otro proveedor. Aprende a diferenciarte sin atacar.",
     "difficulty": "intermediate",
     "xpReward": 200,
     "badgeId": "competitor-killer",
     "conversationId": "objecion-competencia",
     "isLocked": true,
-    "tags": ["competencia", "diferenciación", "valor"]
+    "tags": ["competencia", "diferenciación", "valor"],
+    "theory": {
+      "title": "Cómo ganar una venta cuando hay un competidor instalado",
+      "slides": [
+        {
+          "id": 1,
+          "emoji": "⚔️",
+          "title": "Regla número uno: nunca ataques al competidor",
+          "body": "Hablar mal del competidor dispara el instinto de defensa del cliente, que empezará a justificar por qué eligió bien. Aunque el competidor sea objetivamente peor, atacarlo te hace quedar mal a ti, no a ellos.",
+          "highlight": "El cliente que defiende a su proveedor actual ya no te escucha a ti."
+        },
+        {
+          "id": 2,
+          "emoji": "🔎",
+          "title": "Busca el gap: lo que el competidor NO cubre",
+          "body": "Ningún proveedor cubre el 100% de las necesidades de un cliente. Tu trabajo es encontrar la grieta: algo que al cliente le gustaría tener pero que asume que no puede tener. Eso es tu punto de entrada.",
+          "highlight": "Pregunta: '¿Hay algo que, si pudieras mejorar de tu proveedor actual, cambiarías?'",
+          "technique": "Gap Selling — Keenan"
+        },
+        {
+          "id": 3,
+          "emoji": "🌉",
+          "title": "El dolor del cambio es real: no lo minimices",
+          "body": "Cuando el cliente dice 'cambiar de proveedor es un dolor de cabeza', tiene toda la razón. Si respondes 'es muy fácil, no te preocupes', no te creerá. Reconoce el problema y ofrece eliminarlo.",
+          "highlight": "Técnica: piloto en paralelo. El cliente puede probar sin cortar con su proveedor actual. Eso elimina el riesgo percibido.",
+          "technique": "Risk Reversal — Dan Kennedy"
+        },
+        {
+          "id": 4,
+          "emoji": "🏆",
+          "title": "Diferenciación por valor, no por características",
+          "body": "No ganas comparando listas de features. Ganas conectando tu diferencial específico con el gap específico que el cliente ya te reveló. Es una solución quirúrgica, no un catálogo.",
+          "highlight": "Mal: 'Nosotros tenemos más funcionalidades.' Bien: 'Para el problema de soporte lento que me comentabas, nosotros respondemos en menos de 2 horas con equipo dedicado.'",
+          "technique": "Challenger Sale — Matthew Dixon"
+        }
+      ]
+    }
   }
 ]

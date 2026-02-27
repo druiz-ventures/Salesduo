@@ -1487,3 +1487,489 @@
   0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
   30%            { transform: translateY(-6px); opacity: 1; }
 }
+
+/* =====================================================
+   LESSON MAP
+   ===================================================== */
+
+.lesson-map-wrapper {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 32px 20px 60px;
+}
+
+.lesson-map-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.lesson-map-title {
+  font-size: 32px;
+  font-weight: 800;
+  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 6px;
+}
+
+.lesson-map-subtitle {
+  color: #64748b;
+  font-size: 15px;
+}
+
+.lesson-map-path {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+
+.map-lesson-block {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.map-connector {
+  width: 3px;
+  height: 32px;
+  background: linear-gradient(to bottom, #3b82f6, #8b5cf6);
+  border-radius: 4px;
+  margin: 2px 0;
+}
+
+.map-connector.locked {
+  background: #334155;
+}
+
+/* Node */
+.map-node {
+  width: 100%;
+  background: #1e293b;
+  border: 1.5px solid #334155;
+  border-radius: 16px;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.map-node:hover:not(.locked) {
+  border-color: #3b82f6;
+  background: #1e3a5f;
+  transform: translateY(-1px);
+}
+
+.map-node.locked {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.map-node.done {
+  border-color: #22c55e55;
+  background: linear-gradient(135deg, #1e293b, #14291f);
+}
+
+.map-node.theory-done {
+  border-color: #f59e0b55;
+}
+
+.map-node.expanded {
+  border-color: #3b82f6;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  border-bottom-color: transparent;
+}
+
+.map-node-icon {
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.map-node-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.map-node-title {
+  display: block;
+  font-size: 15px;
+  font-weight: 700;
+  color: #f1f5f9;
+  margin-bottom: 3px;
+}
+
+.map-node-desc {
+  display: block;
+  font-size: 12px;
+  color: #64748b;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.map-node-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.map-badge-diff {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-weight: 600;
+}
+
+.diff-easy  { background: #14291f; color: #22c55e; }
+.diff-mid   { background: #292214; color: #f59e0b; }
+.diff-hard  { background: #291414; color: #ef4444; }
+
+.map-node-xp {
+  font-size: 11px;
+  color: #f59e0b;
+  font-weight: 700;
+}
+
+.map-node-chevron {
+  font-size: 10px;
+  color: #475569;
+}
+
+/* Sub-steps */
+.map-substeps {
+  width: 100%;
+  border: 1.5px solid #3b82f6;
+  border-top: none;
+  border-bottom-left-radius: 16px;
+  border-bottom-right-radius: 16px;
+  overflow: hidden;
+  animation: substepsIn 0.2s ease;
+}
+
+@keyframes substepsIn {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.map-substep {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 20px;
+  border-top: 1px solid #1e293b;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.map-substep:first-child {
+  border-top: none;
+}
+
+.map-substep.substep-available {
+  background: #0f172a;
+}
+
+.map-substep.substep-available:hover {
+  background: #1e293b;
+}
+
+.map-substep.substep-done {
+  background: #0a1f0f;
+}
+
+.map-substep.substep-done:hover {
+  background: #0f2a14;
+}
+
+.map-substep.substep-locked {
+  background: #0a0f1a;
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.substep-icon {
+  font-size: 20px;
+  flex-shrink: 0;
+  width: 28px;
+  text-align: center;
+}
+
+.substep-content {
+  flex: 1;
+}
+
+.substep-label {
+  display: block;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #64748b;
+  margin-bottom: 2px;
+}
+
+.substep-name {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: #e2e8f0;
+  margin-bottom: 2px;
+}
+
+.substep-meta {
+  display: block;
+  font-size: 11px;
+  color: #475569;
+}
+
+.substep-action {
+  flex-shrink: 0;
+}
+
+.substep-start {
+  font-size: 12px;
+  font-weight: 700;
+  color: #3b82f6;
+}
+
+.substep-repeat {
+  font-size: 12px;
+  font-weight: 600;
+  color: #475569;
+}
+
+
+/* =====================================================
+   THEORY SCREEN
+   ===================================================== */
+
+.theory-container {
+  max-width: 620px;
+  margin: 0 auto;
+  padding: 0 20px 60px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.theory-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 0;
+  gap: 12px;
+}
+
+.theory-back-btn {
+  background: none;
+  border: none;
+  color: #64748b;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 6px 0;
+  transition: color 0.15s;
+  flex-shrink: 0;
+}
+
+.theory-back-btn:hover {
+  color: #94a3b8;
+}
+
+.theory-lesson-title {
+  font-size: 13px;
+  color: #64748b;
+  font-weight: 600;
+  text-align: center;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.theory-counter {
+  font-size: 13px;
+  color: #475569;
+  flex-shrink: 0;
+}
+
+.theory-progress-track {
+  height: 4px;
+  background: #1e293b;
+  border-radius: 4px;
+  margin-bottom: 32px;
+  overflow: hidden;
+}
+
+.theory-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+  border-radius: 4px;
+  transition: width 0.4s ease;
+}
+
+/* Slide */
+.theory-slide {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(20px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+.theory-emoji {
+  font-size: 52px;
+  margin-bottom: 20px;
+  line-height: 1;
+}
+
+.theory-title {
+  font-size: 22px;
+  font-weight: 800;
+  color: #f1f5f9;
+  margin-bottom: 16px;
+  line-height: 1.3;
+}
+
+.theory-body {
+  font-size: 15px;
+  color: #94a3b8;
+  line-height: 1.7;
+  margin-bottom: 24px;
+  max-width: 480px;
+}
+
+.theory-highlight-box {
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-left: 3px solid #3b82f6;
+  border-radius: 12px;
+  padding: 16px 18px;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  text-align: left;
+  max-width: 480px;
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.theory-highlight-icon {
+  font-size: 18px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.theory-highlight-text {
+  font-size: 14px;
+  color: #cbd5e1;
+  line-height: 1.6;
+  font-style: italic;
+}
+
+.theory-technique-tag {
+  font-size: 12px;
+  color: #8b5cf6;
+  background: #1e1633;
+  border: 1px solid #4c1d9533;
+  border-radius: 20px;
+  padding: 5px 14px;
+  font-weight: 600;
+}
+
+/* Navigation */
+.theory-nav {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 32px;
+}
+
+.theory-btn-prev {
+  background: #1e293b;
+  color: #94a3b8;
+  border: 1px solid #334155;
+  border-radius: 12px;
+  padding: 12px 24px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.theory-btn-prev:hover {
+  background: #334155;
+  color: #f1f5f9;
+}
+
+.theory-btn-next {
+  background: linear-gradient(135deg, #3b82f6, #6366f1);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 12px 32px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+
+.theory-btn-next:hover {
+  opacity: 0.9;
+}
+
+.theory-btn-practice {
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 14px 36px;
+  font-size: 15px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: opacity 0.15s;
+  box-shadow: 0 4px 20px #22c55e33;
+}
+
+.theory-btn-practice:hover {
+  opacity: 0.9;
+}
+
+/* Dots */
+.theory-dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 24px;
+}
+
+.theory-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #334155;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.theory-dot.active {
+  background: #3b82f6;
+  transform: scale(1.3);
+}
+
+.theory-dot.done {
+  background: #22c55e;
+}
+
