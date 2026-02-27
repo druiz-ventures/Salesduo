@@ -1,45 +1,79 @@
-export function analyzeResponse(userInput, keywords) {
-  const input = userInput
+// ─── Normalización ────────────────────────────────────────────────────────────
+function normalize(text) {
+  return text
     .toLowerCase()
     .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "");
-
-  const positiveWords = keywords.positive || [];
-  const negativeWords = keywords.negative || [];
-
-  const positiveMatch = positiveWords.some((word) =>
-    input.includes(word.toLowerCase())
-  );
-
-  const negativeMatch = negativeWords.some((word) =>
-    input.includes(word.toLowerCase())
-  );
-
-  // Si hay AMBAS, la positiva gana (el usuario sabe de qué habla)
-  if (positiveMatch && negativeMatch) {
-    return "positive";
-  }
-
-  // Si solo hay negativa → trampa
-  if (negativeMatch) {
-    return "negative";
-  }
-
-  // Si solo hay positiva → bien
-  if (positiveMatch) {
-    return "positive";
-  }
-
-  return "nomatch";
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[¿¡]/g, "");
 }
 
+// ─── Detecta si una palabra está negada en el contexto anterior ──────────────
+const NEGATION_WORDS = ["no ", "ni ", "nunca ", "jamas ", "sin ", "tampoco ", "nada de "];
+
+function isNegated(input, wordIndex) {
+  const lookback = input.slice(Math.max(0, wordIndex - 25), wordIndex);
+  return NEGATION_WORDS.some((neg) => lookback.includes(neg));
+}
+
+// ─── Motor principal: scoring ponderado ──────────────────────────────────────
+function scoreWeighted(input, weightedKeywords) {
+  const norm = normalize(input);
+  let total = 0;
+
+  for (const { word, weight } of weightedKeywords) {
+    const idx = norm.indexOf(normalize(word));
+    if (idx === -1) continue;
+    const negated = isNegated(norm, idx);
+    total += negated ? -Math.abs(weight) : weight;
+  }
+
+  return total;
+}
+
+// ─── Compatibilidad con formato legacy (arrays positive/negative) ─────────────
+function scoreFromLists(input, positiveWords = [], negativeWords = []) {
+  const norm = normalize(input);
+  let total = 0;
+
+  for (const word of positiveWords) {
+    const idx = norm.indexOf(normalize(word));
+    if (idx === -1) continue;
+    total += isNegated(norm, idx) ? -10 : 10;
+  }
+
+  for (const word of negativeWords) {
+    const idx = norm.indexOf(normalize(word));
+    if (idx === -1) continue;
+    total += isNegated(norm, idx) ? 5 : -20;
+  }
+
+  return total;
+}
+
+// ─── Clasificador final ───────────────────────────────────────────────────────
+export function analyzeResponse(userInput, keywords) {
+  let score;
+
+  if (keywords.weighted && keywords.weighted.length > 0) {
+    score = scoreWeighted(userInput, keywords.weighted);
+  } else {
+    score = scoreFromLists(userInput, keywords.positive, keywords.negative);
+  }
+
+  if (score >= 10) return { match: "positive", score };
+  if (score <= -8) return { match: "negative", score };
+  return { match: "nomatch", score };
+}
+
+// ─── Entrada principal desde ChatSimulator ───────────────────────────────────
 export function processUserInput(currentNode, userInput) {
-  const matchType = analyzeResponse(userInput, currentNode.keywords);
-  const nextNodeId = currentNode.onKeywordMatch[matchType];
+  const { match, score } = analyzeResponse(userInput, currentNode.keywords);
+  const nextNodeId = currentNode.onKeywordMatch[match];
 
   return {
     nextNodeId,
-    matchType,
+    matchType: match,
+    localScore: score,
     scoreImpact: currentNode.scoreImpact || 0,
   };
 }

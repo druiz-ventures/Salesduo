@@ -1,17 +1,31 @@
 {
   "id": "objecion-competencia",
-  "clientName": "Miguel",
-  "clientRole": "Director de Operaciones, empresa industrial",
+  "clientName": "Miguel Torres",
+  "clientRole": "Director de Operaciones · Empresa industrial (200 empleados)",
   "clientAvatar": "🧔",
-  "context": "Miguel lleva 2 años trabajando con tu competidor. No está descontento, pero aceptó la llamada.",
+  "context": "Miguel lleva 2 años con tu competidor y no está descontento. Aceptó esta llamada porque un contacto suyo os recomendó. Tiene poco tiempo y mucha desconfianza.",
   "initialNode": "start",
   "nodes": {
     "start": {
       "clientMessage": "Te soy sincero: ya trabajo con [Competidor X] y estoy bastante contento. No sé qué me puedes ofrecer que no tenga ya.",
-      "hint": "NO ataques al competidor. Pregunta por lo que NO está cubierto.",
+      "hint": "NUNCA ataques al competidor. Tu primer movimiento: pregunta qué le falta, no qué tienes tú.",
       "keywords": {
-        "positive": ["qué tal", "cómo te va", "satisfecho", "falta", "mejorar", "gustaría", "ideal", "perfecto"],
-        "negative": ["mejor", "peor", "malo", "caro", "problema con ellos", "competidor"]
+        "weighted": [
+          { "word": "qué tal",       "weight": 14 },
+          { "word": "cómo te va",    "weight": 16 },
+          { "word": "qué mejorarías","weight": 20 },
+          { "word": "qué te falta",  "weight": 20 },
+          { "word": "satisfecho",    "weight": 14 },
+          { "word": "ideal para ti", "weight": 16 },
+          { "word": "si pudieras cambiar","weight": 18 },
+          { "word": "qué echas en falta","weight": 20 },
+          { "word": "mejor que ellos","weight": -22 },
+          { "word": "peor que nosotros","weight": -22 },
+          { "word": "ellos son malos","weight": -22 },
+          { "word": "competidor",    "weight": -14 },
+          { "word": "nosotros somos mejores","weight": -20 },
+          { "word": "nuestro producto es","weight": -12 }
+        ]
       },
       "onKeywordMatch": {
         "positive": "node-gap-discovery",
@@ -22,11 +36,25 @@
     },
 
     "node-gap-discovery": {
-      "clientMessage": "Pues mira... en general bien, pero hay una cosa que siempre me ha fastidiado: el soporte es lentísimo. A veces tardo 3 días en que me respondan.",
-      "hint": "🎯 Encontraste el gap. Ahora conecta ESE dolor con tu solución.",
+      "clientMessage": "Pues mira, en general bien... pero hay algo que siempre me ha fastidiado: el soporte es lentísimo. A veces tardamos 3 días en que nos respondan y en operaciones eso nos paraliza.",
+      "hint": "🎯 Encontraste el gap. Ahora conéctalo directamente con tu diferencial. No te vayas por las ramas.",
       "keywords": {
-        "positive": ["soporte", "respuesta", "horas", "24h", "inmediato", "dedicado", "nuestro equipo"],
-        "negative": ["típico", "normal", "todos igual", "nosotros también"]
+        "weighted": [
+          { "word": "soporte",       "weight": 16 },
+          { "word": "respuesta",     "weight": 14 },
+          { "word": "horas",         "weight": 14 },
+          { "word": "24h",           "weight": 20 },
+          { "word": "inmediato",     "weight": 18 },
+          { "word": "dedicado",      "weight": 18 },
+          { "word": "nuestro equipo","weight": 16 },
+          { "word": "en menos de",   "weight": 18 },
+          { "word": "garantizamos",  "weight": 16 },
+          { "word": "3 días",        "weight": 16 },
+          { "word": "típico",        "weight": -14 },
+          { "word": "todos igual",   "weight": -16 },
+          { "word": "normal",        "weight": -10 },
+          { "word": "nosotros también","weight": -14 }
+        ]
       },
       "onKeywordMatch": {
         "positive": "node-differentiation",
@@ -37,11 +65,20 @@
     },
 
     "node-attack-fail": {
-      "clientMessage": "Oye, no me hables mal de ellos. Son buena gente y me han tratado bien. Creo que no tiene sentido seguir esta conversación.",
-      "hint": "⚠️ Nunca ataques al competidor. Genera rechazo inmediato.",
+      "clientMessage": "Oye, no me hables mal de ellos. Son buena gente y me han tratado correctamente. No creo que tenga sentido seguir esta conversación.",
+      "hint": "⚠️ Atacar al competidor genera rechazo inmediato. El cliente los defiende aunque tengan fallos. Pide disculpas y redirige.",
       "keywords": {
-        "positive": ["perdona", "disculpa", "tienes razón", "no quería", "respeto"],
-        "negative": ["pero", "es que", "la verdad"]
+        "weighted": [
+          { "word": "perdona",       "weight": 18 },
+          { "word": "disculpa",      "weight": 18 },
+          { "word": "tienes razón",  "weight": 18 },
+          { "word": "no quería",     "weight": 16 },
+          { "word": "respeto",       "weight": 14 },
+          { "word": "no era mi intención","weight": 18 },
+          { "word": "pero",          "weight": -12 },
+          { "word": "es que",        "weight": -10 },
+          { "word": "la verdad",     "weight": -10 }
+        ]
       },
       "onKeywordMatch": {
         "positive": "node-recovery",
@@ -52,11 +89,25 @@
     },
 
     "node-differentiation": {
-      "clientMessage": "¿Soporte en menos de 2 horas? ¿Con un equipo dedicado? Eso sí que me interesa... Pero cambiar de proveedor es un dolor de cabeza.",
-      "hint": "Reconoce el dolor del cambio y ofrece facilitar la transición.",
+      "clientMessage": "¿Soporte en menos de 2 horas con un equipo dedicado? Eso sí que me interesa... pero cambiar de proveedor es un dolor de cabeza enorme. Migración de datos, formación del equipo, riesgo de caídas...",
+      "hint": "Reconoce el dolor del cambio sin minimizarlo. Ofrece eliminar el riesgo: piloto en paralelo.",
       "keywords": {
-        "positive": ["transición", "migración", "acompañar", "paso a paso", "sin riesgo", "paralelo", "piloto"],
-        "negative": ["fácil", "no pasa nada", "rápido", "sin problema"]
+        "weighted": [
+          { "word": "transición",    "weight": 18 },
+          { "word": "migración",     "weight": 18 },
+          { "word": "acompañar",     "weight": 16 },
+          { "word": "paso a paso",   "weight": 16 },
+          { "word": "sin riesgo",    "weight": 20 },
+          { "word": "paralelo",      "weight": 20 },
+          { "word": "piloto",        "weight": 20 },
+          { "word": "sin cortar",    "weight": 18 },
+          { "word": "nos encargamos","weight": 16 },
+          { "word": "fácil",         "weight": -16 },
+          { "word": "no pasa nada",  "weight": -18 },
+          { "word": "rápido",        "weight": -12 },
+          { "word": "sin problema",  "weight": -16 },
+          { "word": "es sencillo",   "weight": -16 }
+        ]
       },
       "onKeywordMatch": {
         "positive": "node-transition",
@@ -67,11 +118,24 @@
     },
 
     "node-transition": {
-      "clientMessage": "¿Piloto en paralelo sin cortar con mi proveedor actual? Eso reduce mucho el riesgo... Me gusta.",
-      "hint": "¡Cierre! Propón fecha y acción concreta.",
+      "clientMessage": "¿Un piloto en paralelo durante 30 días sin tener que cortar con mi proveedor actual? Eso reduce mucho el riesgo. Me gusta cómo lo planteas.",
+      "hint": "¡Cierre! Propón una reunión técnica con fecha concreta. El impulso está de tu lado.",
       "keywords": {
-        "positive": ["reunión", "siguiente paso", "empezar", "esta semana", "cuándo", "arrancar", "fecha"],
-        "negative": ["piénsalo", "ya veremos", "cuando quieras"]
+        "weighted": [
+          { "word": "reunión",        "weight": 18 },
+          { "word": "técnica",        "weight": 14 },
+          { "word": "siguiente paso", "weight": 18 },
+          { "word": "empezar",        "weight": 16 },
+          { "word": "esta semana",    "weight": 20 },
+          { "word": "miércoles",      "weight": 18 },
+          { "word": "jueves",         "weight": 18 },
+          { "word": "arrancar",       "weight": 16 },
+          { "word": "cuándo",         "weight": 14 },
+          { "word": "fecha",          "weight": 16 },
+          { "word": "piénsalo",       "weight": -18 },
+          { "word": "ya veremos",     "weight": -18 },
+          { "word": "cuando quieras", "weight": -18 }
+        ]
       },
       "onKeywordMatch": {
         "positive": "node-win",
@@ -82,11 +146,19 @@
     },
 
     "node-recovery": {
-      "clientMessage": "Bueno, vale, acepto que no era tu intención. Pero entonces, ¿qué tienes que me pueda interesar?",
-      "hint": "Segunda oportunidad. Pregunta por sus necesidades, no hables de ti.",
+      "clientMessage": "Bueno, acepto que no era tu intención. Pero entonces, ¿qué tienes que me pueda interesar a mí específicamente?",
+      "hint": "Segunda oportunidad. Pregunta por sus necesidades, no hables de tu producto todavía.",
       "keywords": {
-        "positive": ["qué necesitas", "qué te falta", "mejorar", "ideal", "gustaría"],
-        "negative": ["somos mejores", "nuestro producto", "tenemos"]
+        "weighted": [
+          { "word": "qué necesitas",  "weight": 20 },
+          { "word": "qué te falta",   "weight": 20 },
+          { "word": "mejorar",        "weight": 14 },
+          { "word": "ideal",          "weight": 14 },
+          { "word": "te gustaría",    "weight": 16 },
+          { "word": "somos mejores",  "weight": -20 },
+          { "word": "nuestro producto","weight": -14 },
+          { "word": "tenemos",        "weight": -10 }
+        ]
       },
       "onKeywordMatch": {
         "positive": "node-gap-discovery",
@@ -97,11 +169,17 @@
     },
 
     "node-minimize-fail": {
-      "clientMessage": "Ya... eso dicen todos. 'Es fácil'. Luego son 3 meses de pesadilla. No me convence.",
-      "hint": "Minimizaste el dolor del cambio. El cliente no te cree.",
+      "clientMessage": "Ya... eso dicen todos. 'Es muy fácil'. Luego son 3 meses de pesadilla y mi equipo bloqueado. No me convences.",
+      "hint": "Minimizaste el dolor del cambio y el cliente no te cree. Reconoce que tiene razón y ofrece el piloto en paralelo.",
       "keywords": {
-        "positive": ["entiendo", "razón", "piloto", "paralelo", "sin cortar"],
-        "negative": []
+        "weighted": [
+          { "word": "entiendo",      "weight": 12 },
+          { "word": "razón",         "weight": 12 },
+          { "word": "piloto",        "weight": 20 },
+          { "word": "paralelo",      "weight": 20 },
+          { "word": "sin cortar",    "weight": 18 },
+          { "word": "30 días",       "weight": 18 }
+        ]
       },
       "onKeywordMatch": {
         "positive": "node-transition",
@@ -112,11 +190,17 @@
     },
 
     "node-missed-gap": {
-      "clientMessage": "Bueno, entonces si es todo igual que lo que tengo... ¿para qué cambiar?",
-      "hint": "Tenías el gap (soporte lento) y no lo usaste.",
+      "clientMessage": "Bueno, si es todo lo mismo que lo que ya tengo... ¿para qué cambio?",
+      "hint": "Tenías el gap (soporte en 3 días) y no lo conectaste con tu diferencial. Hazlo ahora.",
       "keywords": {
-        "positive": ["soporte", "3 días", "respuesta", "rápido"],
-        "negative": []
+        "weighted": [
+          { "word": "soporte",   "weight": 16 },
+          { "word": "3 días",    "weight": 18 },
+          { "word": "respuesta", "weight": 14 },
+          { "word": "rápido",    "weight": 14 },
+          { "word": "2 horas",   "weight": 20 },
+          { "word": "dedicado",  "weight": 16 }
+        ]
       },
       "onKeywordMatch": {
         "positive": "node-differentiation",
@@ -127,7 +211,7 @@
     },
 
     "node-win": {
-      "clientMessage": "Perfecto. Hagamos una reunión técnica con mi equipo para ver la integración. ¿Miércoles?",
+      "clientMessage": "Perfecto. Hagamos una reunión técnica con mi equipo para ver la integración y empezar el piloto. ¿El miércoles a las 10h?",
       "hint": null,
       "isEndNode": true,
       "endType": "success",
@@ -135,7 +219,7 @@
     },
 
     "node-lost": {
-      "clientMessage": "Mira, prefiero quedarme con lo que tengo. Gracias por la llamada.",
+      "clientMessage": "Mira, prefiero quedarme con lo que conozco. Ha sido un placer, pero no es el momento.",
       "hint": null,
       "isEndNode": true,
       "endType": "failure",
@@ -143,7 +227,7 @@
     },
 
     "node-stall": {
-      "clientMessage": "Interesante... déjame hablarlo con mi equipo y te digo algo.",
+      "clientMessage": "Interesante... déjame hablarlo con mi equipo esta semana y te digo algo.",
       "hint": null,
       "isEndNode": true,
       "endType": "partial",
@@ -151,11 +235,17 @@
     },
 
     "node-confused": {
-      "clientMessage": "No te pillo... ¿qué me estás preguntando?",
-      "hint": "Sé claro. Pregunta qué le falta o qué mejoraría de su proveedor actual.",
+      "clientMessage": "No te pillo... ¿qué me estás preguntando exactamente?",
+      "hint": "Sé más claro. Pregunta directamente: '¿Qué cambiarías de tu proveedor actual si pudieras?'",
       "keywords": {
-        "positive": ["falta", "mejorar", "gustaría", "soporte", "satisfecho"],
-        "negative": []
+        "weighted": [
+          { "word": "falta",     "weight": 14 },
+          { "word": "mejorar",   "weight": 12 },
+          { "word": "gustaría",  "weight": 14 },
+          { "word": "soporte",   "weight": 14 },
+          { "word": "satisfecho","weight": 12 },
+          { "word": "cambiarías","weight": 18 }
+        ]
       },
       "onKeywordMatch": {
         "positive": "node-gap-discovery",
@@ -169,19 +259,19 @@
   "endResults": {
     "success": {
       "title": "¡Reunión técnica cerrada! 🎉",
-      "message": "Encontraste el gap del competidor sin atacarlo y ofreciste una transición sin riesgo. Impecable.",
+      "message": "Encontraste el gap del competidor sin atacarlo, lo conectaste con tu diferencial y eliminaste el riesgo del cambio con un piloto en paralelo. Técnica de nivel senior.",
       "xpEarned": 200,
       "unlocksBadge": "competitor-killer"
     },
     "partial": {
-      "title": "Tibio... 😅",
-      "message": "El cliente tiene interés pero no se comprometió. Faltó urgencia o propuesta concreta.",
+      "title": "Interés, pero sin compromiso 😅",
+      "message": "El cliente ve valor pero no se comprometió. Te faltó o urgencia o una propuesta concreta con fecha. 'Te digo algo' raramente se convierte en un sí.",
       "xpEarned": 60,
       "unlocksBadge": null
     },
     "failure": {
-      "title": "Se quedó con el competidor 😬",
-      "message": "O atacaste al competidor o no encontraste su punto débil. Repasa la técnica del gap.",
+      "title": "Se queda con el competidor 😬",
+      "message": "O atacaste al competidor (error fatal) o no encontraste su punto débil. La próxima vez: pregunta primero, habla después.",
       "xpEarned": 15,
       "unlocksBadge": null
     }

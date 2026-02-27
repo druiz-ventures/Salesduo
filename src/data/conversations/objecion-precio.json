@@ -1,17 +1,36 @@
 {
   "id": "objecion-precio",
-  "clientName": "Carlos",
-  "clientRole": "Director de Compras, empresa mediana",
+  "clientName": "Carlos Mendoza",
+  "clientRole": "Director de Compras · Empresa mediana (80 empleados)",
   "clientAvatar": "👨‍💼",
-  "context": "Carlos lleva 10 minutos escuchándote. Parece interesado pero...",
+  "context": "Carlos lleva 10 minutos escuchándote. Está interesado pero la última compra que hizo le salió cara. Tiene el presupuesto justo.",
   "initialNode": "start",
   "nodes": {
     "start": {
       "clientMessage": "Mira, el producto me gusta, pero sinceramente... es demasiado caro para nosotros ahora mismo.",
-      "hint": "Responde sin atacar el precio directamente. Piensa en el VALOR que aporta.",
+      "hint": "No defiendas el precio. Gira hacia el VALOR: ¿qué le cuesta NO tenerlo?",
       "keywords": {
-        "positive": ["valor", "inversión", "retorno", "roi", "beneficio", "ahorro", "resultado", "amortizar", "amortizado", "agilizar", "proceso", "productividad", "rentable", "rentabilidad", "ganar", "generar", "aporta", "merece la pena", "a largo plazo", "recuperar"],
-        "negative": ["te hago descuento", "te bajo el precio", "precio especial", "te lo dejo en", "rebaja", "reducir el precio", "más barato"]
+        "weighted": [
+          { "word": "valor",         "weight": 12 },
+          { "word": "inversión",     "weight": 15 },
+          { "word": "retorno",       "weight": 15 },
+          { "word": "roi",           "weight": 18 },
+          { "word": "beneficio",     "weight": 10 },
+          { "word": "ahorro",        "weight": 12 },
+          { "word": "resultado",     "weight": 10 },
+          { "word": "amortizar",     "weight": 14 },
+          { "word": "rentable",      "weight": 12 },
+          { "word": "productividad", "weight": 10 },
+          { "word": "generar",       "weight": 8  },
+          { "word": "merece la pena","weight": 14 },
+          { "word": "recuperar",     "weight": 12 },
+          { "word": "descuento",     "weight": -20 },
+          { "word": "rebaja",        "weight": -20 },
+          { "word": "más barato",    "weight": -18 },
+          { "word": "precio especial","weight": -18 },
+          { "word": "te lo dejo en", "weight": -20 },
+          { "word": "reducir el precio", "weight": -18 }
+        ]
       },
       "onKeywordMatch": {
         "positive": "node-empathy",
@@ -20,12 +39,30 @@
       },
       "scoreImpact": 0
     },
+
     "node-empathy": {
-      "clientMessage": "Hmm... ¿y qué pasaría si os ayudara a ahorrar más de lo que cuesta?",
-      "hint": "Bien. Ahora pregúntale por su situación actual. ¿Qué problemas tiene HOY?",
+      "clientMessage": "Hmm... ¿y qué pasaría si os ayudara a ahorrar más de lo que cuesta al año?",
+      "hint": "Bien. Ahora PREGÚNTALE por su situación actual. ¿Qué problema tiene HOY que esto resuelve?",
       "keywords": {
-        "positive": ["cuánto", "problema", "actualmente", "situación", "ahora", "pierdes", "cuesta", "tiempo", "horas", "proceso", "manual", "equipo", "día a día", "cómo lo hacéis"],
-        "negative": ["te lo garantizo", "gratis", "sin coste", "prueba gratuita", "no pagas nada"]
+        "weighted": [
+          { "word": "cuánto",        "weight": 14 },
+          { "word": "problema",      "weight": 12 },
+          { "word": "actualmente",   "weight": 12 },
+          { "word": "situación",     "weight": 10 },
+          { "word": "ahora mismo",   "weight": 10 },
+          { "word": "horas",         "weight": 14 },
+          { "word": "proceso",       "weight": 12 },
+          { "word": "manual",        "weight": 14 },
+          { "word": "equipo",        "weight": 10 },
+          { "word": "día a día",     "weight": 12 },
+          { "word": "cómo lo hacéis","weight": 16 },
+          { "word": "qué usáis",     "weight": 16 },
+          { "word": "tiempo",        "weight": 10 },
+          { "word": "gratis",        "weight": -18 },
+          { "word": "sin coste",     "weight": -18 },
+          { "word": "prueba gratuita","weight": -15 },
+          { "word": "no pagas nada", "weight": -20 }
+        ]
       },
       "onKeywordMatch": {
         "positive": "node-discovery",
@@ -34,12 +71,24 @@
       },
       "scoreImpact": 30
     },
+
     "node-price-trap": {
-      "clientMessage": "Hmm... si me haces descuento, igual me lo pienso, pero necesitaría al menos un 30% menos.",
-      "hint": "⚠️ Caíste en la trampa del precio. Reconducir hacia el valor. Habla de resultados, no de números.",
+      "clientMessage": "Hmm... si me haces descuento, igual me lo pienso. Necesitaría al menos un 30% menos.",
+      "hint": "⚠️ Caíste en la trampa del precio. Reconducir: habla de resultados, no de cifras.",
       "keywords": {
-        "positive": ["valor", "resultado", "problema", "necesidad", "ahorro", "retorno", "inversión", "beneficio", "lo que te aporta"],
-        "negative": ["te hago el 30", "vale te lo bajo", "descuento", "te lo dejo", "precio especial"]
+        "weighted": [
+          { "word": "valor",         "weight": 14 },
+          { "word": "resultado",     "weight": 14 },
+          { "word": "problema",      "weight": 12 },
+          { "word": "necesidad",     "weight": 12 },
+          { "word": "ahorro",        "weight": 14 },
+          { "word": "retorno",       "weight": 16 },
+          { "word": "lo que te aporta","weight": 16 },
+          { "word": "te hago el 30", "weight": -25 },
+          { "word": "vale te lo bajo","weight": -25 },
+          { "word": "descuento",     "weight": -20 },
+          { "word": "precio especial","weight": -20 }
+        ]
       },
       "onKeywordMatch": {
         "positive": "node-recovery",
@@ -48,12 +97,28 @@
       },
       "scoreImpact": -20
     },
+
     "node-discovery": {
       "clientMessage": "Bueno... actualmente perdemos unas 3 horas al día en procesos manuales que vuestro sistema automatizaría.",
-      "hint": "🎯 ¡Perfecto! Tiene un dolor real. Ahora haz el cálculo delante de él: horas × días × coste/hora.",
+      "hint": "🎯 Tiene un dolor real y te lo está diciendo. Haz el cálculo en voz alta: horas × días × coste/hora.",
       "keywords": {
-        "positive": ["3 horas", "calcular", "calculemos", "mes", "año", "cuánto representa", "coste real", "multiplicar", "días", "horas al año", "euros", "al mes", "supone"],
-        "negative": ["vaya", "no sabía", "interesante", "ya veo", "entiendo"]
+        "weighted": [
+          { "word": "calcul",        "weight": 18 },
+          { "word": "mes",           "weight": 14 },
+          { "word": "año",           "weight": 14 },
+          { "word": "horas al año",  "weight": 20 },
+          { "word": "cuánto representa","weight": 18 },
+          { "word": "coste real",    "weight": 18 },
+          { "word": "multiplicar",   "weight": 16 },
+          { "word": "euros",         "weight": 14 },
+          { "word": "al mes",        "weight": 14 },
+          { "word": "supone",        "weight": 12 },
+          { "word": "3 horas",       "weight": 16 },
+          { "word": "vaya",          "weight": -8  },
+          { "word": "no sabía",      "weight": -8  },
+          { "word": "interesante",   "weight": -6  },
+          { "word": "ya veo",        "weight": -8  }
+        ]
       },
       "onKeywordMatch": {
         "positive": "node-roi-close",
@@ -62,12 +127,29 @@
       },
       "scoreImpact": 40
     },
+
     "node-roi-close": {
       "clientMessage": "Oye... no lo había visto así. 3h/día × 25 días × 12 meses = 900 horas al año. A 30€/hora son 27.000€ perdidos. Y vuestro producto cuesta 4.800€/año... tiene sentido.",
-      "hint": "¡Cierre cerca! Propón una acción CONCRETA: reunión, demo, piloto. Con FECHA.",
+      "hint": "¡Cierre cerca! Propón una acción CONCRETA con FECHA. No 'lo pensamos', sino 'el martes a las 11'.",
       "keywords": {
-        "positive": ["reunión", "demo", "piloto", "prueba", "empezar", "contrato", "siguiente paso", "esta semana", "mañana", "cuándo empezamos", "arrancar", "firmar", "fecha"],
-        "negative": ["piénsalo", "cuando puedas", "ya me dirás", "sin prisa", "tómate tu tiempo"]
+        "weighted": [
+          { "word": "reunión",        "weight": 18 },
+          { "word": "demo",           "weight": 18 },
+          { "word": "piloto",         "weight": 18 },
+          { "word": "siguiente paso", "weight": 16 },
+          { "word": "esta semana",    "weight": 18 },
+          { "word": "mañana",         "weight": 18 },
+          { "word": "empezar",        "weight": 14 },
+          { "word": "arrancar",       "weight": 14 },
+          { "word": "firmar",         "weight": 16 },
+          { "word": "fecha",          "weight": 16 },
+          { "word": "cuándo empezamos","weight": 20 },
+          { "word": "piénsalo",       "weight": -16 },
+          { "word": "cuando puedas",  "weight": -16 },
+          { "word": "ya me dirás",    "weight": -18 },
+          { "word": "sin prisa",      "weight": -16 },
+          { "word": "tómate tu tiempo","weight": -16 }
+        ]
       },
       "onKeywordMatch": {
         "positive": "node-win",
@@ -76,6 +158,7 @@
       },
       "scoreImpact": 50
     },
+
     "node-win": {
       "clientMessage": "Perfecto. La semana que viene tengo hueco el martes a las 11h. ¿Te va bien?",
       "hint": null,
@@ -83,47 +166,57 @@
       "endType": "success",
       "scoreImpact": 30
     },
+
     "node-lost": {
-      "clientMessage": "Mira, si solo puedes competir en precio, voy a hablar con otros proveedores. Gracias.",
+      "clientMessage": "Mira, si solo puedes competir bajando el precio, voy a hablar con otros proveedores. Gracias.",
       "hint": null,
       "isEndNode": true,
       "endType": "failure",
       "scoreImpact": 0
     },
+
     "node-stall": {
-      "clientMessage": "Bueno... déjame pensarlo y ya te llamo.",
+      "clientMessage": "Bueno... déjame pensarlo y ya te llamo yo.",
       "hint": null,
       "isEndNode": true,
       "endType": "partial",
       "scoreImpact": 10
     },
+
     "node-confused": {
       "clientMessage": "No te acabo de entender... ¿a qué te refieres exactamente?",
-      "hint": "El cliente no pilla tu respuesta. Sé más directo y habla de valor o de su problema.",
+      "hint": "El cliente no pilla el mensaje. Sé más directo: habla del VALOR o del PROBLEMA que tiene.",
       "keywords": {
-        "positive": ["valor", "inversión", "retorno", "problema", "resultado", "ahorro", "beneficio", "situación"],
-        "negative": []
+        "weighted": [
+          { "word": "valor",     "weight": 14 },
+          { "word": "inversión", "weight": 14 },
+          { "word": "retorno",   "weight": 14 },
+          { "word": "problema",  "weight": 12 },
+          { "word": "resultado", "weight": 12 },
+          { "word": "ahorro",    "weight": 12 }
+        ]
       },
       "onKeywordMatch": {
         "positive": "node-empathy",
-        "negative": "node-confused-2",
-        "nomatch": "node-confused-2"
+        "negative": "node-lost",
+        "nomatch": "node-lost"
       },
       "scoreImpact": -10
     },
-    "node-confused-2": {
-      "clientMessage": "Lo siento, creo que no estamos llegando a ningún lado. Voy a cortar aquí.",
-      "hint": null,
-      "isEndNode": true,
-      "endType": "failure",
-      "scoreImpact": 0
-    },
+
     "node-recovery": {
       "clientMessage": "Tienes razón, me estaba centrando demasiado en el número. Cuéntame más sobre lo que ofrecéis.",
-      "hint": "Buena recuperación. Ahora pregúntale por su problema actual para llevar la conversación al valor.",
+      "hint": "Segunda oportunidad. Pregunta por su problema actual para llevar la conversación al valor.",
       "keywords": {
-        "positive": ["cuánto", "problema", "actualmente", "situación", "proceso", "manual", "tiempo", "equipo"],
-        "negative": []
+        "weighted": [
+          { "word": "cuánto",      "weight": 14 },
+          { "word": "problema",    "weight": 12 },
+          { "word": "actualmente", "weight": 12 },
+          { "word": "proceso",     "weight": 12 },
+          { "word": "manual",      "weight": 14 },
+          { "word": "tiempo",      "weight": 10 },
+          { "word": "equipo",      "weight": 10 }
+        ]
       },
       "onKeywordMatch": {
         "positive": "node-discovery",
@@ -132,12 +225,21 @@
       },
       "scoreImpact": 15
     },
+
     "node-commitment-fear": {
-      "clientMessage": "No soy ingenuo. Solo quiero asegurarme de que vale lo que cuesta.",
-      "hint": "Reconoce su postura y llévalo a hablar de su situación actual.",
+      "clientMessage": "No soy ingenuo. Solo quiero asegurarme de que vale lo que cuesta antes de comprometerme.",
+      "hint": "Reconoce su postura y llévalo a hablar de su situación actual con datos.",
       "keywords": {
-        "positive": ["claro", "entiendo", "lógico", "resultado", "demostrar", "enseñar", "caso real", "ejemplo", "datos"],
-        "negative": []
+        "weighted": [
+          { "word": "claro",      "weight": 8  },
+          { "word": "entiendo",   "weight": 8  },
+          { "word": "lógico",     "weight": 8  },
+          { "word": "resultado",  "weight": 14 },
+          { "word": "demostrar",  "weight": 14 },
+          { "word": "caso real",  "weight": 16 },
+          { "word": "ejemplo",    "weight": 12 },
+          { "word": "datos",      "weight": 14 }
+        ]
       },
       "onKeywordMatch": {
         "positive": "node-discovery",
@@ -146,12 +248,19 @@
       },
       "scoreImpact": -5
     },
+
     "node-missed-opportunity": {
-      "clientMessage": "Sí, interesante... pero sigo sin ver claro el retorno.",
-      "hint": "Tenías los datos (3 horas/día) y no los usaste para calcular. ¡Haz las cuentas!",
+      "clientMessage": "Sí, interesante... pero sigo sin ver claro el retorno para mi caso.",
+      "hint": "Tenías los datos (3 horas/día) y no los usaste. ¡Haz las cuentas ahora!",
       "keywords": {
-        "positive": ["calcular", "calculemos", "3 horas", "coste", "horas al año", "multiplicar", "euros"],
-        "negative": []
+        "weighted": [
+          { "word": "calcul",        "weight": 18 },
+          { "word": "3 horas",       "weight": 16 },
+          { "word": "coste",         "weight": 14 },
+          { "word": "horas al año",  "weight": 20 },
+          { "word": "multiplicar",   "weight": 16 },
+          { "word": "euros",         "weight": 14 }
+        ]
       },
       "onKeywordMatch": {
         "positive": "node-roi-close",
@@ -161,22 +270,23 @@
       "scoreImpact": -15
     }
   },
+
   "endResults": {
     "success": {
-      "title": "¡Venta conseguida! 🎉",
-      "message": "Dominaste la objeción del precio con el argumento del ROI. Así se vende.",
+      "title": "¡Reunión cerrada! 🎉",
+      "message": "Convertiste la objeción de precio en un análisis de ROI. El cliente vio el coste de NO comprarte. Así se vende.",
       "xpEarned": 100,
       "unlocksBadge": "price-handler"
     },
     "partial": {
       "title": "Casi... 😅",
-      "message": "El cliente está tibio. No lograste urgencia ni compromiso concreto. Necesitas proponer una acción con fecha.",
+      "message": "Llegaste al ROI pero no generaste urgencia ni propusiste una acción concreta con fecha. El cliente que 'te llama' raramente lo hace.",
       "xpEarned": 40,
       "unlocksBadge": null
     },
     "failure": {
       "title": "Venta perdida 😬",
-      "message": "Repasa la técnica del ROI: pregunta por el problema → calcula el coste → propón solución.",
+      "message": "Repasa la secuencia: no defiendas el precio → pregunta por el problema → calcula el coste → propón acción con fecha.",
       "xpEarned": 10,
       "unlocksBadge": null
     }

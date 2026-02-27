@@ -1,17 +1,33 @@
 {
   "id": "objecion-tiempo",
-  "clientName": "Laura",
-  "clientRole": "CEO de startup, 50 empleados",
+  "clientName": "Laura Sanz",
+  "clientRole": "CEO · Startup en crecimiento (50 empleados)",
   "clientAvatar": "👩‍💼",
-  "context": "Laura tiene interés pero siempre está 'ocupada'. Lleva 3 semanas posponiendo.",
+  "context": "Laura tiene interés real pero siempre está 'ocupada'. Lleva 3 semanas posponiendo la decisión. Hoy aceptó 5 minutos por teléfono.",
   "initialNode": "start",
   "nodes": {
     "start": {
-      "clientMessage": "Mira, me parece interesante, pero ahora mismo no es buen momento. Estamos a tope con el trimestre.",
-      "hint": "No aceptes el 'no es buen momento'. Conecta con el coste de esperar.",
+      "clientMessage": "Mira, me parece interesante, pero ahora mismo no es buen momento. Estamos a tope cerrando el trimestre.",
+      "hint": "No aceptes el 'no es buen momento'. El coste de esperar es real. Hazlo visible.",
       "keywords": {
-        "positive": ["esperar", "coste", "cada día", "mientras", "perdiendo", "cuánto tiempo", "urgente", "ahora"],
-        "negative": ["tranquila", "cuando puedas", "sin prisa", "no pasa nada", "entiendo"]
+        "weighted": [
+          { "word": "esperar",       "weight": 16 },
+          { "word": "coste",         "weight": 14 },
+          { "word": "cada día",      "weight": 16 },
+          { "word": "cada semana",   "weight": 16 },
+          { "word": "mientras tanto","weight": 14 },
+          { "word": "perdiendo",     "weight": 18 },
+          { "word": "cuánto tiempo", "weight": 16 },
+          { "word": "urgente",       "weight": 14 },
+          { "word": "ahora mismo",   "weight": 12 },
+          { "word": "cuánto os cuesta","weight": 18 },
+          { "word": "tranquila",     "weight": -18 },
+          { "word": "cuando puedas", "weight": -18 },
+          { "word": "sin prisa",     "weight": -16 },
+          { "word": "no pasa nada",  "weight": -20 },
+          { "word": "entiendo perfectamente","weight": -12 },
+          { "word": "ya te llamo",   "weight": -16 }
+        ]
       },
       "onKeywordMatch": {
         "positive": "node-cost-of-waiting",
@@ -22,11 +38,26 @@
     },
 
     "node-cost-of-waiting": {
-      "clientMessage": "Hmm... ¿coste de esperar? ¿A qué te refieres exactamente?",
-      "hint": "Perfecto, la tienes interesada. Haz números concretos.",
+      "clientMessage": "Hmm... ¿coste de esperar? A ver, explícame a qué te refieres.",
+      "hint": "La tienes interesada. Ahora cuantifica: horas semanales × coste/hora × semanas que lleva esperando.",
       "keywords": {
-        "positive": ["mes", "semana", "horas", "dinero", "equipo", "manual", "proceso", "€", "euros"],
-        "negative": ["no sé", "depende", "bueno"]
+        "weighted": [
+          { "word": "mes",           "weight": 14 },
+          { "word": "semana",        "weight": 14 },
+          { "word": "horas",         "weight": 16 },
+          { "word": "dinero",        "weight": 14 },
+          { "word": "equipo",        "weight": 12 },
+          { "word": "manual",        "weight": 14 },
+          { "word": "proceso",       "weight": 12 },
+          { "word": "euros",         "weight": 16 },
+          { "word": "€",             "weight": 16 },
+          { "word": "calcul",        "weight": 18 },
+          { "word": "cuánto",        "weight": 14 },
+          { "word": "reporting",     "weight": 14 },
+          { "word": "no sé",         "weight": -10 },
+          { "word": "depende",       "weight": -8  },
+          { "word": "es difícil",    "weight": -8  }
+        ]
       },
       "onKeywordMatch": {
         "positive": "node-numbers",
@@ -37,11 +68,21 @@
     },
 
     "node-too-nice": {
-      "clientMessage": "Genial, pues ya te llamo yo cuando tenga un hueco. ¡Gracias!",
-      "hint": "⚠️ Fuiste demasiado complaciente. Nunca te va a llamar.",
+      "clientMessage": "Genial, pues ya te contacto yo cuando tenga un hueco libre. ¡Gracias!",
+      "hint": "⚠️ Fuiste demasiado complaciente. Nunca te va a llamar. Intenta rescatar la conversación antes de que cuelgue.",
       "keywords": {
-        "positive": ["espera", "antes de colgar", "un momento", "rápido", "solo", "minuto"],
-        "negative": ["perfecto", "vale", "ok", "claro"]
+        "weighted": [
+          { "word": "espera",        "weight": 18 },
+          { "word": "antes de colgar","weight": 20 },
+          { "word": "un momento",    "weight": 18 },
+          { "word": "solo un minuto","weight": 18 },
+          { "word": "rápido",        "weight": 14 },
+          { "word": "solo te pido",  "weight": 16 },
+          { "word": "perfecto",      "weight": -16 },
+          { "word": "vale",          "weight": -14 },
+          { "word": "ok",            "weight": -14 },
+          { "word": "claro",         "weight": -12 }
+        ]
       },
       "onKeywordMatch": {
         "positive": "node-rescue",
@@ -52,11 +93,25 @@
     },
 
     "node-numbers": {
-      "clientMessage": "Es verdad que perdemos unas 20 horas semanales en reporting manual... nunca lo había calculado así.",
-      "hint": "🎯 Tiene los datos delante. Ahora propón acción CONCRETA y RÁPIDA.",
+      "clientMessage": "Es verdad que perdemos unas 20 horas semanales en reporting manual... nunca lo había visto así de claro.",
+      "hint": "🎯 Tiene los datos delante y los está procesando. Ahora propón una acción CONCRETA y PEQUEÑA. No una compra, una demo de 15 minutos.",
       "keywords": {
-        "positive": ["demo", "15 minutos", "rápido", "esta semana", "mañana", "piloto", "prueba"],
-        "negative": ["cuando quieras", "sin prisa", "piénsalo"]
+        "weighted": [
+          { "word": "demo",          "weight": 18 },
+          { "word": "15 minutos",    "weight": 20 },
+          { "word": "media hora",    "weight": 18 },
+          { "word": "esta semana",   "weight": 20 },
+          { "word": "mañana",        "weight": 20 },
+          { "word": "jueves",        "weight": 18 },
+          { "word": "viernes",       "weight": 18 },
+          { "word": "piloto",        "weight": 18 },
+          { "word": "prueba",        "weight": 16 },
+          { "word": "rápido",        "weight": 14 },
+          { "word": "cuando quieras","weight": -18 },
+          { "word": "sin prisa",     "weight": -18 },
+          { "word": "piénsalo",      "weight": -16 },
+          { "word": "ya verás",      "weight": -14 }
+        ]
       },
       "onKeywordMatch": {
         "positive": "node-win",
@@ -67,11 +122,21 @@
     },
 
     "node-rescue": {
-      "clientMessage": "Bueno, dime rápido, tengo 2 minutos.",
-      "hint": "Tienes 2 minutos. Ve al grano: problema + coste + solución.",
+      "clientMessage": "Bueno... dime muy rápido, tengo literalmente 2 minutos.",
+      "hint": "Tienes 2 minutos. Exactamente este orden: problema → coste → solución concreta. Sin rodeos.",
       "keywords": {
-        "positive": ["20 horas", "reporting", "manual", "automatizar", "ahorrar", "resultado"],
-        "negative": ["es que", "verás", "bueno"]
+        "weighted": [
+          { "word": "20 horas",      "weight": 20 },
+          { "word": "reporting",     "weight": 16 },
+          { "word": "manual",        "weight": 14 },
+          { "word": "automatizar",   "weight": 18 },
+          { "word": "ahorrar",       "weight": 16 },
+          { "word": "resultado",     "weight": 14 },
+          { "word": "semana",        "weight": 14 },
+          { "word": "es que",        "weight": -10 },
+          { "word": "verás",         "weight": -8  },
+          { "word": "bueno pues",    "weight": -8  }
+        ]
       },
       "onKeywordMatch": {
         "positive": "node-numbers",
@@ -82,11 +147,17 @@
     },
 
     "node-vague": {
-      "clientMessage": "Ya... eso suena muy genérico. Todos dicen lo mismo. Tengo que irme.",
-      "hint": "Fuiste demasiado vago. Necesitabas datos concretos.",
+      "clientMessage": "Ya... eso suena genérico. Todos me dicen que ahorraré tiempo. Tengo que irme.",
+      "hint": "Fuiste demasiado vago. Necesitas un número concreto ligado a SU empresa.",
       "keywords": {
-        "positive": ["específicamente", "tu caso", "20 horas", "reporting"],
-        "negative": []
+        "weighted": [
+          { "word": "específicamente","weight": 16 },
+          { "word": "en tu caso",    "weight": 18 },
+          { "word": "vosotros",      "weight": 14 },
+          { "word": "20 horas",      "weight": 18 },
+          { "word": "reporting",     "weight": 14 },
+          { "word": "calcul",        "weight": 16 }
+        ]
       },
       "onKeywordMatch": {
         "positive": "node-numbers",
@@ -97,7 +168,7 @@
     },
 
     "node-win": {
-      "clientMessage": "¿15 minutos de demo? Eso sí puedo. El jueves a las 9h, ¿te va?",
+      "clientMessage": "¿15 minutos de demo? Eso sí puedo. El jueves a las 9h, ¿te va bien?",
       "hint": null,
       "isEndNode": true,
       "endType": "success",
@@ -113,7 +184,7 @@
     },
 
     "node-stall": {
-      "clientMessage": "Sí, tiene sentido... pero ahora no puedo. Mándame un email y lo miro.",
+      "clientMessage": "Sí, tiene sentido... pero ahora no puedo comprometerme. Mándame un email y lo miro esta semana.",
       "hint": null,
       "isEndNode": true,
       "endType": "partial",
@@ -121,11 +192,16 @@
     },
 
     "node-confused": {
-      "clientMessage": "Perdona, no te sigo. ¿Qué me quieres decir?",
-      "hint": "Sé más directo. Habla del coste de NO actuar ahora.",
+      "clientMessage": "Perdona, no te sigo. ¿Qué me quieres decir exactamente?",
+      "hint": "Sé más directo. Una frase: '¿Cuánto os está costando cada semana no tener esto resuelto?'",
       "keywords": {
-        "positive": ["esperar", "coste", "perdiendo", "cada día", "semana"],
-        "negative": []
+        "weighted": [
+          { "word": "esperar",   "weight": 14 },
+          { "word": "coste",     "weight": 14 },
+          { "word": "perdiendo", "weight": 16 },
+          { "word": "cada semana","weight": 14 },
+          { "word": "horas",     "weight": 12 }
+        ]
       },
       "onKeywordMatch": {
         "positive": "node-cost-of-waiting",
@@ -138,20 +214,20 @@
 
   "endResults": {
     "success": {
-      "title": "¡Demo conseguida! 🎉",
-      "message": "Convertiste un 'no tengo tiempo' en una reunión concreta. Técnica del coste de esperar dominada.",
+      "title": "¡Demo cerrada! 🎉",
+      "message": "Convertiste un 'no tengo tiempo' en una reunión concreta. Clave: hiciste el coste de esperar más doloroso que el coste de actuar.",
       "xpEarned": 120,
       "unlocksBadge": "time-master"
     },
     "partial": {
       "title": "Email... probablemente al spam 😅",
-      "message": "No lograste compromiso real. El email rara vez funciona.",
+      "message": "Llegaste a los datos pero no generaste urgencia suficiente para que se comprometiera. El 'mándame un email' es casi siempre un no educado.",
       "xpEarned": 40,
       "unlocksBadge": null
     },
     "failure": {
       "title": "Cliente perdido 😬",
-      "message": "Fuiste demasiado pasivo o vago. En ventas, la urgencia la creas tú.",
+      "message": "Fuiste demasiado pasivo o demasiado vago. En ventas, la urgencia no aparece sola: la creas tú con datos concretos.",
       "xpEarned": 10,
       "unlocksBadge": null
     }
