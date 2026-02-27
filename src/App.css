@@ -1973,3 +1973,79 @@
   background: #22c55e;
 }
 
+
+/* =====================================================
+   THEORY EXAMPLES (correct / incorrect)
+   ===================================================== */
+
+.theory-examples {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  max-width: 520px;
+  margin-top: 4px;
+  text-align: left;
+}
+
+.theory-example {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid transparent;
+  animation: exampleIn 0.25s ease;
+}
+
+@keyframes exampleIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.example-correct {
+  background: #0a1f0f;
+  border-color: #22c55e33;
+}
+
+.example-wrong {
+  background: #1f0a0a;
+  border-color: #ef444433;
+}
+
+.example-icon {
+  font-size: 16px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.example-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+  min-width: 0;
+}
+
+.example-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: #64748b;
+}
+
+.example-text {
+  font-size: 13px;
+  color: #e2e8f0;
+  line-height: 1.5;
+  font-style: italic;
+}
+
+.example-reason {
+  font-size: 12px;
+  color: #64748b;
+  line-height: 1.4;
+  margin-top: 2px;
+}
+

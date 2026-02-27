@@ -15,49 +15,151 @@
         {
           "id": 1,
           "emoji": "🧠",
-          "title": "El error que comete el 90% de los vendedores",
-          "body": "Cuando el cliente dice 'es muy caro', el instinto natural es defender el precio, justificarlo o bajar la propuesta. Ese es exactamente el movimiento que destruye la venta.",
-          "highlight": "Nunca defiendas el precio antes de establecer el valor."
+          "title": "El error que destruye el 90% de las ventas",
+          "body": "Cuando el cliente dice 'es muy caro', el instinto natural es justificar el precio, compararlo con la competencia o directamente bajarlo. Los tres caminos llevan al mismo sitio: perder la venta o perder el margen.",
+          "highlight": "El precio no es el problema. El problema es que el cliente todavía no ve lo que le cuesta NO tenerlo.",
+          "examples": [
+            {
+              "type": "wrong",
+              "label": "Reacción típica (error)",
+              "text": "Entiendo que parece caro, pero si me das unos días puedo hablar con mi manager para ver si te hacemos un precio especial.",
+              "reason": "Comunica debilidad. El cliente aprende que puede conseguir descuento presionando."
+            },
+            {
+              "type": "correct",
+              "label": "Reacción correcta",
+              "text": "Tiene sentido que te fijes en el precio. Antes de hablar de cifras, ¿puedo preguntarte cuánto os está costando no tener esto resuelto ahora mismo?",
+              "reason": "Interrumpe el patrón y redirige hacia el coste real del problema."
+            }
+          ]
         },
         {
           "id": 2,
           "emoji": "🎯",
-          "title": "Patrón de interrupción (Brian Tracy)",
-          "body": "En vez de responder al precio, interrumpe el patrón mental del cliente con una pregunta inesperada. El objetivo: hacer que piense en el coste de su situación actual, no en el precio de tu solución.",
-          "highlight": "Ejemplo: '¿Puedo preguntarte cuánto os está costando no tener esto resuelto ahora mismo?'",
-          "technique": "Brian Tracy — Patrón de interrupción"
+          "title": "Interrupción del patrón",
+          "body": "El cliente llega con un guión mental: 'me van a vender algo caro, voy a resistir'. Tu trabajo es romper ese guión antes de que arranque. Una pregunta inesperada sobre su situación actual lo saca del modo defensa.",
+          "highlight": "No respondas al precio. Responde con una pregunta sobre el coste de su situación actual.",
+          "technique": "Interrupción del patrón",
+          "examples": [
+            {
+              "type": "wrong",
+              "label": "Sigue el guión del cliente",
+              "text": "Nuestro precio incluye soporte 24/7, actualizaciones automáticas y un gestor de cuenta dedicado, por eso está donde está.",
+              "reason": "Entras en modo defensa. El cliente no te preguntó qué incluye, te dijo que es caro."
+            },
+            {
+              "type": "correct",
+              "label": "Rompe el guión",
+              "text": "Interesante que lo menciones. ¿Cuánto tiempo pierde tu equipo cada semana en el proceso que esto automatizaría?",
+              "reason": "Ignora el precio y lleva al cliente a pensar en su propio problema. Cambia el marco de la conversación."
+            }
+          ]
         },
         {
           "id": 3,
           "emoji": "❤️",
-          "title": "Feel-Felt-Found",
-          "body": "Una vez interrumpido el patrón, usa esta estructura para conectar emocionalmente antes de entrar en datos: 'Entiendo cómo te sientes... otros clientes se sentían igual... lo que encontraron fue...'",
-          "highlight": "Primero empatía, luego lógica. El cerebro compra con emoción y justifica con razón.",
-          "technique": "Brian Tracy — Feel-Felt-Found"
+          "title": "Empatía antes que lógica",
+          "body": "Antes de entrar en datos, el cliente necesita sentir que le entiendes. Si vas directo a los números sin conectar emocionalmente, parecerás un robot con PowerPoint. La secuencia ganadora es: reconocer → normalizar → redirigir.",
+          "highlight": "Primero valida que su preocupación es lógica. Luego muestra que otros en su situación pensaban lo mismo. Luego cuenta qué descubrieron.",
+          "technique": "Reconocer · Normalizar · Redirigir",
+          "examples": [
+            {
+              "type": "wrong",
+              "label": "Sin empatía",
+              "text": "Mira, si calculamos el ROI verás que en 8 meses lo tienes amortizado.",
+              "reason": "Vas directo a los números. El cliente no está listo porque no se ha sentido escuchado."
+            },
+            {
+              "type": "correct",
+              "label": "Con empatía",
+              "text": "Lo entiendo perfectamente. De hecho, la mayoría de directores con los que hablo me dicen lo mismo la primera vez. Lo que suelen descubrir después es que el coste real estaba en otro sitio.",
+              "reason": "El cliente se siente comprendido. Y la mención a 'otros directores' activa la curiosidad."
+            }
+          ]
         },
         {
           "id": 4,
           "emoji": "🔍",
-          "title": "SPIN Selling: las 4 preguntas",
-          "body": "SPIN es la metodología de ventas más estudiada del mundo (Neil Rackham, 35.000 llamadas analizadas). Estructura: Situación → Problema → Implicación → Necesidad-Beneficio. Cada pregunta profundiza más en el dolor.",
-          "highlight": "No listes características. Haz preguntas que lleven al cliente a descubrir el problema él solo.",
-          "technique": "Neil Rackham — SPIN Selling"
+          "title": "Las 4 preguntas que revelan el dolor real",
+          "body": "El secreto no es convencer al cliente de que tu producto es bueno. Es hacer las preguntas correctas para que él solo llegue a la conclusión de que tiene un problema que le cuesta dinero. Hay cuatro niveles, cada uno más profundo que el anterior.",
+          "highlight": "Situación → Problema → Consecuencias → Valor de la solución. No saltes pasos.",
+          "technique": "Las 4 preguntas de diagnóstico",
+          "examples": [
+            {
+              "type": "correct",
+              "label": "1. Situación",
+              "text": "¿Cómo gestionáis actualmente el seguimiento de proveedores? ¿Lo tenéis en alguna herramienta o más en Excel?",
+              "reason": "Neutra y no amenazante. Hace que el cliente describa su situación actual."
+            },
+            {
+              "type": "correct",
+              "label": "2. Problema",
+              "text": "¿Y qué pasa cuando hay que preparar un informe para dirección? ¿Cuánto tiempo suele llevar?",
+              "reason": "Lleva al cliente a identificar un punto de fricción concreto."
+            },
+            {
+              "type": "correct",
+              "label": "3. Consecuencias",
+              "text": "¿Alguna vez habéis tenido que tomar una decisión con datos desactualizados? ¿Qué pasó?",
+              "reason": "Amplifica el dolor. El cliente recuerda un momento en el que el problema le costó algo real."
+            },
+            {
+              "type": "correct",
+              "label": "4. Valor de la solución",
+              "text": "Si ese proceso pasara de 2 días a 15 minutos, ¿qué impacto tendría eso en cómo trabajáis con dirección?",
+              "reason": "El cliente imagina el beneficio antes de que hayas mencionado el precio."
+            }
+          ]
         },
         {
           "id": 5,
           "emoji": "📊",
-          "title": "El cálculo de ROI en voz alta",
-          "body": "El número que sale de la boca del cliente vale 10 veces más que el que dices tú. Cuando el cliente cuantifica su propio problema (horas × coste × frecuencia), la comparación con tu precio la hace él solo.",
-          "highlight": "Objetivo: que el cliente diga 'nunca lo había calculado así' antes de que tú menciones tu precio.",
-          "technique": "ROI Anchoring"
+          "title": "El cálculo que hace el cliente en voz alta",
+          "body": "El número más poderoso de una conversación de ventas es el que sale de la boca del cliente, no de la tuya. Cuando él cuantifica su propio problema, la comparación con tu precio la hace solo, sin que tengas que convencerle de nada.",
+          "highlight": "Objetivo: que el cliente diga 'nunca lo había visto así' antes de que tú menciones tu precio.",
+          "technique": "ROI calculado por el cliente",
+          "examples": [
+            {
+              "type": "wrong",
+              "label": "Tú haces el cálculo",
+              "text": "Con nuestro sistema ahorraríais aproximadamente 27.000€ al año. El ROI es del 560% en el primer año.",
+              "reason": "Los números que tú dices generan escepticismo. El cliente piensa: 'eso lo dice para vender'."
+            },
+            {
+              "type": "correct",
+              "label": "El cliente hace el cálculo",
+              "text": "Dices que perdéis 3 horas al día en esto. ¿Cuántas personas están involucradas? ¿Y a qué coste/hora? Hagamos las cuentas juntos.",
+              "reason": "El cliente llega al número solo. Ese número es irrefutable porque lo ha calculado él."
+            }
+          ]
         },
         {
           "id": 6,
           "emoji": "📅",
-          "title": "Cierre con fecha concreta",
-          "body": "El peor cierre es 'piénsatelo'. Siempre termina con una acción específica: 'El martes a las 11, ¿te va bien?' No 'cuando puedas' ni 'sin prisa'. La urgencia no aparece sola: la creas tú.",
-          "highlight": "Un cliente que 'te llama' raramente lo hace. Tú propones la fecha, él dice sí o no.",
-          "technique": "Grant Cardone — Cierre por acción concreta"
+          "title": "Cerrar siempre con una acción concreta",
+          "body": "El peor cierre es 'piénsatelo y ya me dices'. Eso no es respetar su tiempo: es rendirse. Cada conversación debe terminar con un siguiente paso específico, con fecha y hora acordadas.",
+          "highlight": "La urgencia no aparece sola. La creas tú proponiendo una acción concreta con fecha.",
+          "technique": "Cierre por acción inmediata",
+          "examples": [
+            {
+              "type": "wrong",
+              "label": "Cierre débil",
+              "text": "Te mando la propuesta por email y cuando la hayas visto me cuentas.",
+              "reason": "No hay compromiso. El email se queda sin leer."
+            },
+            {
+              "type": "wrong",
+              "label": "Cierre sin fecha",
+              "text": "¿Cuándo crees que podríamos hacer la demo?",
+              "reason": "Le das el control al cliente. La respuesta habitual es 'no sé, la semana que viene quizás'."
+            },
+            {
+              "type": "correct",
+              "label": "Cierre con fecha",
+              "text": "Me alegra que lo veas claro. ¿El martes a las 11 o el jueves a las 10, cuál te va mejor para la demo?",
+              "reason": "Propones tú. Dos opciones concretas. El cliente elige entre dos síes, no entre sí y no."
+            }
+          ]
         }
       ]
     }
@@ -78,32 +180,88 @@
         {
           "id": 1,
           "emoji": "⏰",
-          "title": "El 'no tengo tiempo' casi nunca es real",
-          "body": "Cuando alguien dice 'ahora no es buen momento', en el 80% de los casos significa 'no veo suficiente valor como para hacer un hueco'. El problema no es su agenda: es que no has hecho visible el coste de esperar.",
-          "highlight": "No hay personas sin tiempo. Hay personas que no ven la urgencia."
+          "title": "El 'no tengo tiempo' casi nunca es sobre el tiempo",
+          "body": "Cuando alguien dice 'ahora no es buen momento', en la mayoría de los casos significa 'todavía no veo suficiente valor para reorganizar mi agenda'. El problema no es su calendario: es que no has hecho visible lo que les cuesta cada semana que pasan sin resolver esto.",
+          "highlight": "No hay personas sin tiempo. Hay personas que no ven la urgencia suficiente para hacer un hueco.",
+          "examples": [
+            {
+              "type": "wrong",
+              "label": "Aceptar sin resistencia",
+              "text": "Perfecto, sin problema. Cuando tengas un momento me escribes y lo organizamos.",
+              "reason": "La venta muere aquí. Nunca te va a llamar. Has comunicado que tu solución puede esperar indefinidamente."
+            },
+            {
+              "type": "correct",
+              "label": "Conectar con el coste de esperar",
+              "text": "Lo entiendo, sé que estáis a tope. Precisamente por eso te pregunto: ¿cuánto tiempo pierde tu equipo cada semana en esto? Porque ese coste sigue corriendo mientras esperamos.",
+              "reason": "No invalida la objeción pero hace visible que esperar también tiene un coste."
+            }
+          ]
         },
         {
           "id": 2,
           "emoji": "💸",
-          "title": "El coste de la inacción",
-          "body": "Cada semana que el cliente espera para tomar una decisión, el problema le sigue costando dinero, tiempo o energía. Tu trabajo es hacer ese coste visible y concreto, no invisible y abstracto.",
-          "highlight": "Técnica: '¿Cuánto tiempo pierde tu equipo en esto cada semana? ¿Y eso cuánto representa al mes?'",
-          "technique": "Cost of Inaction — Jeb Blount"
+          "title": "El coste de no actuar",
+          "body": "Cada semana que el cliente pospone, el problema le sigue costando dinero, tiempo o energía. Tu trabajo es hacer ese coste concreto y visible. No como amenaza, sino como dato que el propio cliente puede calcular.",
+          "highlight": "Haz que el cliente compare el coste de reunirse contigo con el coste de seguir como está.",
+          "technique": "Coste de la inacción",
+          "examples": [
+            {
+              "type": "wrong",
+              "label": "Coste vago",
+              "text": "Claro, pero ten en cuenta que cada día que pasa sin esto estáis perdiendo eficiencia.",
+              "reason": "'Eficiencia' es abstracto. No mueve a nadie. Necesitas un número."
+            },
+            {
+              "type": "correct",
+              "label": "Coste concreto",
+              "text": "Me dijiste que perdéis unas 20 horas semanales en reporting manual. A 35€/hora son 700€ a la semana. Llevamos 3 semanas hablando: ya van 2.100€ perdidos. ¿Vale la pena aguantar otro mes?",
+              "reason": "El número concreto crea urgencia real. El cliente puede verificarlo y no puede ignorarlo."
+            }
+          ]
         },
         {
           "id": 3,
           "emoji": "🚫",
           "title": "El error de ser demasiado complaciente",
-          "body": "Si el cliente dice 'te llamo yo', y tú respondes 'perfecto, cuando quieras', la venta está muerta. Eso no es respeto por su tiempo: es rendirse. Un buen vendedor siempre propone un paso concreto antes de cerrar la llamada.",
-          "highlight": "Nunca salgas de una llamada sin un siguiente paso acordado con fecha."
+          "body": "Ceder ante 'ya te llamo yo' sin proponer ningún paso concreto es rendirse disfrazado de educación. Si el cliente siente que puede aplazarte sin consecuencias, lo hará.",
+          "highlight": "Nunca salgas de una llamada sin un siguiente paso acordado. Aunque sea pequeño.",
+          "examples": [
+            {
+              "type": "wrong",
+              "label": "Rendirse con educación",
+              "text": "Sin problema, entiendo que ahora no puedes. Ya me dirás cuando estés lista.",
+              "reason": "El 95% de estas llamadas nunca ocurren."
+            },
+            {
+              "type": "correct",
+              "label": "Rescatar antes de colgar",
+              "text": "Espera, antes de que cuelgues: ¿tienes literalmente 2 minutos ahora mismo? Solo quiero mostrarte un dato sobre lo que os está costando esto cada semana. Si después sigues pensando que no es el momento, lo respeto.",
+              "reason": "Pides muy poco (2 minutos) y ofreces algo concreto. Es muy difícil decir que no."
+            }
+          ]
         },
         {
           "id": 4,
           "emoji": "⚡",
           "title": "Propuesta pequeña, fricción mínima",
-          "body": "No pidas una hora de reunión cuando puedes pedir 15 minutos de demo. Cuanto más pequeño el compromiso que pides, más fácil es que diga sí. Entra por la puerta pequeña.",
-          "highlight": "'¿Tienes 15 minutos el jueves a las 9?' es infinitamente más fácil de aceptar que 'necesito que vengas a una presentación'.",
-          "technique": "Foot-in-the-door — Cialdini"
+          "body": "El error clásico es pedir una hora de reunión cuando el cliente está saturado. Cuanto más pequeño sea el compromiso que pides, más fácil es que diga sí. Entra por la puerta pequeña.",
+          "highlight": "No pidas una hora. Pide 15 minutos. No pidas reunión presencial. Pide una llamada rápida.",
+          "technique": "Reducción de fricción del primer paso",
+          "examples": [
+            {
+              "type": "wrong",
+              "label": "Demasiado compromiso",
+              "text": "¿Cuándo podríamos hacer una presentación completa para ti y tu equipo? Suele durar entre 60 y 90 minutos.",
+              "reason": "90 minutos para alguien que no tiene tiempo es un no automático."
+            },
+            {
+              "type": "correct",
+              "label": "Compromiso mínimo",
+              "text": "No te pido más que 15 minutos de demo. Solo para que veas si tiene sentido. Si no encaja, en 15 minutos lo sabemos. ¿El jueves a las 9?",
+              "reason": "15 minutos es fácil de decir sí. Fecha concreta. Y demuestras que respetas su tiempo."
+            }
+          ]
         }
       ]
     }
@@ -119,38 +277,106 @@
     "isLocked": true,
     "tags": ["competencia", "diferenciación", "valor"],
     "theory": {
-      "title": "Cómo ganar una venta cuando hay un competidor instalado",
+      "title": "Cómo ganar cuando hay un competidor instalado",
       "slides": [
         {
           "id": 1,
           "emoji": "⚔️",
           "title": "Regla número uno: nunca ataques al competidor",
-          "body": "Hablar mal del competidor dispara el instinto de defensa del cliente, que empezará a justificar por qué eligió bien. Aunque el competidor sea objetivamente peor, atacarlo te hace quedar mal a ti, no a ellos.",
-          "highlight": "El cliente que defiende a su proveedor actual ya no te escucha a ti."
+          "body": "Hablar mal del competidor activa el instinto de defensa del cliente, que empezará a justificar por qué eligió bien. Aunque tengas razón, el cliente lo vivirá como un ataque a su propio criterio. Nadie le gusta que le digan que se equivocó.",
+          "highlight": "Atacar al competidor es atacar indirectamente la decisión del cliente. Pierde terreno quien lo hace.",
+          "examples": [
+            {
+              "type": "wrong",
+              "label": "Ataque directo (error grave)",
+              "text": "Bueno, [Competidor X] tiene muchos problemas de soporte. Hay bastantes clientes que nos han llegado muy frustrados con ellos.",
+              "reason": "El cliente pasa a defender a su proveedor. Has perdido su atención y su confianza de golpe."
+            },
+            {
+              "type": "wrong",
+              "label": "Ataque velado (también error)",
+              "text": "Sí, les conocemos. Son una opción, aunque los clientes que han probado varias soluciones suelen acabar con nosotros.",
+              "reason": "El cliente entiende el mensaje implícito. Sigue siendo un ataque, solo más cobarde."
+            },
+            {
+              "type": "correct",
+              "label": "Sin atacar",
+              "text": "Me alegra que estés contento con ellos. ¿Qué es lo que más valoras de cómo trabajan?",
+              "reason": "Preguntas por lo bueno. El cliente baja la guardia. Y obtienes información clave sobre qué es importante para él."
+            }
+          ]
         },
         {
           "id": 2,
           "emoji": "🔎",
-          "title": "Busca el gap: lo que el competidor NO cubre",
-          "body": "Ningún proveedor cubre el 100% de las necesidades de un cliente. Tu trabajo es encontrar la grieta: algo que al cliente le gustaría tener pero que asume que no puede tener. Eso es tu punto de entrada.",
-          "highlight": "Pregunta: '¿Hay algo que, si pudieras mejorar de tu proveedor actual, cambiarías?'",
-          "technique": "Gap Selling — Keenan"
+          "title": "Busca el gap: lo que el competidor no cubre",
+          "body": "Ningún proveedor cubre el 100% de las necesidades de ningún cliente. Siempre hay algo que el cliente aguanta porque 'tampoco es para tanto'. Eso es tu punto de entrada. No lo hagas evidente: deja que el cliente lo descubra con tus preguntas.",
+          "highlight": "No preguntes qué hacen mal. Pregunta qué mejorarían si pudieran. La respuesta es lo mismo pero sin defensas.",
+          "technique": "Búsqueda del gap",
+          "examples": [
+            {
+              "type": "wrong",
+              "label": "Pregunta amenazante",
+              "text": "¿Y no tienes ningún problema con ellos? ¿Todo funciona perfectamente?",
+              "reason": "Suena a que buscas munición. El cliente se pone en guardia y responde 'sí, todo bien'."
+            },
+            {
+              "type": "correct",
+              "label": "Pregunta que abre",
+              "text": "Me alegra que funcione. Si pudieras cambiar o mejorar una sola cosa de cómo os dan servicio ahora mismo, ¿qué sería?",
+              "reason": "Formulación positiva y no amenazante. El cliente responde con sinceridad."
+            },
+            {
+              "type": "correct",
+              "label": "Pregunta sobre el ideal",
+              "text": "¿Cómo sería para ti el proveedor perfecto en este área? ¿Qué tendría que hacer diferente?",
+              "reason": "El cliente describe su proveedor ideal. Tú escuchas para ver si puedes serlo."
+            }
+          ]
         },
         {
           "id": 3,
           "emoji": "🌉",
           "title": "El dolor del cambio es real: no lo minimices",
-          "body": "Cuando el cliente dice 'cambiar de proveedor es un dolor de cabeza', tiene toda la razón. Si respondes 'es muy fácil, no te preocupes', no te creerá. Reconoce el problema y ofrece eliminarlo.",
-          "highlight": "Técnica: piloto en paralelo. El cliente puede probar sin cortar con su proveedor actual. Eso elimina el riesgo percibido.",
-          "technique": "Risk Reversal — Dan Kennedy"
+          "body": "Cuando el cliente dice 'cambiar de proveedor es un lío', tiene razón. Migración de datos, formación, riesgo de caídas... Si dices 'es muy fácil', no te creerá. Reconoce el problema y ofrece eliminarlo.",
+          "highlight": "Nunca digas 'es fácil'. Di 'tenemos un proceso para que no sea un problema'.",
+          "technique": "Eliminación del riesgo percibido",
+          "examples": [
+            {
+              "type": "wrong",
+              "label": "Minimizar el dolor",
+              "text": "No te preocupes, la migración es muy sencilla. En un par de días estáis operativos sin ningún problema.",
+              "reason": "El cliente no te cree. Ha vivido migraciones antes. Ahora desconfía de todo lo que le digas."
+            },
+            {
+              "type": "correct",
+              "label": "Reconocer y eliminar el riesgo",
+              "text": "Tienes razón, cambiar mal gestionado es un problema. Por eso hacemos un piloto de 30 días en paralelo: seguís con vuestro proveedor actual mientras probáis con nosotros. Sin cortar nada. Si al mes no veis la diferencia, no habéis perdido nada.",
+              "reason": "Reconoces el problema, demuestras que lo has pensado, y ofreces una salida sin riesgo."
+            }
+          ]
         },
         {
           "id": 4,
           "emoji": "🏆",
-          "title": "Diferenciación por valor, no por características",
-          "body": "No ganas comparando listas de features. Ganas conectando tu diferencial específico con el gap específico que el cliente ya te reveló. Es una solución quirúrgica, no un catálogo.",
-          "highlight": "Mal: 'Nosotros tenemos más funcionalidades.' Bien: 'Para el problema de soporte lento que me comentabas, nosotros respondemos en menos de 2 horas con equipo dedicado.'",
-          "technique": "Challenger Sale — Matthew Dixon"
+          "title": "Diferénciate en el punto exacto que le importa",
+          "body": "No ganas listando todas tus ventajas. Ganas conectando tu diferencial específico con el gap específico que el cliente te reveló. Un dolor, una solución. No un catálogo.",
+          "highlight": "Mal: 'Somos mejores en X, Y y Z.' Bien: 'Para el problema concreto que me comentaste, nosotros hacemos exactamente esto.'",
+          "technique": "Diferenciación quirúrgica",
+          "examples": [
+            {
+              "type": "wrong",
+              "label": "Lista de ventajas genéricas",
+              "text": "Nosotros tenemos mejor interfaz, más integraciones, soporte 24/7, precios más competitivos y un equipo de onboarding dedicado.",
+              "reason": "Demasiada información, nada conectada a lo que le preocupa a él. Entra por un oído y sale por el otro."
+            },
+            {
+              "type": "correct",
+              "label": "Diferenciación quirúrgica",
+              "text": "Antes me dijiste que lo que más te fastidiaba era tardar 3 días en recibir respuesta de soporte. Nosotros garantizamos respuesta en menos de 2 horas, con un técnico que conoce tu cuenta. Eso está en contrato.",
+              "reason": "Conectas directamente con el dolor que él mismo mencionó. No es un argumento de ventas: es la respuesta a su problema."
+            }
+          ]
         }
       ]
     }

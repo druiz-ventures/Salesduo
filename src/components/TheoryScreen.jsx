@@ -12,21 +12,14 @@ export default function TheoryScreen({ lesson, onComplete, onBack }) {
     <div className="theory-container">
       {/* Header */}
       <div className="theory-header">
-        <button className="theory-back-btn" onClick={onBack}>
-          ← Volver
-        </button>
+        <button className="theory-back-btn" onClick={onBack}>← Volver</button>
         <span className="theory-lesson-title">{lesson.title}</span>
-        <span className="theory-counter">
-          {currentSlide + 1} / {slides.length}
-        </span>
+        <span className="theory-counter">{currentSlide + 1} / {slides.length}</span>
       </div>
 
       {/* Progress bar */}
       <div className="theory-progress-track">
-        <div
-          className="theory-progress-fill"
-          style={{ width: `${progress}%` }}
-        />
+        <div className="theory-progress-fill" style={{ width: `${progress}%` }} />
       </div>
 
       {/* Slide */}
@@ -35,14 +28,34 @@ export default function TheoryScreen({ lesson, onComplete, onBack }) {
         <h2 className="theory-title">{slide.title}</h2>
         <p className="theory-body">{slide.body}</p>
 
-        <div className="theory-highlight-box">
-          <span className="theory-highlight-icon">💡</span>
-          <p className="theory-highlight-text">{slide.highlight}</p>
-        </div>
+        {slide.highlight && (
+          <div className="theory-highlight-box">
+            <span className="theory-highlight-icon">💡</span>
+            <p className="theory-highlight-text">{slide.highlight}</p>
+          </div>
+        )}
 
         {slide.technique && (
-          <div className="theory-technique-tag">
-            🎓 {slide.technique}
+          <div className="theory-technique-tag">🎓 {slide.technique}</div>
+        )}
+
+        {slide.examples && slide.examples.length > 0 && (
+          <div className="theory-examples">
+            {slide.examples.map((ex, i) => (
+              <div
+                key={i}
+                className={`theory-example ${ex.type === "correct" ? "example-correct" : "example-wrong"}`}
+              >
+                <span className="example-icon">
+                  {ex.type === "correct" ? "✅" : "❌"}
+                </span>
+                <div className="example-content">
+                  {ex.label && <span className="example-label">{ex.label}</span>}
+                  <span className="example-text">"{ex.text}"</span>
+                  {ex.reason && <span className="example-reason">{ex.reason}</span>}
+                </div>
+              </div>
+            ))}
           </div>
         )}
       </div>
@@ -50,19 +63,12 @@ export default function TheoryScreen({ lesson, onComplete, onBack }) {
       {/* Navigation */}
       <div className="theory-nav">
         {currentSlide > 0 && (
-          <button
-            className="theory-btn-prev"
-            onClick={() => setCurrentSlide(currentSlide - 1)}
-          >
+          <button className="theory-btn-prev" onClick={() => setCurrentSlide(currentSlide - 1)}>
             ← Anterior
           </button>
         )}
-
         {!isLast ? (
-          <button
-            className="theory-btn-next"
-            onClick={() => setCurrentSlide(currentSlide + 1)}
-          >
+          <button className="theory-btn-next" onClick={() => setCurrentSlide(currentSlide + 1)}>
             Siguiente →
           </button>
         ) : (
@@ -77,9 +83,7 @@ export default function TheoryScreen({ lesson, onComplete, onBack }) {
         {slides.map((_, i) => (
           <div
             key={i}
-            className={`theory-dot ${i === currentSlide ? "active" : ""} ${
-              i < currentSlide ? "done" : ""
-            }`}
+            className={`theory-dot ${i === currentSlide ? "active" : ""} ${i < currentSlide ? "done" : ""}`}
             onClick={() => i <= currentSlide && setCurrentSlide(i)}
           />
         ))}
