@@ -9,7 +9,7 @@
 
     "start": {
       "clientMessage": "Mira, el producto me gusta, pero sinceramente... es demasiado caro. Ya trabajo con un proveedor que me cobra bastante menos por algo parecido.",
-      "hint": "TÉCNICA: Patrón de interrupción (Brian Tracy). No respondas al precio. No te defiendas. Interrumpe el patrón con una pregunta que le haga pensar en el coste de su situación actual.",
+      "hint": "TÉCNICA: Patrón de interrupción . No respondas al precio. No te defiendas. Interrumpe el patrón con una pregunta que le haga pensar en el coste de su situación actual.",
       "keywords": {
         "weighted": [
           { "word": "entiendo",      "weight": 8  },
@@ -44,7 +44,7 @@
 
     "node-feel-felt-found": {
       "clientMessage": "Hmm... ¿a qué te refieres con el coste de la situación actual? Lo que tengo ahora funciona.",
-      "hint": "TÉCNICA: Feel-Felt-Found (Brian Tracy). Estructura: 'Entiendo cómo te sientes... otros clientes se sentían igual... lo que encontraron fue...' Luego lanza una pregunta de SITUACIÓN (SPIN): algo concreto y neutro sobre cómo trabajan hoy.",
+      "hint": "TÉCNICA: Reconocer-Normalizar-Redirigir . Estructura: 'Entiendo cómo te sientes... otros clientes se sentían igual... lo que encontraron fue...' Luego lanza una pregunta de SITUACIÓN (SPIN): algo concreto y neutro sobre cómo trabajan hoy.",
       "keywords": {
         "weighted": [
           { "word": "sientes",       "weight": 16 },
@@ -75,7 +75,7 @@
 
     "node-spin-situation": {
       "clientMessage": "Pues... tenemos un equipo de 4 personas que se encarga de reportes y seguimiento de proveedores. Lo hacen en Excel mayormente.",
-      "hint": "TÉCNICA: Pregunta de PROBLEMA (SPIN Selling - Neil Rackham). Ya tienes la situación. Ahora profundiza en el dolor: ¿qué problemas les genera ese proceso? Hazle ver que su 'funciona' quizás no funciona tan bien.",
+      "hint": "TÉCNICA: Pregunta de problema. Ya tienes la situación. Ahora profundiza en el dolor: ¿qué problemas les genera ese proceso? Hazle ver que su 'funciona' quizás no funciona tan bien.",
       "keywords": {
         "weighted": [
           { "word": "problemas",     "weight": 18 },
@@ -106,7 +106,7 @@
 
     "node-spin-problem": {
       "clientMessage": "Pues la verdad es que sí... a veces los reportes llevan 2 días en hacerse, hay errores que luego hay que corregir y en reuniones de dirección hemos llegado con datos desactualizados. Pero bueno, nos apañamos.",
-      "hint": "🎯 TÉCNICA: Pregunta de IMPLICACIÓN (SPIN). El dolor está ahí. Ahora hay que amplificarlo: ¿qué consecuencias tienen esos errores? ¿Qué impacto tiene llegar con datos erróneos a dirección? Haz que él mismo vea la magnitud del problema.",
+      "hint": "🎯 TÉCNICA: Pregunta de implicación. El dolor está ahí. Ahora hay que amplificarlo: ¿qué consecuencias tienen esos errores? ¿Qué impacto tiene llegar con datos erróneos a dirección? Haz que él mismo vea la magnitud del problema.",
       "keywords": {
         "weighted": [
           { "word": "qué pasa",      "weight": 16 },
@@ -136,7 +136,7 @@
 
     "node-implication": {
       "clientMessage": "Hombre... el mes pasado tuvimos una reunión con el CEO donde los datos de un proveedor clave estaban desfasados. Tomamos una decisión que luego hubo que revertir. Eso nos costó tiempo y una conversación incómoda con el equipo.",
-      "hint": "💡 TÉCNICA: Pregunta de NECESIDAD-BENEFICIO (SPIN) + Cálculo de ROI (Brian Tracy). Tiene el dolor concreto. Ahora hazle calcular el coste real de ese problema y conectarlo con tu solución. Pregunta: '¿Cuánto crees que costó esa decisión en tiempo y recursos?'",
+      "hint": "💡 TÉCNICA: Pregunta de valor + Cálculo de ROI . Tiene el dolor concreto. Ahora hazle calcular el coste real de ese problema y conectarlo con tu solución. Pregunta: '¿Cuánto crees que costó esa decisión en tiempo y recursos?'",
       "keywords": {
         "weighted": [
           { "word": "cuánto costó",  "weight": 20 },
@@ -166,7 +166,7 @@
 
     "node-roi-calculation": {
       "clientMessage": "Pues mira... solo esa reunión y la corrección posterior fueron unas 15 horas del equipo. A unos 40€/hora de media... serían 600€. Y eso pasa dos o tres veces al año como mínimo. Nunca lo había calculado así.",
-      "hint": "🔥 TÉCNICA: Cierre por comparación de inversión (Grant Cardone). Ahora él mismo ha calculado el coste del problema. Conecta: su coste anual de NO actuar vs el precio de tu solución. Luego propón un siguiente paso concreto con fecha.",
+      "hint": "🔥 TÉCNICA: Cierre por comparación de inversión . Ahora él mismo ha calculado el coste del problema. Conecta: su coste anual de NO actuar vs el precio de tu solución. Luego propón un siguiente paso concreto con fecha.",
       "keywords": {
         "weighted": [
           { "word": "comparado con",  "weight": 18 },
@@ -378,7 +378,7 @@
   "endResults": {
     "success": {
       "title": "¡Demo cerrada! 🎉",
-      "message": "Ejecutaste SPIN Selling completo: Situación → Problema → Implicación → Necesidad-Beneficio. El cliente calculó el coste de su problema y lo comparó con tu precio. Eso es vender valor, no precio.",
+      "message": "Ejecutaste Secuencia completa: Situación → Problema → Implicación → Necesidad-Beneficio. El cliente calculó el coste de su problema y lo comparó con tu precio. Eso es vender valor, no precio.",
       "xpEarned": 100,
       "unlocksBadge": "price-handler"
     },
@@ -390,7 +390,7 @@
     },
     "failure": {
       "title": "Venta perdida 😬",
-      "message": "La secuencia correcta: patrón de interrupción → Feel-Felt-Found → SPIN (Situación → Problema → Implicación) → ROI → cierre con fecha. No defiendas el precio antes de establecer el valor.",
+      "message": "La secuencia correcta: patrón de interrupción → Reconocer-Normalizar-Redirigir → secuencia (Situación → Problema → Implicación) → ROI → cierre con fecha. No defiendas el precio antes de establecer el valor.",
       "xpEarned": 10,
       "unlocksBadge": null
     }

@@ -16,6 +16,8 @@ const conversationsMap = {
   "objecion-competencia": objecionCompetencia,
 };
 
+const isDemoMode = new URLSearchParams(window.location.search).get("demo") === "true";
+
 function App() {
   const [currentScreen, setCurrentScreen] = useState("loading");
   const [selectedLesson, setSelectedLesson] = useState(null);
@@ -25,6 +27,7 @@ function App() {
   const [totalXP, setTotalXP] = useState(0);
   const [badges, setBadges] = useState([]);
   const [showDashboard, setShowDashboard] = useState(false);
+  const [userProfile, setUserProfile] = useState(null);
 
   useEffect(() => {
     const saved = localStorage.getItem("duosales-progress");
@@ -34,29 +37,29 @@ function App() {
       setTheoriesRead(data.theoriesRead || []);
       setTotalXP(data.totalXP || 0);
       setBadges(data.badges || []);
+      setUserProfile(data.profile || null);
       setCurrentScreen("menu");
     } else {
       setCurrentScreen("onboarding");
     }
   }, []);
 
-  const saveProgress = (newCompleted, newTheories, newXP, newBadges) => {
-    localStorage.setItem(
-      "duosales-progress",
-      JSON.stringify({
-        completedLessons: newCompleted,
-        theoriesRead: newTheories,
-        totalXP: newXP,
-        badges: newBadges,
-      })
-    );
+  const saveProgress = (newCompleted, newTheories, newXP, newBadges, profile) => {
+    localStorage.setItem("duosales-progress", JSON.stringify({
+      completedLessons: newCompleted,
+      theoriesRead: newTheories,
+      totalXP: newXP,
+      badges: newBadges,
+      profile: profile !== undefined ? profile : userProfile,
+    }));
   };
 
-  const handleOnboardingComplete = () => {
+  const handleOnboardingComplete = (profile) => {
+    setUserProfile(profile);
+    saveProgress([], [], 0, [], profile);
     setCurrentScreen("menu");
   };
 
-  // Called from LessonMap with the lesson + mode ("theory" or "practice")
   const handleSelectLesson = (lesson, mode) => {
     setSelectedLesson(lesson);
     if (mode === "theory") {
@@ -74,7 +77,6 @@ function App() {
     const newTheories = [...new Set([...theoriesRead, selectedLesson.id])];
     setTheoriesRead(newTheories);
     saveProgress(completedLessons, newTheories, totalXP, badges);
-    // Go straight to practice
     const conversation = conversationsMap[selectedLesson.conversationId];
     if (conversation) {
       setSelectedConversation(conversation);
@@ -84,21 +86,11 @@ function App() {
 
   const handleFinishLesson = (results) => {
     const newXP = totalXP + results.xpEarned;
-    const newCompleted = [
-      ...new Set([...completedLessons, selectedConversation.id]),
-    ];
+    const newCompleted = [...new Set([...completedLessons, selectedConversation.id])];
     let newBadges = [...badges];
-
-    if (results.badgeUnlocked) {
-      newBadges = [...new Set([...newBadges, results.badgeUnlocked])];
-    }
-    if (results.endType === "success" && !badges.includes("first-win")) {
-      newBadges = [...new Set([...newBadges, "first-win"])];
-    }
-    if (results.score >= 150 && !badges.includes("perfect-score")) {
-      newBadges = [...new Set([...newBadges, "perfect-score"])];
-    }
-
+    if (results.badgeUnlocked) newBadges = [...new Set([...newBadges, results.badgeUnlocked])];
+    if (results.endType === "success" && !badges.includes("first-win")) newBadges = [...new Set([...newBadges, "first-win"])];
+    if (results.score >= 150 && !badges.includes("perfect-score")) newBadges = [...new Set([...newBadges, "perfect-score"])];
     setTotalXP(newXP);
     setCompletedLessons(newCompleted);
     setBadges(newBadges);
@@ -126,22 +118,18 @@ function App() {
 
   return (
     <div>
+      {isDemoMode && (
+        <div className="demo-banner">
+          🎬 Modo demo — todas las lecciones desbloqueadas
+        </div>
+      )}
       <div className="topbar">
         <span className="topbar-logo">Duosales</span>
         <div className="topbar-stats">
-          <span className="topbar-stat">
-            ⭐ <strong>{totalXP}</strong> XP
-          </span>
-          <span className="topbar-stat">
-            🏅 <strong>{badges.length}</strong>
-          </span>
-          <span className="topbar-stat">
-            ✅ <strong>{completedLessons.length}</strong>
-          </span>
-          <button
-            className="btn-dashboard"
-            onClick={() => setShowDashboard(true)}
-          >
+          <span className="topbar-stat">⭐ <strong>{totalXP}</strong> XP</span>
+          <span className="topbar-stat">🏅 <strong>{badges.length}</strong></span>
+          <span className="topbar-stat">✅ <strong>{completedLessons.length}</strong></span>
+          <button className="btn-dashboard" onClick={() => setShowDashboard(true)}>
             📊 Progreso
           </button>
         </div>
@@ -167,6 +155,8 @@ function App() {
           onSelectLesson={handleSelectLesson}
           completedLessons={completedLessons}
           theoriesRead={theoriesRead}
+          userProfile={userProfile}
+          demoMode={isDemoMode}
         />
       )}
     </div>
