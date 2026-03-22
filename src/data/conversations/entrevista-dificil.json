@@ -1,0 +1,13 @@
+{
+  "id": "entrevista-dificil",
+  "clientName": "Marta Ruiz",
+  "clientRole": "Hiring Manager · Equipo de ventas",
+  "clientAvatar": "🎯",
+  "context": "Entrevista exigente con objeciones sobre experiencia y resultados. Debes sostener la presión.",
+  "initialNode": "start",
+  "nodes": {
+    "start": {
+      "hint": "TÉCNICA: Reconoce la objeción, contextualiza y responde con casos medibles (STAR)."
+    }
+  }
+}

@@ -10,6 +10,14 @@ const CHALLENGE_LESSON_MAP = {
   "confianza":   "objecion-precio",
 };
 
+const PRACTICE_TRACKS = [
+  { id: "all", label: "Todos", emoji: "🌐" },
+  { id: "seguros", label: "Seguros", emoji: "🛡️" },
+  { id: "infoproductos", label: "InfoProductos", emoji: "🎓" },
+  { id: "software", label: "Software", emoji: "💻" },
+  { id: "entrevistas", label: "Entrevistas", emoji: "🧑‍💼" },
+];
+
 function getRecommendedLesson(profile) {
   if (!profile || !profile.challenges || profile.challenges.length === 0) return null;
   for (const challenge of profile.challenges) {
@@ -19,15 +27,34 @@ function getRecommendedLesson(profile) {
   return null;
 }
 
-export default function LessonMap({ onSelectLesson, completedLessons, theoriesRead, userProfile, demoMode }) {
-  const [expandedLesson, setExpandedLesson] = useState(null);
-  const recommendedId = getRecommendedLesson(userProfile);
+function getRecommendedTrack(profile, profileSector) {
+  if (profileSector === "seguros") return "seguros";
+  if (profileSector === "infoproductos") return "infoproductos";
+  if (profileSector === "kit-digital") return "software";
+  if (profileSector === "inmobiliario") return "software";
 
-  const isLessonLocked = (lesson, index) => {
+  if (profile?.sells?.includes("formacion")) return "infoproductos";
+  if (profile?.sells?.includes("saas")) return "software";
+  if (profile?.challenges?.includes("confianza")) return "entrevistas";
+
+  return null;
+}
+
+export default function LessonMap({ onSelectLesson, completedLessons, theoriesRead, userProfile, profileSector, demoMode }) {
+  const [expandedLesson, setExpandedLesson] = useState(null);
+  const [selectedTrack, setSelectedTrack] = useState("all");
+  const recommendedId = getRecommendedLesson(userProfile);
+  const recommendedTrack = getRecommendedTrack(userProfile, profileSector);
+  const filteredLessons = lessons.filter((lesson) => {
+    if (selectedTrack === "all") return true;
+    return lesson.track === selectedTrack;
+  });
+
+  const isLessonLocked = (lesson, index, lessonList) => {
     if (demoMode) return false;
     if (!lesson.isLocked) return false;
     if (index === 0) return false;
-    return !completedLessons.includes(lessons[index - 1].id);
+    return !completedLessons.includes(lessonList[index - 1].id);
   };
 
   const isTheoryDone = (id) => theoriesRead.includes(id);
@@ -36,7 +63,7 @@ export default function LessonMap({ onSelectLesson, completedLessons, theoriesRe
   return (
     <div className="lesson-map-wrapper">
       <div className="lesson-map-header">
-        <h1 className="lesson-map-title">🎯 Duosales</h1>
+        <h1 className="lesson-map-title">🎯 salesDuo</h1>
 
         {/* Personalized greeting */}
         {userProfile && (
@@ -69,8 +96,36 @@ export default function LessonMap({ onSelectLesson, completedLessons, theoriesRe
       </div>
 
       <div className="lesson-map-path">
-        {lessons.map((lesson, index) => {
-          const locked = isLessonLocked(lesson, index);
+        <div style={{ display: "flex", flexWrap: "wrap", gap: "10px", marginBottom: "16px" }}>
+          {PRACTICE_TRACKS.map((track) => (
+            <button
+              key={track.id}
+              onClick={() => {
+                setSelectedTrack(track.id);
+                setExpandedLesson(null);
+              }}
+              style={{
+                border: selectedTrack === track.id ? "1px solid #6366f1" : "1px solid #334155",
+                background: selectedTrack === track.id
+                  ? "rgba(99,102,241,0.15)"
+                  : recommendedTrack === track.id ? "rgba(34,197,94,0.12)" : "#0f172a",
+                color: selectedTrack === track.id
+                  ? "#a5b4fc"
+                  : recommendedTrack === track.id ? "#86efac" : "#94a3b8",
+                borderRadius: "999px",
+                padding: "8px 12px",
+                fontSize: "12px",
+                fontWeight: "600",
+                cursor: "pointer",
+              }}
+            >
+              {track.emoji} {track.label}{recommendedTrack === track.id ? " · Recomendado" : ""}
+            </button>
+          ))}
+        </div>
+
+        {filteredLessons.map((lesson, index) => {
+          const locked = isLessonLocked(lesson, index, filteredLessons);
           const theoryDone = isTheoryDone(lesson.id);
           const practiceDone = isPracticeDone(lesson.id);
           const fullyDone = theoryDone && practiceDone;
@@ -143,30 +198,27 @@ export default function LessonMap({ onSelectLesson, completedLessons, theoriesRe
                   {/* Práctica */}
                   <div
                     className={`map-substep ${
-                      !theoryDone ? "substep-locked"
-                      : practiceDone ? "substep-done"
-                      : "substep-available"
+                      practiceDone ? "substep-done" : "substep-available"
                     }`}
-                    onClick={() => theoryDone && onSelectLesson(lesson, "practice")}
+                    onClick={() => onSelectLesson(lesson, "practice")}
                   >
                     <div className="substep-icon">
-                      {!theoryDone ? "🔒" : practiceDone ? "✅" : "🎯"}
+                      {practiceDone ? "✅" : "🎯"}
                     </div>
                     <div className="substep-content">
                       <span className="substep-label">Paso 2 · Práctica</span>
                       <span className="substep-name">Simulación con cliente real</span>
                       <span className="substep-meta">
-                        {!theoryDone ? "Completa la teoría primero"
-                        : `+${lesson.xpReward} XP al completar`}
+                        {!theoryDone
+                          ? "💡 Recomendado: haz la teoría antes"
+                          : `+${lesson.xpReward} XP al completar`}
                       </span>
                     </div>
-                    {theoryDone && (
-                      <div className="substep-action">
-                        <span className={practiceDone ? "substep-repeat" : "substep-start"}>
-                          {practiceDone ? "Repetir →" : "Practicar →"}
-                        </span>
-                      </div>
-                    )}
+                    <div className="substep-action">
+                      <span className={practiceDone ? "substep-repeat" : "substep-start"}>
+                        {practiceDone ? "Repetir →" : "Practicar →"}
+                      </span>
+                    </div>
                   </div>
                 </div>
               )}

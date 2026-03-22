@@ -1,10 +1,13 @@
 import "../App.css";
 import allBadges from "../data/badges.json";
 
-export default function Dashboard({ totalXP, completedLessons, badges, onClose }) {
+export default function Dashboard({ totalXP, completedLessons, badges, sessionStats = { total: 0, racha: 0 }, onClose }) {
   const level = Math.floor(totalXP / 100) + 1;
   const xpForNextLevel = 100 - (totalXP % 100);
   const progressPercent = (totalXP % 100);
+  const weeklyGoal = 3;
+  const currentWeekSessions = sessionStats.weekly ?? 0;
+  const weeklyProgress = Math.min(100, Math.round((currentWeekSessions / weeklyGoal) * 100));
 
   return (
     <div className="dashboard-overlay">
@@ -53,6 +56,37 @@ export default function Dashboard({ totalXP, completedLessons, badges, onClose }
             </span>
             <span className="dashboard-stat-label">XP medio por lección</span>
           </div>
+        </div>
+
+        {/* Sesiones & Racha */}
+        <div className="dashboard-stats" style={{ marginTop: "12px" }}>
+          <div className="dashboard-stat-box" style={{ background: "rgba(99,102,241,0.1)", border: "1px solid rgba(99,102,241,0.3)" }}>
+            <span className="dashboard-stat-number">🎯 {sessionStats.total}</span>
+            <span className="dashboard-stat-label">Sesiones totales</span>
+          </div>
+          <div className="dashboard-stat-box" style={{ background: "rgba(249,115,22,0.1)", border: "1px solid rgba(249,115,22,0.3)" }}>
+            <span className="dashboard-stat-number">🔥 {sessionStats.racha}</span>
+            <span className="dashboard-stat-label">Días seguidos</span>
+          </div>
+        </div>
+
+        <div style={{
+          marginTop: "14px",
+          background: "rgba(99,102,241,0.08)",
+          border: "1px solid rgba(99,102,241,0.3)",
+          borderRadius: "12px",
+          padding: "12px 14px",
+        }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8px" }}>
+            <span style={{ color: "#c7d2fe", fontSize: "13px", fontWeight: 700 }}>🎯 Reto semanal</span>
+            <span style={{ color: "#a5b4fc", fontSize: "12px" }}>{currentWeekSessions}/{weeklyGoal} sesiones</span>
+          </div>
+          <div style={{ height: "8px", background: "#0f172a", borderRadius: "999px", overflow: "hidden" }}>
+            <div style={{ width: `${weeklyProgress}%`, height: "100%", background: "#6366f1" }} />
+          </div>
+          <p style={{ color: "#94a3b8", fontSize: "11px", margin: "8px 0 0" }}>
+            Completa 3 sesiones por semana para acelerar aprendizaje y retención.
+          </p>
         </div>
 
         {/* Badges */}

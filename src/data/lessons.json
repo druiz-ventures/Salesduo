@@ -380,5 +380,309 @@
         }
       ]
     }
+  },
+  {
+    "id": "seguros-facil",
+    "title": "Seguros · Primera toma de contacto",
+    "description": "Cliente particular con dudas económicas. Aprende a descubrir riesgo real sin presionar.",
+    "difficulty": "beginner",
+    "xpReward": 120,
+    "badgeId": "seguros-inicio",
+    "conversationId": "seguros-facil",
+    "isLocked": false,
+    "track": "seguros",
+    "tags": ["seguros", "descubrimiento", "objeciones"],
+    "theory": {
+      "title": "Vender seguros sin sonar vendedor",
+      "slides": [
+        {
+          "id": 1,
+          "emoji": "🛡️",
+          "title": "No vendas pólizas, vende tranquilidad",
+          "body": "El cliente no compra coberturas técnicas; compra protección para su familia o su patrimonio. Si entras por precio, pierdes. Si entras por impacto real, ganas conversación.",
+          "highlight": "La pregunta clave: ¿qué pasaría si mañana ocurre el escenario que más te preocupa?"
+        },
+        {
+          "id": 2,
+          "emoji": "❓",
+          "title": "Diagnóstico antes de oferta",
+          "body": "Primero entiende situación actual, riesgos, dependientes económicos y horizonte. Luego propones. Sin diagnóstico, cualquier propuesta parece una plantilla.",
+          "technique": "Situación → Riesgo → Consecuencia"
+        },
+        {
+          "id": 3,
+          "emoji": "🤝",
+          "title": "Cierre sin presión",
+          "body": "Ofrece un paso pequeño: revisión comparativa o llamada de 15 minutos. El objetivo es avanzar, no cerrar por fuerza en la primera llamada.",
+          "highlight": "Cierra con fecha concreta y dos opciones de agenda."
+        }
+      ]
+    }
+  },
+  {
+    "id": "seguros-dificil",
+    "title": "Seguros · Cliente escéptico avanzado",
+    "description": "Cliente que ya tiene proveedor y poco tiempo. Diferencia tu propuesta por riesgo no cubierto.",
+    "difficulty": "intermediate",
+    "xpReward": 180,
+    "badgeId": "seguros-pro",
+    "conversationId": "seguros-dificil",
+    "isLocked": false,
+    "track": "seguros",
+    "tags": ["seguros", "competencia", "riesgo"],
+    "theory": {
+      "title": "Cómo competir en seguros sin entrar en guerra de precio",
+      "slides": [
+        {
+          "id": 1,
+          "emoji": "⚔️",
+          "title": "No ataques al proveedor actual",
+          "body": "Si atacas al seguro actual, el cliente defiende su decisión. Pregunta qué valora y qué mejoraría. Ahí aparece el hueco real.",
+          "highlight": "Pregunta potente: Si pudieras mejorar una sola cosa de tu póliza actual, ¿cuál sería?"
+        },
+        {
+          "id": 2,
+          "emoji": "📉",
+          "title": "Haz visible el riesgo oculto",
+          "body": "Tu diferencial no es cobertura X; es el coste de estar mal cubierto. Usa casos y números simples para aterrizar impacto.",
+          "technique": "Gap de cobertura + impacto económico"
+        },
+        {
+          "id": 3,
+          "emoji": "📅",
+          "title": "Propón auditoría rápida",
+          "body": "No pidas cambio inmediato. Propón auditoría de póliza actual sin compromiso para detectar huecos. Menor fricción, mayor aceptación.",
+          "highlight": "Dos síes: ¿martes 11:00 o jueves 16:30 para revisarlo juntos?"
+        }
+      ]
+    }
+  },
+  {
+    "id": "infoproductos-facil",
+    "title": "Infoproductos · Objeción de precio",
+    "description": "Lead interesado pero con miedo a invertir en sí mismo. Aprende a bajar riesgo percibido.",
+    "difficulty": "beginner",
+    "xpReward": 130,
+    "badgeId": "info-fundamentos",
+    "conversationId": "infoproductos-facil",
+    "isLocked": false,
+    "track": "infoproductos",
+    "tags": ["infoproductos", "precio", "confianza"],
+    "theory": {
+      "title": "Vender transformación, no contenido",
+      "slides": [
+        {
+          "id": 1,
+          "emoji": "🎯",
+          "title": "El cliente compra resultado",
+          "body": "En formación online la objeción real suele ser: ¿y si no me funciona? Habla de implementación, acompañamiento y claridad de camino.",
+          "highlight": "Del curso al cambio: qué podrá hacer distinto en 30 días."
+        },
+        {
+          "id": 2,
+          "emoji": "🧪",
+          "title": "Reduce riesgo percibido",
+          "body": "Usa pruebas sociales específicas, garantías realistas y pasos iniciales concretos. Evita promesas grandilocuentes.",
+          "technique": "Prueba + plan + compromiso"
+        },
+        {
+          "id": 3,
+          "emoji": "🚀",
+          "title": "Cierre orientado a acción",
+          "body": "Cierra con un próximo paso medible: sesión de arranque, hoja de ruta o diagnóstico previo.",
+          "highlight": "Si se ve empezando, se ve comprando."
+        }
+      ]
+    }
+  },
+  {
+    "id": "infoproductos-dificil",
+    "title": "Infoproductos · Cliente quemado",
+    "description": "Prospecto que ya compró formaciones y quedó decepcionado. Debes reconstruir confianza.",
+    "difficulty": "intermediate",
+    "xpReward": 200,
+    "badgeId": "info-trust",
+    "conversationId": "infoproductos-dificil",
+    "isLocked": false,
+    "track": "infoproductos",
+    "tags": ["infoproductos", "confianza", "objeciones"],
+    "theory": {
+      "title": "Cómo vender cuando ya han sido decepcionados",
+      "slides": [
+        {
+          "id": 1,
+          "emoji": "🩹",
+          "title": "Primero valida la experiencia negativa",
+          "body": "Un cliente quemado no necesita argumentos; necesita sentir que entiendes su frustración. Validar no es ceder, es abrir puerta.",
+          "highlight": "Empatía explícita antes de cualquier pitch."
+        },
+        {
+          "id": 2,
+          "emoji": "🔍",
+          "title": "Diferencia con evidencia",
+          "body": "No digas que eres distinto: demuestra cómo, con proceso, soporte y expectativas realistas.",
+          "technique": "Comparación por proceso, no por claims"
+        },
+        {
+          "id": 3,
+          "emoji": "✅",
+          "title": "Microcompromiso para volver a confiar",
+          "body": "Propón paso de bajo riesgo: sesión diagnóstica, clase piloto o revisión personalizada.",
+          "highlight": "La confianza se gana por etapas."
+        }
+      ]
+    }
+  },
+  {
+    "id": "kit-digital-facil",
+    "title": "Software · Pyme con dudas técnicas",
+    "description": "Negocio pequeño interesado pero con miedo a no saber usar la herramienta.",
+    "difficulty": "beginner",
+    "xpReward": 120,
+    "badgeId": "software-onboarding",
+    "conversationId": "kit-digital-facil",
+    "isLocked": false,
+    "track": "software",
+    "tags": ["software", "onboarding", "adopción"],
+    "theory": {
+      "title": "Vender software a no técnicos",
+      "slides": [
+        {
+          "id": 1,
+          "emoji": "🧩",
+          "title": "Menos features, más casos de uso",
+          "body": "Traducir funciones a tareas diarias reduce ansiedad técnica y acelera la decisión.",
+          "highlight": "Habla de su día a día, no del producto."
+        },
+        {
+          "id": 2,
+          "emoji": "👣",
+          "title": "Explica implementación por fases",
+          "body": "El miedo baja cuando el cliente ve pasos claros: setup, formación, soporte y primeros resultados.",
+          "technique": "Ruta de adopción en 30 días"
+        },
+        {
+          "id": 3,
+          "emoji": "📆",
+          "title": "Cierra con demo guiada",
+          "body": "Una demo enfocada en su caso aumenta percepción de facilidad y control.",
+          "highlight": "Cierre: ¿te enseño cómo sería con tus datos?"
+        }
+      ]
+    }
+  },
+  {
+    "id": "kit-digital-dificil",
+    "title": "Software · Empresa escarmentada",
+    "description": "Cliente que ya tuvo una mala implantación. Debes eliminar miedo al cambio.",
+    "difficulty": "intermediate",
+    "xpReward": 210,
+    "badgeId": "software-recovery",
+    "conversationId": "kit-digital-dificil",
+    "isLocked": false,
+    "track": "software",
+    "tags": ["software", "migración", "riesgo"],
+    "theory": {
+      "title": "Recuperar ventas tras malas experiencias previas",
+      "slides": [
+        {
+          "id": 1,
+          "emoji": "🧠",
+          "title": "Objeción real: riesgo de repetir el fracaso",
+          "body": "Cuando dicen 'no es buen momento', muchas veces quieren decir 'no quiero volver a fallar'.",
+          "highlight": "Pon foco en control del riesgo."
+        },
+        {
+          "id": 2,
+          "emoji": "🛟",
+          "title": "Diseña salida segura",
+          "body": "Piloto, paralelización y métricas de éxito son tus mejores argumentos frente al miedo.",
+          "technique": "Piloto con criterio de éxito"
+        },
+        {
+          "id": 3,
+          "emoji": "📈",
+          "title": "Habla de coste de seguir igual",
+          "body": "Si no cambian, el coste actual se mantiene. Haz visible ese coste con números del cliente.",
+          "highlight": "Inacción también es decisión."
+        }
+      ]
+    }
+  },
+  {
+    "id": "entrevista-facil",
+    "title": "Entrevistas · Vender tu perfil",
+    "description": "Practica cómo presentar tu valor en una entrevista comercial sin sonar genérico.",
+    "difficulty": "beginner",
+    "xpReward": 110,
+    "badgeId": "interview-pitch",
+    "conversationId": "entrevista-facil",
+    "isLocked": false,
+    "track": "entrevistas",
+    "tags": ["entrevista", "pitch personal", "comunicación"],
+    "theory": {
+      "title": "Cómo venderte en una entrevista comercial",
+      "slides": [
+        {
+          "id": 1,
+          "emoji": "🧭",
+          "title": "Estructura de 60 segundos",
+          "body": "Quién eres, qué problema sabes resolver y prueba breve. Sin historia larga.",
+          "highlight": "Perfil + propuesta de valor + evidencia."
+        },
+        {
+          "id": 2,
+          "emoji": "📌",
+          "title": "Habla en resultados",
+          "body": "Sustituye rasgos ('soy proactivo') por ejemplos concretos y métricas.",
+          "technique": "Contexto → Acción → Resultado"
+        },
+        {
+          "id": 3,
+          "emoji": "🙌",
+          "title": "Cierre de entrevista",
+          "body": "Cierra mostrando interés y proponiendo siguiente paso con claridad.",
+          "highlight": "¿Cuál sería el siguiente paso del proceso?"
+        }
+      ]
+    }
+  },
+  {
+    "id": "entrevista-dificil",
+    "title": "Entrevistas · Objeciones duras del recruiter",
+    "description": "Responde a dudas sobre experiencia, resultados y ajuste al puesto sin ponerte a la defensiva.",
+    "difficulty": "intermediate",
+    "xpReward": 170,
+    "badgeId": "interview-objections",
+    "conversationId": "entrevista-dificil",
+    "isLocked": false,
+    "track": "entrevistas",
+    "tags": ["entrevista", "objeciones", "posicionamiento"],
+    "theory": {
+      "title": "Gestionar objeciones en entrevistas",
+      "slides": [
+        {
+          "id": 1,
+          "emoji": "🧱",
+          "title": "No te justifiques, contextualiza",
+          "body": "Ante una objeción, reconoce, da contexto y aporta evidencia. Evita discutir.",
+          "highlight": "Reconocer + explicar + demostrar."
+        },
+        {
+          "id": 2,
+          "emoji": "🎬",
+          "title": "Ten 3 casos preparados",
+          "body": "Lleva ejemplos de prospección, cierre y gestión de rechazo. Eso transmite madurez comercial.",
+          "technique": "Casos STAR orientados a ventas"
+        },
+        {
+          "id": 3,
+          "emoji": "🏁",
+          "title": "Cierra posicionándote",
+          "body": "Resume por qué encajas y pide avanzar. Cierre también en entrevistas.",
+          "highlight": "Si buscas perfiles que vendan con método, creo que encajo bien."
+        }
+      ]
+    }
   }
 ]

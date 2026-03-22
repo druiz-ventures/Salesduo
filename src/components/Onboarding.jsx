@@ -50,14 +50,23 @@ const INFO_STEPS = [
   },
 ];
 
-export default function Onboarding({ onComplete }) {
-  const [phase, setPhase] = useState("info"); // "info" | "profile"
+export default function Onboarding({ onComplete, hasTipo = false, onlyTipo = false }) {
+  const [phase, setPhase] = useState(hasTipo ? "info" : "tipo"); // "tipo" | "sector" | "info" | "profile"
+  const [tipo, setTipo] = useState(null);
+  const [sector, setSector] = useState(null);
+  const [empresa, setEmpresa] = useState("");
   const [infoStep, setInfoStep] = useState(0);
   const [profileStep, setProfileStep] = useState(0); // 0=sell 1=buyer 2=challenge
 
   const [sells, setSells]         = useState([]);
   const [buyer, setBuyer]         = useState(null);
   const [challenges, setChallenges] = useState([]);
+
+  // ── Tipo navigation ────────────────────────────────────────────────────
+  const handleTipoNext = (value) => {
+    setTipo(value);
+    setPhase("sector");
+  };
 
   // ── Info navigation ────────────────────────────────────────────────────
   const handleInfoNext = () => {
@@ -73,7 +82,7 @@ export default function Onboarding({ onComplete }) {
     if (profileStep < 2) {
       setProfileStep(profileStep + 1);
     } else {
-      onComplete({ sells, buyer, challenges });
+      onComplete({ sells, buyer, challenges, tipo, sector, empresa });
     }
   };
 
@@ -87,6 +96,170 @@ export default function Onboarding({ onComplete }) {
   const toggleMulti = (id, list, setList) => {
     setList(list.includes(id) ? list.filter(x => x !== id) : [...list, id]);
   };
+
+  // ── Render: tipo ──────────────────────────────────────────────────────
+  if (phase === "tipo") {
+    const TIPO_OPTIONS = [
+      { id: "particular", emoji: "👤", label: "Por mi cuenta",           sub: "Freelance, autónomo o vendedor individual" },
+      { id: "empresa",    emoji: "🏢", label: "Represento a una empresa", sub: "Equipo comercial, startup o pyme" },
+    ];
+    return (
+      <div className="onboarding-overlay">
+        <div className="onboarding-card" style={{ textAlign: "center" }}>
+          <div className="onboarding-emoji">🎯</div>
+          <h2 className="onboarding-title">¿Cómo practicas las ventas?</h2>
+          <p className="onboarding-description">Elige cómo mejor te describes. Lo usaremos para personalizar tu entrenamiento.</p>
+          <div style={{ display: "flex", flexDirection: "column", gap: "14px", margin: "28px 0" }}>
+            {TIPO_OPTIONS.map(opt => (
+              <button
+                key={opt.id}
+                onClick={() => handleTipoNext(opt.id)}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "16px",
+                  padding: "18px 20px",
+                  borderRadius: "12px",
+                  border: "2px solid #334155",
+                  background: "#0f172a",
+                  cursor: "pointer",
+                  textAlign: "left",
+                  transition: "all 0.15s",
+                  width: "100%",
+                }}
+                onMouseEnter={e => { e.currentTarget.style.borderColor = "#6366f1"; e.currentTarget.style.background = "rgba(99,102,241,0.1)"; }}
+                onMouseLeave={e => { e.currentTarget.style.borderColor = "#334155"; e.currentTarget.style.background = "#0f172a"; }}
+              >
+                <span style={{ fontSize: "32px" }}>{opt.emoji}</span>
+                <div>
+                  <div style={{ color: "#f1f5f9", fontWeight: "700", fontSize: "16px" }}>{opt.label}</div>
+                  <div style={{ color: "#64748b", fontSize: "12px", marginTop: "3px" }}>{opt.sub}</div>
+                </div>
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ── Render: sector ────────────────────────────────────────────────────
+  if (phase === "sector") {
+    const SECTOR_OPTIONS = [
+      { id: "seguros",       emoji: "🛡️", label: "Seguros" },
+      { id: "inmobiliario",  emoji: "🏠", label: "Inmobiliario" },
+      { id: "infoproductos", emoji: "🎓", label: "Infoproductos" },
+      { id: "kit-digital",   emoji: "💻", label: "Kit Digital" },
+      { id: "otros",         emoji: "✨", label: "Otros" },
+    ];
+
+    if (tipo === "particular") {
+      return (
+        <div className="onboarding-overlay">
+          <div className="onboarding-card" style={{ textAlign: "center" }}>
+            <div className="onboarding-emoji">🎯</div>
+            <h2 className="onboarding-title">¿En qué sector vendes?</h2>
+            <p className="onboarding-description">Lo usaremos para personalizar tus simulaciones.</p>
+            <div style={{ display: "flex", flexDirection: "column", gap: "12px", margin: "24px 0" }}>
+              {SECTOR_OPTIONS.map(opt => (
+                <button
+                  key={opt.id}
+                  onClick={() => {
+                    if (onlyTipo) {
+                      onComplete({ tipo, sector: opt.id, empresa: "" });
+                    } else {
+                      setSector(opt.id);
+                      setPhase("info");
+                    }
+                  }}
+                  style={{
+                    display: "flex", alignItems: "center", gap: "14px",
+                    padding: "16px 18px", borderRadius: "12px",
+                    border: "2px solid #334155", background: "#0f172a",
+                    cursor: "pointer", textAlign: "left", width: "100%",
+                    transition: "all 0.15s",
+                  }}
+                  onMouseEnter={e => { e.currentTarget.style.borderColor = "#6366f1"; e.currentTarget.style.background = "rgba(99,102,241,0.1)"; }}
+                  onMouseLeave={e => { e.currentTarget.style.borderColor = "#334155"; e.currentTarget.style.background = "#0f172a"; }}
+                >
+                  <span style={{ fontSize: "28px" }}>{opt.emoji}</span>
+                  <span style={{ color: "#f1f5f9", fontWeight: "600", fontSize: "15px" }}>{opt.label}</span>
+                </button>
+              ))}
+            </div>
+            <button className="btn-skip" onClick={() => setPhase("tipo")} style={{ width: "100%" }}>← Atrás</button>
+          </div>
+        </div>
+      );
+    }
+
+    // tipo === "empresa"
+    return (
+      <div className="onboarding-overlay">
+        <div className="onboarding-card" style={{ textAlign: "center" }}>
+          <div className="onboarding-emoji">🏢</div>
+          <h2 className="onboarding-title">Cuéntanos sobre tu empresa</h2>
+          <p className="onboarding-description">Lo usaremos para adaptar los escenarios de práctica.</p>
+          <div style={{ display: "flex", flexDirection: "column", gap: "14px", margin: "24px 0", textAlign: "left" }}>
+            <div>
+              <label style={{ color: "#94a3b8", fontSize: "13px", fontWeight: "600", display: "block", marginBottom: "6px" }}>NOMBRE DE LA EMPRESA</label>
+              <input
+                type="text"
+                placeholder="Ej: Acme Soluciones S.L."
+                value={empresa}
+                onChange={e => setEmpresa(e.target.value)}
+                style={{
+                  width: "100%", padding: "14px 16px", borderRadius: "10px",
+                  border: "1px solid #334155", background: "#0f172a",
+                  color: "#f1f5f9", fontSize: "15px", outline: "none",
+                  boxSizing: "border-box",
+                }}
+              />
+            </div>
+            <div>
+              <label style={{ color: "#94a3b8", fontSize: "13px", fontWeight: "600", display: "block", marginBottom: "8px" }}>SECTOR PRINCIPAL</label>
+              <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+                {SECTOR_OPTIONS.map(opt => (
+                  <button
+                    key={opt.id}
+                    onClick={() => setSector(opt.id)}
+                    style={{
+                      display: "flex", alignItems: "center", gap: "12px",
+                      padding: "12px 16px", borderRadius: "10px",
+                      border: `2px solid ${sector === opt.id ? "#6366f1" : "#334155"}`,
+                      background: sector === opt.id ? "rgba(99,102,241,0.15)" : "#0f172a",
+                      cursor: "pointer", textAlign: "left", width: "100%",
+                      transition: "all 0.15s",
+                    }}
+                  >
+                    <span style={{ fontSize: "20px" }}>{opt.emoji}</span>
+                    <span style={{ color: "#f1f5f9", fontWeight: "600", fontSize: "14px" }}>{opt.label}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+          <div style={{ display: "flex", gap: "10px" }}>
+            <button className="btn-skip" onClick={() => setPhase("tipo")} style={{ flex: 1 }}>← Atrás</button>
+            <button
+              className="btn-next"
+              style={{ flex: 2, opacity: (sector && empresa.trim()) ? 1 : 0.4 }}
+              disabled={!sector || !empresa.trim()}
+              onClick={() => {
+                if (onlyTipo) {
+                  onComplete({ tipo, sector, empresa });
+                } else {
+                  setPhase("info");
+                }
+              }}
+            >
+              Continuar →
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   // ── Render: info slides ────────────────────────────────────────────────
   if (phase === "info") {

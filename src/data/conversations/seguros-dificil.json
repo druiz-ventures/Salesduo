@@ -1,0 +1,13 @@
+{
+  "id": "seguros-dificil",
+  "clientName": "Roberto Fuentes",
+  "clientRole": "Empresario · Cliente con proveedor actual",
+  "clientAvatar": "👔",
+  "context": "Cliente impaciente, ya asegurado y muy reactivo ante propuestas genéricas.",
+  "initialNode": "start",
+  "nodes": {
+    "start": {
+      "hint": "TÉCNICA: No ataques al proveedor actual. Busca el gap de cobertura y su impacto económico."
+    }
+  }
+}

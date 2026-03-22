@@ -1,0 +1,13 @@
+{
+  "id": "infoproductos-dificil",
+  "clientName": "Rodrigo Vega",
+  "clientRole": "Consultor escéptico",
+  "clientAvatar": "🧠",
+  "context": "Cliente quemado por cursos anteriores y muy crítico con promesas de marketing.",
+  "initialNode": "start",
+  "nodes": {
+    "start": {
+      "hint": "TÉCNICA: Valida su mala experiencia y diferencia tu propuesta con proceso y evidencia, no con hype."
+    }
+  }
+}

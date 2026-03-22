@@ -1,0 +1,13 @@
+{
+  "id": "kit-digital-facil",
+  "clientName": "Manuela Torres",
+  "clientRole": "Autónoma · Negocio local",
+  "clientAvatar": "💇‍♀️",
+  "context": "Cliente no técnico, interesado pero con miedo a no saber usar la herramienta.",
+  "initialNode": "start",
+  "nodes": {
+    "start": {
+      "hint": "TÉCNICA: Habla en casos de uso simples y en un plan de adopción paso a paso."
+    }
+  }
+}

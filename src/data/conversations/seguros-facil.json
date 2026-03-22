@@ -1,0 +1,13 @@
+{
+  "id": "seguros-facil",
+  "clientName": "Antonio Herrera",
+  "clientRole": "Particular · Padre de familia",
+  "clientAvatar": "👨‍👩‍👧‍👦",
+  "context": "Cliente cordial pero sensible al precio y con poca claridad sobre riesgos reales.",
+  "initialNode": "start",
+  "nodes": {
+    "start": {
+      "hint": "TÉCNICA: Empatiza primero y luego pregunta por escenarios de riesgo reales. Evita vender coberturas de golpe."
+    }
+  }
+}

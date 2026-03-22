@@ -1,0 +1,13 @@
+{
+  "id": "kit-digital-dificil",
+  "clientName": "Fernando Castillo",
+  "clientRole": "Gerente PYME · Experiencia negativa previa",
+  "clientAvatar": "🏢",
+  "context": "Cliente con trauma por implantación fallida. Alta resistencia al cambio.",
+  "initialNode": "start",
+  "nodes": {
+    "start": {
+      "hint": "TÉCNICA: Elimina riesgo con piloto y criterios de éxito. No minimices su experiencia previa."
+    }
+  }
+}

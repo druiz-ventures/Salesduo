@@ -12,6 +12,7 @@
   font-size: 20px;
   font-weight: 800;
   background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+  background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -33,6 +34,72 @@
   color: #f1f5f9;
 }
 
+.theme-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid #334155;
+}
+
+.role-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid #334155;
+}
+
+.role-switch-btn {
+  border: none;
+  background: transparent;
+  color: #94a3b8;
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1;
+  border-radius: 999px;
+  padding: 7px 10px;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.role-switch-btn:hover {
+  color: #cbd5e1;
+}
+
+.role-switch-btn.active {
+  background: linear-gradient(135deg, #22c55e, #06b6d4);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(34, 197, 94, 0.35);
+}
+
+.theme-switch-btn {
+  border: none;
+  background: transparent;
+  color: #94a3b8;
+  font-size: 13px;
+  line-height: 1;
+  border-radius: 999px;
+  width: 30px;
+  height: 26px;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.theme-switch-btn:hover {
+  color: #cbd5e1;
+}
+
+.theme-switch-btn.active {
+  background: linear-gradient(135deg, #6366f1, #3b82f6);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.35);
+}
+
 /* ===== LESSON SELECTOR ===== */
 .lesson-selector {
   max-width: 700px;
@@ -46,6 +113,7 @@
   font-weight: 800;
   margin-bottom: 8px;
   background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+  background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -658,6 +726,123 @@
   font-size: 13px;
   cursor: pointer;
   transition: all 0.2s;
+}
+
+/* ===== THEME (LIGHT MODE OVERRIDES) ===== */
+:root[data-theme="light"] .topbar {
+  background: linear-gradient(135deg, #ffffff, #f1f5f9);
+  border-bottom-color: #cbd5e1;
+}
+
+:root[data-theme="light"] .topbar-stat {
+  color: #475569;
+}
+
+:root[data-theme="light"] .topbar-stat strong {
+  color: #0f172a;
+}
+
+:root[data-theme="light"] .theme-switch {
+  background: #e2e8f0;
+  border-color: #cbd5e1;
+}
+
+:root[data-theme="light"] .role-switch {
+  background: #e2e8f0;
+  border-color: #cbd5e1;
+}
+
+:root[data-theme="light"] .role-switch-btn {
+  color: #475569;
+}
+
+:root[data-theme="light"] .role-switch-btn:hover {
+  color: #0f172a;
+}
+
+:root[data-theme="light"] .theme-switch-btn {
+  color: #475569;
+}
+
+:root[data-theme="light"] .theme-switch-btn:hover {
+  color: #0f172a;
+}
+
+:root[data-theme="light"] .lesson-map-wrapper,
+:root[data-theme="light"] .chat-container,
+:root[data-theme="light"] .theory-container {
+  background: transparent;
+}
+
+:root[data-theme="light"] .chat-header h2,
+:root[data-theme="light"] .lesson-map-title,
+:root[data-theme="light"] .theory-title,
+:root[data-theme="light"] .dashboard-title,
+:root[data-theme="light"] .result-card h3,
+:root[data-theme="light"] .map-node-title,
+:root[data-theme="light"] .substep-name,
+:root[data-theme="light"] .theory-lesson-title {
+  color: #0f172a;
+}
+
+:root[data-theme="light"] .chat-role,
+:root[data-theme="light"] .map-node-desc,
+:root[data-theme="light"] .substep-meta,
+:root[data-theme="light"] .dashboard-stat-label,
+:root[data-theme="light"] .theory-body,
+:root[data-theme="light"] .theory-highlight-text,
+:root[data-theme="light"] .example-reason,
+:root[data-theme="light"] .result-card p {
+  color: #475569;
+}
+
+:root[data-theme="light"] .chat-context,
+:root[data-theme="light"] .example-label,
+:root[data-theme="light"] .theory-counter {
+  color: #64748b;
+}
+
+:root[data-theme="light"] .chat-messages,
+:root[data-theme="light"] .map-node,
+:root[data-theme="light"] .map-substeps,
+:root[data-theme="light"] .map-substep,
+:root[data-theme="light"] .theory-slide,
+:root[data-theme="light"] .dashboard-card,
+:root[data-theme="light"] .lesson-card {
+  background: #ffffff;
+  border-color: #cbd5e1;
+}
+
+:root[data-theme="light"] .chat-input {
+  background: #ffffff;
+  color: #0f172a;
+  border-color: #cbd5e1;
+}
+
+:root[data-theme="light"] .chat-input::placeholder {
+  color: #94a3b8;
+}
+
+:root[data-theme="light"] .message.client .message-bubble {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+:root[data-theme="light"] .onboarding-overlay {
+  background: radial-gradient(ellipse at top, #ffffff, #eef2ff);
+}
+
+:root[data-theme="light"] .onboarding-card {
+  background: linear-gradient(145deg, #ffffff, #f8fafc);
+  border-color: #cbd5e1;
+}
+
+:root[data-theme="light"] .result-card.success {
+  background: linear-gradient(135deg, #dcfce7, #ffffff);
+}
+
+:root[data-theme="light"] .result-card.failure {
+  background: linear-gradient(135deg, #fee2e2, #ffffff);
 }
 
 .btn-dashboard:hover {
@@ -1507,6 +1692,7 @@
   font-size: 32px;
   font-weight: 800;
   background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+  background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   margin-bottom: 6px;

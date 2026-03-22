@@ -1,0 +1,13 @@
+{
+  "id": "infoproductos-facil",
+  "clientName": "Patricia Núñez",
+  "clientRole": "Profesional en transición laboral",
+  "clientAvatar": "👩‍💻",
+  "context": "Lead interesado con miedo al precio y a no obtener resultados.",
+  "initialNode": "start",
+  "nodes": {
+    "start": {
+      "hint": "TÉCNICA: Reduce el riesgo percibido. Habla de implementación, acompañamiento y resultado tangible."
+    }
+  }
+}

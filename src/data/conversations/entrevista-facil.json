@@ -1,0 +1,13 @@
+{
+  "id": "entrevista-facil",
+  "clientName": "Laura Gómez",
+  "clientRole": "Recruiter · Empresa SaaS",
+  "clientAvatar": "🧑‍💼",
+  "context": "Entrevista inicial. Debes presentar tu valor comercial con claridad y foco en resultados.",
+  "initialNode": "start",
+  "nodes": {
+    "start": {
+      "hint": "TÉCNICA: Pitch de 60 segundos: perfil, problema que resuelves y evidencia concreta."
+    }
+  }
+}
