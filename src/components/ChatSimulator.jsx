@@ -234,7 +234,7 @@ Tu foco está en resultados medibles, resiliencia y capacidad para vender bajo p
 
 
 
-export default function ChatSimulator({ conversationData, salesRole = "setter", onFinish, userId }) {
+export default function ChatSimulator({ conversationData, salesRole = "setter", onFinish, onAbort, userId }) {
   const scenario = SCENARIOS[conversationData.id] || SCENARIOS["objecion-precio"];
 
   const [messages, setMessages] = useState([
@@ -381,6 +381,18 @@ export default function ChatSimulator({ conversationData, salesRole = "setter", 
     handleFinish();
   };
 
+  const handleAbortTraining = () => {
+    const confirmAbort = window.confirm("¿Seguro que quieres abandonar este entrenamiento?");
+    if (!confirmAbort) return;
+    if (onAbort) {
+      onAbort();
+      return;
+    }
+    if (onFinish) {
+      onFinish({ score, xpEarned: 0, endType: "abandoned", badgeUnlocked: null });
+    }
+  };
+
   const qualityColors = { positive: "#22c55e", negative: "#ef4444", nomatch: "#f59e0b" };
 
   const isInterviewScenario = conversationData.id?.startsWith("entrevista");
@@ -467,22 +479,33 @@ export default function ChatSimulator({ conversationData, salesRole = "setter", 
       </div>
 
       {!ended ? (
-        <div className="chat-input-area">
-          <input
-            ref={inputRef}
-            type="text"
-            value={input}
-            onChange={e => setInput(e.target.value)}
-            onKeyDown={e => e.key === "Enter" && handleSend()}
-            placeholder="Escribe tu respuesta de ventas..."
-            className="chat-input"
-            disabled={isTyping}
-            autoComplete="off"
-          />
-          <button onClick={handleSend} className="btn-send" disabled={isTyping}>
-            {isTyping ? "..." : "Enviar"}
-          </button>
+        <>
+          <div className="chat-input-area">
+            <input
+              ref={inputRef}
+              type="text"
+              value={input}
+              onChange={e => setInput(e.target.value)}
+              onKeyDown={e => e.key === "Enter" && handleSend()}
+              placeholder="Escribe tu respuesta de ventas..."
+              className="chat-input"
+              disabled={isTyping}
+              autoComplete="off"
+            />
+            <button onClick={handleSend} className="btn-send" disabled={isTyping}>
+              {isTyping ? "..." : "Enviar"}
+            </button>
         </div>
+          <div style={{ padding: "0 16px 16px" }}>
+            <button
+              onClick={handleAbortTraining}
+              className="btn-back"
+              style={{ background: "transparent", border: "1px solid #334155", color: "#94a3b8" }}
+            >
+              ← Abandonar entrenamiento
+            </button>
+          </div>
+        </>
       ) : (
         <div className={`result-card ${endType}`}>
           <h3>{result.title}</h3>

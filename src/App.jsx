@@ -300,6 +300,25 @@ function App() {
     setCurrentScreen("menu");
   };
 
+  const handleGoHome = () => {
+    if (!authUser) {
+      setCurrentScreen("auth");
+      return;
+    }
+    setShowDashboard(false);
+    setShowAdmin(false);
+    setShowQuickValidation(false);
+    setSelectedConversation(null);
+    setSelectedLesson(null);
+    setCurrentScreen("menu");
+  };
+
+  const handleAbortTraining = () => {
+    setSelectedConversation(null);
+    setSelectedLesson(null);
+    setCurrentScreen("menu");
+  };
+
   const handleSelectLesson = (lesson, mode) => {
     setSelectedLesson(lesson);
     if (mode === "theory") {
@@ -391,7 +410,9 @@ function App() {
       )}
 
       <div className="topbar">
-        <span className="topbar-logo">salesDuo</span>
+        <span className="topbar-logo" onClick={handleGoHome} role="button" tabIndex={0} onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && handleGoHome()}>
+          salesDuo
+        </span>
         <div className="topbar-stats">
           <span className="topbar-stat">⭐ <strong>{totalXP}</strong> XP</span>
           <span className="topbar-stat">🏅 <strong>{badges.length}</strong></span>
@@ -476,6 +497,7 @@ function App() {
             key={selectedConversation.id + Date.now()}
             conversationData={selectedConversation}
             onFinish={handleFinishLesson}
+            onAbort={handleAbortTraining}
             userId={authUser?.id}
           />
         ) : (
@@ -484,6 +506,7 @@ function App() {
             conversationData={selectedConversation}
             salesRole={salesRole}
             onFinish={handleFinishLesson}
+            onAbort={handleAbortTraining}
             userId={authUser?.id}
           />
         )

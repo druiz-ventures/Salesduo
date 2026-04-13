@@ -12,7 +12,7 @@ const shuffleArray = (arr) => {
   return copy;
 };
 
-export default function ChatSimulatorMVP({ conversationData, onFinish, userId }) {
+export default function ChatSimulatorMVP({ conversationData, onFinish, onAbort, userId }) {
   const [currentNodeId, setCurrentNodeId] = useState(conversationData.initialNode || "start");
   const [messages, setMessages] = useState([]);
   const [score, setScore] = useState(0);
@@ -119,6 +119,18 @@ export default function ChatSimulatorMVP({ conversationData, onFinish, userId })
 
   const handleValidationComplete = () => {
     handleFinish();
+  };
+
+  const handleAbortTraining = () => {
+    const confirmAbort = window.confirm("¿Seguro que quieres abandonar este entrenamiento?");
+    if (!confirmAbort) return;
+    if (onAbort) {
+      onAbort();
+      return;
+    }
+    if (onFinish) {
+      onFinish({ score, xpEarned: 0, endType: "abandoned", badgeUnlocked: null });
+    }
   };
 
   const clientAvatar = conversationData.clientAvatar || "👨‍💼";
@@ -266,6 +278,13 @@ export default function ChatSimulatorMVP({ conversationData, onFinish, userId })
               {option.text}
             </button>
           ))}
+          <button
+            onClick={handleAbortTraining}
+            className="btn-back"
+            style={{ background: "transparent", border: "1px solid #334155", color: "#94a3b8", marginTop: "4px" }}
+          >
+            ← Abandonar entrenamiento
+          </button>
         </div>
       )}
 
