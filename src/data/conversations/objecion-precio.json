@@ -4,395 +4,143 @@
   "clientRole": "Director de Compras · Empresa mediana (80 empleados)",
   "clientAvatar": "👨‍💼",
   "context": "Carlos lleva 10 minutos escuchándote. Ha pedido precio y se ha quedado en silencio. Es un comprador experimentado que ha visto a muchos comerciales y tiene el presupuesto justo. No cede fácil.",
+  "difficultyLevel": "medium",
   "initialNode": "start",
+  "maxTurns": 3,
+  "successCriteria": {
+    "minScore": 50,
+    "completionType": "win"
+  },
   "nodes": {
-
     "start": {
       "clientMessage": "Mira, el producto me gusta, pero sinceramente... es demasiado caro. Ya trabajo con un proveedor que me cobra bastante menos por algo parecido.",
-      "hint": "TÉCNICA: Patrón de interrupción . No respondas al precio. No te defiendas. Interrumpe el patrón con una pregunta que le haga pensar en el coste de su situación actual.",
-      "keywords": {
-        "weighted": [
-          { "word": "entiendo",      "weight": 8  },
-          { "word": "comprendo",     "weight": 8  },
-          { "word": "otros clientes","weight": 14 },
-          { "word": "lo mismo pensaban","weight": 16 },
-          { "word": "cuánto os está costando","weight": 20 },
-          { "word": "qué os cuesta", "weight": 18 },
-          { "word": "cuánto perdéis","weight": 18 },
-          { "word": "preguntarte algo","weight": 14 },
-          { "word": "antes de hablar de precio","weight": 18 },
-          { "word": "puedo preguntarte","weight": 14 },
-          { "word": "situación actual","weight": 12 },
-          { "word": "qué problema",  "weight": 14 },
-          { "word": "descuento",     "weight": -22 },
-          { "word": "rebaja",        "weight": -22 },
-          { "word": "más barato",    "weight": -20 },
-          { "word": "precio especial","weight": -20 },
-          { "word": "ajustar precio","weight": -18 },
-          { "word": "te lo dejo",    "weight": -22 },
-          { "word": "somos mejores", "weight": -16 },
-          { "word": "nuestro producto","weight": -10 }
-        ]
-      },
-      "onKeywordMatch": {
-        "positive": "node-feel-felt-found",
-        "negative": "node-price-trap",
-        "nomatch": "node-pattern-miss"
-      },
-      "scoreImpact": 0
+      "technique": "Patrón de interrupción",
+      "nextCorrectNode": "node-feel-felt-found",
+      "options": [
+        {
+          "id": "opt-1",
+          "text": "Te entiendo. ¿Cuánto dinero os está costando anualmente gestionar esa información con el proveedor actual?",
+          "correct": true,
+          "explanation": "Utilizas Patrón de Interrupción: en lugar de defender el precio, interrumpes el patrón con una pregunta que le hace pensar en el COSTE OCULTO de su situación actual. Pasas del precio al valor."
+        },
+        {
+          "id": "opt-2",
+          "text": "Entiendo, pero nosotros somos mucho mejores y tenemos muchas más features que la competencia. Además te puedo dejar un descuento especial hoy.",
+          "correct": false,
+          "explanation": "Error: defendiste el precio comparándote con la competencia y ofreciste descuento, lo que valida su objeción y te coloca en una posición débil."
+        },
+        {
+          "id": "opt-3",
+          "text": "Vale, pues quizás no es el momento. Si en Q3 tenéis presupuesto me avisas y retomamos.",
+          "correct": false,
+          "explanation": "Error: renunciaste sin explorar el dolor. No intentaste entender si realmente es un problema de precio o si hay otro motivo detrás."
+        }
+      ]
     },
-
     "node-feel-felt-found": {
-      "clientMessage": "Hmm... ¿a qué te refieres con el coste de la situación actual? Lo que tengo ahora funciona.",
-      "hint": "TÉCNICA: Reconocer-Normalizar-Redirigir . Estructura: 'Entiendo cómo te sientes... otros clientes se sentían igual... lo que encontraron fue...' Luego lanza una pregunta de SITUACIÓN (SPIN): algo concreto y neutro sobre cómo trabajan hoy.",
-      "keywords": {
-        "weighted": [
-          { "word": "sientes",       "weight": 16 },
-          { "word": "sentían",       "weight": 16 },
-          { "word": "encontraron",   "weight": 16 },
-          { "word": "otros clientes","weight": 14 },
-          { "word": "cómo gestionáis","weight": 18 },
-          { "word": "cómo lo hacéis","weight": 18 },
-          { "word": "cuántas personas","weight": 16 },
-          { "word": "qué proceso",   "weight": 16 },
-          { "word": "actualmente",   "weight": 12 },
-          { "word": "hoy en día",    "weight": 12 },
-          { "word": "cuánto tiempo", "weight": 14 },
-          { "word": "cuántas horas", "weight": 16 },
-          { "word": "nosotros somos","weight": -14 },
-          { "word": "nuestro producto","weight": -12 },
-          { "word": "tenemos una feature","weight": -12 },
-          { "word": "es que nosotros","weight": -12 }
-        ]
-      },
-      "onKeywordMatch": {
-        "positive": "node-spin-situation",
-        "negative": "node-feature-dump",
-        "nomatch": "node-pattern-miss"
-      },
-      "scoreImpact": 25
+      "clientMessage": "Hmm, la verdad es que no lo tengo calculado... ¿qué me quieres decir con eso?",
+      "technique": "Pregunta de Situación (SPIN)",
+      "nextCorrectNode": "node-spin-situation",
+      "options": [
+        {
+          "id": "opt-1",
+          "text": "Otros clientes míos en tu sector tenían el mismo pensamiento que tú ahora. Cuando vimos el coste oculto de mantener a 4 personas full-time reportando en Excel, la inversión pasó a ser secundaria. ¿Cómo gestionáis vosotros ahora ese seguimiento de proveedores?",
+          "correct": true,
+          "explanation": "Utilizas Feel-Felt-Found + Pregunta de Situación: reconoces su sentimiento, lo normalizas (otros han sentido lo mismo), y lanzas una pregunta de SITUACIÓN (SPIN) que le hace pensar en el proceso actual sin presión."
+        },
+        {
+          "id": "opt-2",
+          "text": "Bueno, el coste es que generalmente toma 10-15 horas mensuales. Pero con nosotros lo reduces a 30 minutos al mes, así que el ROI es inmediato.",
+          "correct": false,
+          "explanation": "Error: hiciste matemáticas por él sin que te lo pidiera. Eso cierra la conversación, no la abre. Es Feature Dump disfrazado de ROI."
+        },
+        {
+          "id": "opt-3",
+          "text": "Pues dependerá de que tengas un equipo dedicado de compras. Si no lo tienes, entonces sí es caro.",
+          "correct": false,
+          "explanation": "Error: competiste con él en una objeción, no exploraste. Te enfocaste en defender tu producto en lugar de entender su realidad."
+        }
+      ]
     },
-
     "node-spin-situation": {
-      "clientMessage": "Pues... tenemos un equipo de 4 personas que se encarga de reportes y seguimiento de proveedores. Lo hacen en Excel mayormente.",
-      "hint": "TÉCNICA: Pregunta de problema. Ya tienes la situación. Ahora profundiza en el dolor: ¿qué problemas les genera ese proceso? Hazle ver que su 'funciona' quizás no funciona tan bien.",
-      "keywords": {
-        "weighted": [
-          { "word": "problemas",     "weight": 18 },
-          { "word": "qué pasa cuando","weight": 18 },
-          { "word": "errores",       "weight": 16 },
-          { "word": "cuánto tiempo tardan","weight": 18 },
-          { "word": "qué dificultades","weight": 18 },
-          { "word": "qué os complica","weight": 16 },
-          { "word": "os ha pasado",  "weight": 14 },
-          { "word": "fallos",        "weight": 14 },
-          { "word": "retraso",       "weight": 14 },
-          { "word": "manual",        "weight": 12 },
-          { "word": "excel",         "weight": 12 },
-          { "word": "qué tan eficiente","weight": 16 },
-          { "word": "interesante",   "weight": -10 },
-          { "word": "ya veo",        "weight": -10 },
-          { "word": "entiendo",      "weight": -8  },
-          { "word": "claro",         "weight": -8  }
-        ]
-      },
-      "onKeywordMatch": {
-        "positive": "node-spin-problem",
-        "negative": "node-missed-spin",
-        "nomatch": "node-pattern-miss"
-      },
-      "scoreImpact": 30
+      "clientMessage": "Tenemos un equipo de 4 personas en el departamento de compras. Básicamente hacen seguimiento de pedidos, plantillas de presupuestos y reportes a dirección. Lo hacen casi todo en Excel.",
+      "technique": "Pregunta de Problema (SPIN)",
+      "nextCorrectNode": "node-spin-problem",
+      "options": [
+        {
+          "id": "opt-1",
+          "text": "Entiendo. ¿Cuáles son los principales problemas o ineficiencias que eso os genera? ¿Hay algo que te gustaría que fuera diferente en ese proceso?",
+          "correct": true,
+          "explanation": "Utilizas Pregunta de Problema (SPIN): exploras el DOLOR de usar Excel. No presionas, solo preguntas sobre las dificultades que genera su método actual."
+        },
+        {
+          "id": "opt-2",
+          "text": "Ah, Excel... Con nuestra solución eso cambiaría completamente. Tenéis dashboards en tiempo real, reportes automáticos, auditoría de cambios...",
+          "correct": false,
+          "explanation": "Error: Feature Dump. Empezaste a vender sin explorar el dolor. Es un reflejo de inseguridad: intentas convencerlo con features en lugar de hacerle descubrir el problema."
+        },
+        {
+          "id": "opt-3",
+          "text": "Vale, eso tiene lógica. Entonces con nosotros ahorraría 2 horas diarias por empleado. Eso son 40 horas/mes, que a 30€/hora son 1.200€ mensuales de ahorro.",
+          "correct": false,
+          "explanation": "Error: intentaste hacer matemáticas sin permiso. Él no te autorizó a calcular el ahorro, solo te contó el proceso. Presupones números que no ha confirmado."
+        }
+      ]
     },
-
     "node-spin-problem": {
-      "clientMessage": "Pues la verdad es que sí... a veces los reportes llevan 2 días en hacerse, hay errores que luego hay que corregir y en reuniones de dirección hemos llegado con datos desactualizados. Pero bueno, nos apañamos.",
-      "hint": "🎯 TÉCNICA: Pregunta de implicación. El dolor está ahí. Ahora hay que amplificarlo: ¿qué consecuencias tienen esos errores? ¿Qué impacto tiene llegar con datos erróneos a dirección? Haz que él mismo vea la magnitud del problema.",
-      "keywords": {
-        "weighted": [
-          { "word": "qué pasa",      "weight": 16 },
-          { "word": "consecuencias", "weight": 18 },
-          { "word": "impacto",       "weight": 18 },
-          { "word": "qué supone",    "weight": 16 },
-          { "word": "cuánto cuesta", "weight": 18 },
-          { "word": "qué representa","weight": 16 },
-          { "word": "decisiones",    "weight": 14 },
-          { "word": "dirección",     "weight": 12 },
-          { "word": "datos erróneos","weight": 16 },
-          { "word": "reputación",    "weight": 14 },
-          { "word": "coste de ese error","weight": 20 },
-          { "word": "cuánto os cuesta ese retraso","weight": 20 },
-          { "word": "ya lo solucionamos","weight": -16 },
-          { "word": "tampoco es para tanto","weight": -16 },
-          { "word": "es un problema menor","weight": -14 }
-        ]
-      },
-      "onKeywordMatch": {
-        "positive": "node-implication",
-        "negative": "node-minimize",
-        "nomatch": "node-pattern-miss"
-      },
-      "scoreImpact": 35
+      "clientMessage": "Pues la verdad es que sí... No voy a mentirte, a veces tarda 2-3 días en hacerse un reporte, hay errores que luego hay que corregir, y en algunas reuniones de dirección hemos llegado con datos desactualizados. Es frustrante.",
+      "technique": "Pregunta de Implicación (SPIN)",
+      "nextCorrectNode": "node-spin-implication",
+      "options": [
+        {
+          "id": "opt-1",
+          "text": "Entiendo. ¿Qué significa que dirección reciba datos desactualizados? ¿Qué tipo de decisiones toma dirección basándose en esos reportes?",
+          "correct": true,
+          "explanation": "Utilizas Pregunta de Implicación (SPIN): amplíficas el dolor sin presionar, haciéndole descubrir la MAGNITUD del impacto en decisiones de negocio."
+        },
+        {
+          "id": "opt-2",
+          "text": "Eso es exactamente lo que nosotros solucionamos. Con actualizaciones en tiempo real no hay errores ni retrasos. Además el soporte está 24/7. ¿Necesitarías SLA?",
+          "correct": false,
+          "explanation": "Error: ya estás cerrando, no explorando. Hiciste de nuevo Feature Dump cuando el cliente apenas empeza a abrir sus problemas. Saltaste fases."
+        },
+        {
+          "id": "opt-3",
+          "text": "2-3 días es bastante tiempo. Eso te cuesta... a ver, si cada reporte que dirección necesita tarda 3 días, en Q1 habrás perdido... [haciendo cálculos]",
+          "correct": false,
+          "explanation": "Error: hablaste para ti. No hiciste una pregunta, dimos un sermón sobre los costes. Eso cierra la puerta, no la abre."
+        }
+      ]
     },
-
-    "node-implication": {
-      "clientMessage": "Hombre... el mes pasado tuvimos una reunión con el CEO donde los datos de un proveedor clave estaban desfasados. Tomamos una decisión que luego hubo que revertir. Eso nos costó tiempo y una conversación incómoda con el equipo.",
-      "hint": "💡 TÉCNICA: Pregunta de valor + Cálculo de ROI . Tiene el dolor concreto. Ahora hazle calcular el coste real de ese problema y conectarlo con tu solución. Pregunta: '¿Cuánto crees que costó esa decisión en tiempo y recursos?'",
-      "keywords": {
-        "weighted": [
-          { "word": "cuánto costó",  "weight": 20 },
-          { "word": "calcul",        "weight": 18 },
-          { "word": "cuánto tiempo", "weight": 16 },
-          { "word": "en horas",      "weight": 16 },
-          { "word": "qué valor",     "weight": 16 },
-          { "word": "si pudieras evitar","weight": 18 },
-          { "word": "qué significaría","weight": 16 },
-          { "word": "cuánto vale",   "weight": 16 },
-          { "word": "euros",         "weight": 14 },
-          { "word": "al año",        "weight": 14 },
-          { "word": "imagina que",   "weight": 14 },
-          { "word": "qué pasaría si","weight": 14 },
-          { "word": "vaya",          "weight": -10 },
-          { "word": "no sabía",      "weight": -8  },
-          { "word": "es normal",     "weight": -10 }
-        ]
-      },
-      "onKeywordMatch": {
-        "positive": "node-roi-calculation",
-        "negative": "node-missed-roi",
-        "nomatch": "node-pattern-miss"
-      },
-      "scoreImpact": 40
+    "node-spin-implication": {
+      "clientMessage": "Bien... dirección usa esos reportes para decidir qué proveedores escalamos, cuáles reducimos, y en qué nuevos productos invertimos. Si los datos son erróneos o llegan desfasados...",
+      "technique": "Cierre por descubrimiento",
+      "nextCorrectNode": "end-success",
+      "options": [
+        {
+          "id": "opt-1",
+          "text": "[Silencio empático. 3 segundos]. Exacto. Pocas cosas son más costosas que una decisión estratégica basada en datos malos. ¿Qué te gustaría tener para que eso no vuelva a pasar?",
+          "correct": true,
+          "explanation": "Utilizas Cierre por Descubrimiento: con silencio empático dejas que ÉL descubra la magnitud. Luego una pregunta abierta que lo lleva a QUERER la solución, no a que tú la vendas."
+        },
+        {
+          "id": "opt-2",
+          "text": "Exacto, por eso nuestra solución es perfecta. Con nosotros tienes reporting en tiempo real, auditoría completa, y escalabilidad sin límites. ¿Hacemos un piloto de 30 días gratis?",
+          "correct": false,
+          "explanation": "Error: cerraste venta sin dejarle que SÍ mismo descubriera. Dijiste la solución en lugar de hacerle llegar a ella. Ahora es TU venta, no SU descubrimiento."
+        },
+        {
+          "id": "opt-3",
+          "text": "Bueno, eso es un riesgo inherente del negocio. Pero con los dashboard en vivo lo minimizamos bastante. ¿Cuándo querrías implementarlo?",
+          "correct": false,
+          "explanation": "Error: minimizaste su problema (\"riesgo inherente\") en lugar de amplificarlo. También intentaste cerrar antes de que ÉL pidiera la solución."
+        }
+      ]
     },
-
-    "node-roi-calculation": {
-      "clientMessage": "Pues mira... solo esa reunión y la corrección posterior fueron unas 15 horas del equipo. A unos 40€/hora de media... serían 600€. Y eso pasa dos o tres veces al año como mínimo. Nunca lo había calculado así.",
-      "hint": "🔥 TÉCNICA: Cierre por comparación de inversión . Ahora él mismo ha calculado el coste del problema. Conecta: su coste anual de NO actuar vs el precio de tu solución. Luego propón un siguiente paso concreto con fecha.",
-      "keywords": {
-        "weighted": [
-          { "word": "comparado con",  "weight": 18 },
-          { "word": "frente a",       "weight": 16 },
-          { "word": "versus",         "weight": 14 },
-          { "word": "1800",           "weight": 20 },
-          { "word": "al año",         "weight": 14 },
-          { "word": "la inversión",   "weight": 16 },
-          { "word": "merece la pena", "weight": 16 },
-          { "word": "cuándo",         "weight": 14 },
-          { "word": "siguiente paso", "weight": 18 },
-          { "word": "esta semana",    "weight": 20 },
-          { "word": "demo",           "weight": 18 },
-          { "word": "reunión",        "weight": 18 },
-          { "word": "empezar",        "weight": 16 },
-          { "word": "arrancar",       "weight": 16 },
-          { "word": "fecha",          "weight": 16 },
-          { "word": "martes",         "weight": 18 },
-          { "word": "jueves",         "weight": 18 },
-          { "word": "piénsalo",       "weight": -18 },
-          { "word": "cuando puedas",  "weight": -18 },
-          { "word": "sin prisa",      "weight": -18 },
-          { "word": "ya te llamo",    "weight": -20 }
-        ]
-      },
-      "onKeywordMatch": {
-        "positive": "node-win",
-        "negative": "node-stall",
-        "nomatch": "node-confused"
-      },
-      "scoreImpact": 50
-    },
-
-    "node-price-trap": {
-      "clientMessage": "Bueno... si me haces un buen descuento igual lo considero. Un 25-30% menos ya lo vería más razonable.",
-      "hint": "⚠️ Caíste en la trampa del precio. TÉCNICA: Redirige con una pregunta de anclaje. Nunca negocies precio antes de establecer valor. Vuelve al problema real.",
-      "keywords": {
-        "weighted": [
-          { "word": "antes de hablar de precio","weight": 20 },
-          { "word": "quiero entender","weight": 16 },
-          { "word": "qué problema",  "weight": 16 },
-          { "word": "qué os cuesta", "weight": 18 },
-          { "word": "situación actual","weight": 14 },
-          { "word": "valor",         "weight": 14 },
-          { "word": "retorno",       "weight": 14 },
-          { "word": "te hago el 25", "weight": -25 },
-          { "word": "te hago el 30", "weight": -25 },
-          { "word": "puedo bajar",   "weight": -22 },
-          { "word": "descuento",     "weight": -20 },
-          { "word": "vale te lo bajo","weight": -25 }
-        ]
-      },
-      "onKeywordMatch": {
-        "positive": "node-feel-felt-found",
-        "negative": "node-lost",
-        "nomatch": "node-pattern-miss"
-      },
-      "scoreImpact": -20
-    },
-
-    "node-feature-dump": {
-      "clientMessage": "Ya, ya... eso me lo dicen todos los comerciales. Características tenéis muchas pero eso no me dice nada del precio.",
-      "hint": "⚠️ Hiciste un 'feature dump': listar características sin conectarlas al problema del cliente. TÉCNICA: Para y pregunta. Recupera con una pregunta de situación.",
-      "keywords": {
-        "weighted": [
-          { "word": "tienes razón",  "weight": 16 },
-          { "word": "perdona",       "weight": 14 },
-          { "word": "déjame preguntarte","weight": 18 },
-          { "word": "cómo gestionáis","weight": 16 },
-          { "word": "qué proceso",   "weight": 16 },
-          { "word": "actualmente",   "weight": 12 }
-        ]
-      },
-      "onKeywordMatch": {
-        "positive": "node-spin-situation",
-        "negative": "node-lost",
-        "nomatch": "node-lost"
-      },
-      "scoreImpact": -15
-    },
-
-    "node-missed-spin": {
-      "clientMessage": "Sí, bueno, todo eso ya lo sé... pero no me has respondido al tema del precio. ¿Vais a ajustarlo o no?",
-      "hint": "Pasaste por encima del dolor sin profundizar. Última oportunidad: pregunta por las consecuencias de esos problemas antes de volver al precio.",
-      "keywords": {
-        "weighted": [
-          { "word": "qué impacto",   "weight": 18 },
-          { "word": "consecuencias", "weight": 18 },
-          { "word": "cuánto os cuesta","weight": 20 },
-          { "word": "qué supone",    "weight": 16 },
-          { "word": "decisiones",    "weight": 14 }
-        ]
-      },
-      "onKeywordMatch": {
-        "positive": "node-spin-problem",
-        "negative": "node-lost",
-        "nomatch": "node-lost"
-      },
-      "scoreImpact": -20
-    },
-
-    "node-minimize": {
-      "clientMessage": "Ya... pero tampoco es tan grave. Algo así nos pasa a todos, ¿no?",
-      "hint": "Minimizaste el dolor del cliente. Necesitas amplificar, no relativizar. Pregunta cuántas veces al año ocurre y cuánto les cuesta cada vez.",
-      "keywords": {
-        "weighted": [
-          { "word": "cuántas veces", "weight": 18 },
-          { "word": "al año",        "weight": 14 },
-          { "word": "cuánto cuesta cada vez","weight": 20 },
-          { "word": "sumando",       "weight": 16 },
-          { "word": "acumulado",     "weight": 16 }
-        ]
-      },
-      "onKeywordMatch": {
-        "positive": "node-implication",
-        "negative": "node-lost",
-        "nomatch": "node-lost"
-      },
-      "scoreImpact": -15
-    },
-
-    "node-missed-roi": {
-      "clientMessage": "Sí... pero sigo sin ver claro que vuestro precio esté justificado.",
-      "hint": "Tenías el dolor concreto y no lo cuantificaste. Haz el cálculo ahora: horas × coste × frecuencia anual. El número tiene que salir de su boca, no de la tuya.",
-      "keywords": {
-        "weighted": [
-          { "word": "calcul",        "weight": 18 },
-          { "word": "cuánto costó",  "weight": 20 },
-          { "word": "horas",         "weight": 14 },
-          { "word": "por año",       "weight": 16 },
-          { "word": "euros",         "weight": 14 }
-        ]
-      },
-      "onKeywordMatch": {
-        "positive": "node-roi-calculation",
-        "negative": "node-stall",
-        "nomatch": "node-stall"
-      },
-      "scoreImpact": -15
-    },
-
-    "node-pattern-miss": {
-      "clientMessage": "No te acabo de seguir... ¿qué me estás queriendo decir exactamente?",
-      "hint": "Respuesta genérica: el cliente no engancha. Usa una pregunta directa y corta: '¿Puedo preguntarte cuánto tiempo dedica tu equipo a reportes cada semana?'",
-      "keywords": {
-        "weighted": [
-          { "word": "cuánto tiempo", "weight": 16 },
-          { "word": "cuántas personas","weight": 16 },
-          { "word": "qué proceso",   "weight": 14 },
-          { "word": "cómo gestionáis","weight": 16 },
-          { "word": "actualmente",   "weight": 12 },
-          { "word": "horas",         "weight": 14 }
-        ]
-      },
-      "onKeywordMatch": {
-        "positive": "node-spin-situation",
-        "negative": "node-lost",
-        "nomatch": "node-lost"
-      },
-      "scoreImpact": -10
-    },
-
-    "node-win": {
-      "clientMessage": "Oye... no lo había visto así. Si el coste del problema supera claramente el precio de la solución... tiene sentido. ¿Cuándo podríamos hacer una demo con mi equipo técnico?",
-      "hint": null,
+    "end-success": {
+      "clientMessage": "[El cliente continuaría aquí, pero en MVP marcamos esto como ÉXITO Si llegaste hasta aquí haciendo las preguntas SPIN correctas]",
       "isEndNode": true,
-      "endType": "success",
-      "scoreImpact": 30
-    },
-
-    "node-lost": {
-      "clientMessage": "Mira, no creo que encajemos. Voy a seguir con lo que tengo. Gracias por tu tiempo.",
-      "hint": null,
-      "isEndNode": true,
-      "endType": "failure",
-      "scoreImpact": 0
-    },
-
-    "node-stall": {
-      "clientMessage": "Interesante... déjame pensarlo esta semana y te escribo.",
-      "hint": null,
-      "isEndNode": true,
-      "endType": "partial",
-      "scoreImpact": 10
-    },
-
-    "node-confused": {
-      "clientMessage": "No te acabo de entender. ¿Me puedes decir en una frase qué me estás proponiendo?",
-      "hint": "Sé directo. Una sola frase: conecta el coste que él mismo calculó con el precio de tu solución.",
-      "keywords": {
-        "weighted": [
-          { "word": "1800",          "weight": 20 },
-          { "word": "coste del problema","weight": 18 },
-          { "word": "frente a",      "weight": 14 },
-          { "word": "comparado",     "weight": 14 },
-          { "word": "inversión",     "weight": 14 },
-          { "word": "merece la pena","weight": 16 }
-        ]
-      },
-      "onKeywordMatch": {
-        "positive": "node-win",
-        "negative": "node-lost",
-        "nomatch": "node-lost"
-      },
-      "scoreImpact": -10
-    }
-  },
-
-  "endResults": {
-    "success": {
-      "title": "¡Demo cerrada! 🎉",
-      "message": "Ejecutaste Secuencia completa: Situación → Problema → Implicación → Necesidad-Beneficio. El cliente calculó el coste de su problema y lo comparó con tu precio. Eso es vender valor, no precio.",
-      "xpEarned": 100,
-      "unlocksBadge": "price-handler"
-    },
-    "partial": {
-      "title": "Interés, sin compromiso 😅",
-      "message": "Llegaste al ROI pero no cerraste con una acción concreta. Recuerda: siempre termina con un siguiente paso con fecha. 'Te escribo' casi nunca ocurre.",
-      "xpEarned": 40,
-      "unlocksBadge": null
-    },
-    "failure": {
-      "title": "Venta perdida 😬",
-      "message": "La secuencia correcta: patrón de interrupción → Reconocer-Normalizar-Redirigir → secuencia (Situación → Problema → Implicación) → ROI → cierre con fecha. No defiendas el precio antes de establecer el valor.",
-      "xpEarned": 10,
-      "unlocksBadge": null
+      "endType": "success"
     }
   }
 }

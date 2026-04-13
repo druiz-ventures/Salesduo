@@ -6,6 +6,7 @@ import Onboarding from "./components/Onboarding";
 import LessonMap from "./components/LessonMap";
 import TheoryScreen from "./components/TheoryScreen";
 import ChatSimulator from "./components/ChatSimulator";
+import ChatSimulatorMVP from "./components/ChatSimulatorMVP";
 import Dashboard from "./components/Dashboard";
 import AdminPanel from "./components/AdminPanel";
 import ValidationFeedback from "./components/ValidationFeedback";
@@ -470,13 +471,22 @@ function App() {
       )}
 
       {currentScreen === "chat" && selectedConversation ? (
-        <ChatSimulator
-          key={selectedConversation.id + Date.now()}
-          conversationData={selectedConversation}
-          salesRole={salesRole}
-          onFinish={handleFinishLesson}
-          userId={authUser?.id}
-        />
+        selectedConversation.nodes && Object.values(selectedConversation.nodes).some(node => node.options) ? (
+          <ChatSimulatorMVP
+            key={selectedConversation.id + Date.now()}
+            conversationData={selectedConversation}
+            onFinish={handleFinishLesson}
+            userId={authUser?.id}
+          />
+        ) : (
+          <ChatSimulator
+            key={selectedConversation.id + Date.now()}
+            conversationData={selectedConversation}
+            salesRole={salesRole}
+            onFinish={handleFinishLesson}
+            userId={authUser?.id}
+          />
+        )
       ) : (
         <LessonMap
           onSelectLesson={handleSelectLesson}
