@@ -7,8 +7,6 @@ import LessonMap from "./components/LessonMap";
 import TheoryScreen from "./components/TheoryScreen";
 import ChatSimulator from "./components/ChatSimulator";
 import Dashboard from "./components/Dashboard";
-import AdminPanel from "./components/AdminPanel";
-import ValidationFeedback from "./components/ValidationFeedback";
 
 const conversationModules = import.meta.glob("./data/conversations/*.json", { eager: true });
 const conversationsMap = Object.values(conversationModules).reduce((acc, mod) => {
@@ -116,8 +114,7 @@ function App() {
   const [profileTipo, setProfileTipo] = useState(null);
   const [profileSector, setProfileSector] = useState(null);
   const [sessionStats, setSessionStats] = useState({ total: 0, racha: 0 });
-  const [showAdmin, setShowAdmin] = useState(false);
-  const [showQuickValidation, setShowQuickValidation] = useState(false);
+
 
   useEffect(() => {
     const media = window.matchMedia("(prefers-color-scheme: dark)");
@@ -398,58 +395,6 @@ function App() {
           <button className="btn-dashboard" onClick={() => setShowDashboard(true)}>
             📊 Progreso
           </button>
-          <button className="btn-dashboard" onClick={() => setShowQuickValidation(true)}>
-            ✅ Validar
-          </button>
-          <div className="role-switch" role="group" aria-label="Rol comercial">
-            <button
-              className={`role-switch-btn ${salesRole === "setter" ? "active" : ""}`}
-              onClick={() => handleSalesRoleChange("setter")}
-              title="Modo SDR / Setter"
-            >
-              SDR
-            </button>
-            <button
-              className={`role-switch-btn ${salesRole === "closer" ? "active" : ""}`}
-              onClick={() => handleSalesRoleChange("closer")}
-              title="Modo AE / Closer"
-            >
-              AE
-            </button>
-          </div>
-          <div className="theme-switch" role="group" aria-label="Tema">
-            <button
-              className={`theme-switch-btn ${themeMode === "light" ? "active" : ""}`}
-              onClick={() => handleThemeChange("light")}
-              title="Modo claro"
-            >
-              ☀️
-            </button>
-            <button
-              className={`theme-switch-btn ${themeMode === "system" ? "active" : ""}`}
-              onClick={() => handleThemeChange("system")}
-              title="Usar tema del sistema"
-            >
-              🖥️
-            </button>
-            <button
-              className={`theme-switch-btn ${themeMode === "dark" ? "active" : ""}`}
-              onClick={() => handleThemeChange("dark")}
-              title="Modo oscuro"
-            >
-              🌙
-            </button>
-          </div>
-          {authUser?.email === "crd713ncb@gmail.com" && (
-            <button
-              onClick={() => setShowAdmin(true)}
-              style={{ background:"#1e293b", border:"1px solid #6366f1",
-                color:"#6366f1", borderRadius:"8px", padding:"6px 12px",
-                cursor:"pointer", fontSize:"12px" }}
-            >
-              🛡️ Admin
-            </button>
-          )}
           <button
             onClick={handleLogout}
             style={{ background:"transparent", border:"1px solid #334155",
@@ -461,10 +406,6 @@ function App() {
         </div>
       </div>
 
-      {showAdmin && (
-        <AdminPanel userEmail={authUser?.email} theme={resolvedTheme} onClose={() => setShowAdmin(false)} />
-      )}
-
       {showDashboard && (
         <Dashboard
           totalXP={totalXP}
@@ -472,16 +413,6 @@ function App() {
           badges={badges}
           sessionStats={sessionStats}
           onClose={() => setShowDashboard(false)}
-        />
-      )}
-
-      {showQuickValidation && (
-        <ValidationFeedback
-          userId={authUser?.id}
-          conversationId={selectedConversation?.id || "manual-validation"}
-          scoreFinal={0}
-          endType="manual"
-          onComplete={() => setShowQuickValidation(false)}
         />
       )}
 
