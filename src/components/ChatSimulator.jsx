@@ -415,13 +415,6 @@ export default function ChatSimulator({ conversationData, salesRole = "setter", 
       </div>
       <p className="chat-role">{conversationData.clientRole || scenario.context}</p>
       <p className="chat-context">{scenario.context}</p>
-      {!conversationData.id?.startsWith("entrevista") && (
-        <p className="chat-context" style={{ color: salesRole === "setter" ? "#06b6d4" : "#22c55e", marginTop: "-6px" }}>
-          {salesRole === "setter"
-            ? "Modo SDR/Setter: objetivo = calificar y agendar siguiente reunión"
-            : "Modo AE/Closer: objetivo = avanzar al cierre con compromiso concreto"}
-        </p>
-      )}
 
       {/* Stake bar */}
       {dealValue > 0 && !isInterviewScenario && (
