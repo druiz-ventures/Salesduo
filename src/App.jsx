@@ -401,22 +401,6 @@ function App() {
           <button className="btn-dashboard" onClick={() => setShowQuickValidation(true)}>
             ✅ Validar
           </button>
-          <div className="role-switch" role="group" aria-label="Rol comercial">
-            <button
-              className={`role-switch-btn ${salesRole === "setter" ? "active" : ""}`}
-              onClick={() => handleSalesRoleChange("setter")}
-              title="Modo SDR / Setter"
-            >
-              SDR
-            </button>
-            <button
-              className={`role-switch-btn ${salesRole === "closer" ? "active" : ""}`}
-              onClick={() => handleSalesRoleChange("closer")}
-              title="Modo AE / Closer"
-            >
-              AE
-            </button>
-          </div>
           <div className="theme-switch" role="group" aria-label="Tema">
             <button
               className={`theme-switch-btn ${themeMode === "light" ? "active" : ""}`}
