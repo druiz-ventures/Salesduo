@@ -148,18 +148,52 @@ function App() {
 
   // ── Detectar sesión activa al cargar ───────────────────────────────────────
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session?.user) {
-        setAuthUser(session.user);
-        loadUserProgress(session.user.id);
-      } else {
+    let isMounted = true;
+    let authTimeoutId;
+
+    // Fallback para evitar spinner infinito si Auth no responde
+    authTimeoutId = window.setTimeout(() => {
+      if (!isMounted) return;
+      setAuthLoading(false);
+      setCurrentScreen("auth");
+    }, 8000);
+
+    const bootstrapAuth = async () => {
+      try {
+        const { data: { session }, error } = await supabase.auth.getSession();
+        if (!isMounted) return;
+
+        if (error) {
+          console.error("Error cargando sesión:", error);
+          setAuthLoading(false);
+          setCurrentScreen("auth");
+          return;
+        }
+
+        if (session?.user) {
+          setAuthUser(session.user);
+          await loadUserProgress(session.user.id);
+        } else {
+          setAuthLoading(false);
+          setCurrentScreen("auth");
+        }
+      } catch (error) {
+        if (!isMounted) return;
+        console.error("Fallo inesperado en bootstrap de auth:", error);
         setAuthLoading(false);
         setCurrentScreen("auth");
+      } finally {
+        if (authTimeoutId) {
+          window.clearTimeout(authTimeoutId);
+        }
       }
-    });
+    };
+
+    bootstrapAuth();
 
     // Escuchar cambios de sesión (login/logout + redirect OAuth)
     const { data: listener } = supabase.auth.onAuthStateChange((event, session) => {
+      if (!isMounted) return;
       if (session?.user) {
         setAuthUser(session.user);
         // SIGNED_IN cubre el retorno del redirect de Google OAuth
@@ -173,7 +207,13 @@ function App() {
       }
     });
 
-    return () => listener.subscription.unsubscribe();
+    return () => {
+      isMounted = false;
+      if (authTimeoutId) {
+        window.clearTimeout(authTimeoutId);
+      }
+      listener.subscription.unsubscribe();
+    };
   }, []);
 
   // ── Cargar progreso del usuario ────────────────────────────────────────────

@@ -4,7 +4,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
 const ANTHROPIC_API_KEY = Deno.env.get("ANTHROPIC_API_KEY") ?? "";
-const ANTHROPIC_MODEL = Deno.env.get("ANTHROPIC_MODEL") ?? "claude-3-5-haiku-latest";
+const ANTHROPIC_MODEL = Deno.env.get("ANTHROPIC_MODEL") ?? "claude-3-5-haiku-20241022";
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL") ?? "";
 const SUPABASE_ANON_KEY = Deno.env.get("SUPABASE_ANON_KEY") ?? "";
 const REQUIRE_AUTH = (Deno.env.get("REQUIRE_AUTH") ?? "false").toLowerCase() === "true";
@@ -12,6 +12,30 @@ const REQUIRE_AUTH = (Deno.env.get("REQUIRE_AUTH") ?? "false").toLowerCase() ===
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+};
+
+const buildProviderFallback = (reason: string, status: number | null = null) => ({
+  clientMessage: "Perdona, se ha cortado un momento la conexión. Si te parece, retomamos: ¿qué resultado concreto te gustaría conseguir con esto en los próximos 90 días?",
+  feedback: "Tu respuesta se registró, pero la IA no pudo evaluarla. " + reason,
+  matchType: "nomatch",
+  scoreImpact: 0,
+  technique: "Sin evaluación (fallback técnico)",
+  isEndNode: false,
+  endType: null,
+  _providerStatus: status,
+  _providerReason: reason,
+});
+
+const getCandidateModels = () => {
+  const configured = (ANTHROPIC_MODEL || "").trim();
+  const candidates = [
+    configured,
+    "claude-3-5-haiku-20241022",
+    "claude-3-haiku-20240307",
+    "claude-3-5-sonnet-20241022",
+  ].filter(Boolean);
+
+  return [...new Set(candidates)];
 };
 
 serve(async (req) => {
@@ -149,36 +173,73 @@ ${roleScoreRules}
 - Argumento genérico sin personalizar: 0 a +10
 - Respuesta ininteligible o irrelevante: -20`;
 
-    // ── Llamada a Claude ───────────────────────────────────────────────────
-    const response = await fetch("https://api.anthropic.com/v1/messages", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-api-key": ANTHROPIC_API_KEY,
-        "anthropic-version": "2023-06-01",
-      },
-      body: JSON.stringify({
-        model: ANTHROPIC_MODEL,
-        max_tokens: 400,
-        system: systemPrompt,
-        messages: conversationHistory,
-      }),
-    });
+    // Validación temprana para evitar falsos "fallos temporales" cuando falta configuración.
+    if (!ANTHROPIC_API_KEY) {
+      console.error("chat-ai config error: missing ANTHROPIC_API_KEY");
+      return new Response(JSON.stringify(buildProviderFallback("La configuración de IA no está completa (ANTHROPIC_API_KEY).", 500)), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
 
-    if (!response.ok) {
-      const errBody = await response.json().catch(() => ({}));
-      console.error("Anthropic API error", response.status, errBody);
+    // ── Llamada a Claude con fallback de modelo (solo si hay 404) ──────────
+    const modelsToTry = getCandidateModels();
+    let response: Response | null = null;
+    let lastErrBody: Record<string, unknown> = {};
+    let selectedModel = modelsToTry[0] || ANTHROPIC_MODEL;
+
+    for (const candidateModel of modelsToTry) {
+      selectedModel = candidateModel;
+      const attempt = await fetch("https://api.anthropic.com/v1/messages", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-api-key": ANTHROPIC_API_KEY,
+          "anthropic-version": "2023-06-01",
+        },
+        body: JSON.stringify({
+          model: candidateModel,
+          max_tokens: 400,
+          system: systemPrompt,
+          messages: conversationHistory,
+        }),
+      });
+
+      if (attempt.ok) {
+        response = attempt;
+        break;
+      }
+
+      const errBody = await attempt.json().catch(() => ({}));
+      lastErrBody = errBody;
+      console.error("Anthropic API error", attempt.status, { model: candidateModel, errBody });
+
+      // Si no es 404, no tiene sentido seguir probando modelos.
+      if (attempt.status !== 404) {
+        response = attempt;
+        break;
+      }
+    }
+
+    if (!response || !response.ok) {
+      const status = response?.status ?? null;
+
+      let providerReason = "Reintenta en unos segundos.";
+      if (status === 401 || status === 403) {
+        providerReason = "La clave del proveedor IA no es válida o no tiene permisos.";
+      } else if (status === 404) {
+        providerReason = "El modelo configurado no está disponible en tu cuenta. Actualiza ANTHROPIC_MODEL en secretos de Supabase.";
+      } else if (status === 429) {
+        providerReason = "Se alcanzó el límite de uso del proveedor IA.";
+      } else if (status && status >= 500) {
+        providerReason = "El proveedor IA está caído temporalmente.";
+      }
+
+      const fallback = buildProviderFallback(providerReason, status);
+      fallback._providerReason = `${providerReason} Modelos probados: ${modelsToTry.join(", ")}. Último modelo: ${selectedModel}.`;
+      fallback._providerError = lastErrBody;
 
       // Fallback para que la simulación no se rompa si el proveedor AI falla.
-      return new Response(JSON.stringify({
-        clientMessage: "Perdona, se ha cortado un momento la conexión. Si te parece, retomamos: ¿qué resultado concreto te gustaría conseguir con esto en los próximos 90 días?",
-        feedback: "Tu respuesta se registró, pero la IA no pudo evaluarla por un fallo temporal del proveedor. Reintenta en unos segundos.",
-        matchType: "nomatch",
-        scoreImpact: 0,
-        technique: "Sin evaluación (fallback técnico)",
-        isEndNode: false,
-        endType: null,
-      }), {
+      return new Response(JSON.stringify(fallback), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }

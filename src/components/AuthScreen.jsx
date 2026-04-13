@@ -1,6 +1,14 @@
 import { useState } from "react";
 import { supabase } from "../supabaseClient";
 
+const getOAuthRedirectTo = () => {
+  const configuredUrl = (import.meta.env.VITE_PUBLIC_SITE_URL || "").trim();
+  if (configuredUrl) {
+    return configuredUrl;
+  }
+  return window.location.origin;
+};
+
 export default function AuthScreen() {
   const [mode, setMode] = useState("login");        // "login" | "register"
   const [email, setEmail] = useState("");
@@ -12,9 +20,10 @@ export default function AuthScreen() {
   const handleGoogleLogin = async () => {
     setError(""); setSuccess("");
     setLoading(true);
+    const redirectTo = getOAuthRedirectTo();
     const { error: err } = await supabase.auth.signInWithOAuth({
       provider: "google",
-      options: { redirectTo: window.location.origin },
+      options: { redirectTo },
     });
     if (err) {
       setError("No se pudo conectar con Google. Inténtalo de nuevo.");
