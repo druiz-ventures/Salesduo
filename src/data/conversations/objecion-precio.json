@@ -1,144 +1,92 @@
 {
   "id": "objecion-precio",
   "clientName": "Carlos Mendoza",
-  "clientRole": "Director de Compras · Empresa mediana (80 empleados)",
+  "clientRole": "Director de Compras · 80 empleados",
   "clientAvatar": "👨‍💼",
-  "context": "Carlos lleva 10 minutos escuchándote. Ha pedido precio y se ha quedado en silencio. Es un comprador experimentado que ha visto a muchos comerciales y tiene el presupuesto justo. No cede fácil.",
+  "context": "Carlos ha pedido precio y ahora cuestiona. Experimentado, presupuesto justo, no cede fácil.",
   "difficultyLevel": "medium",
   "initialNode": "start",
   "maxTurns": 3,
-  "successCriteria": {
-    "minScore": 50,
-    "completionType": "win"
-  },
+  "dealValue": 18000,
+  "commissionRate": 10,
   "nodes": {
     "start": {
-      "clientMessage": "Mira, el producto me gusta, pero sinceramente... es demasiado caro. Ya trabajo con un proveedor que me cobra bastante menos por algo parecido.",
-      "technique": "Patrón de interrupción",
-      "nextCorrectNode": "node-feel-felt-found",
-      "options": [
-        {
-          "id": "opt-1",
-          "text": "Te entiendo. ¿Cuánto dinero os está costando anualmente gestionar esa información con el proveedor actual?",
-          "correct": true,
-          "explanation": "Utilizas Patrón de Interrupción: en lugar de defender el precio, interrumpes el patrón con una pregunta que le hace pensar en el COSTE OCULTO de su situación actual. Pasas del precio al valor."
-        },
-        {
-          "id": "opt-2",
-          "text": "Entiendo, pero nosotros somos mucho mejores y tenemos muchas más features que la competencia. Además te puedo dejar un descuento especial hoy.",
-          "correct": false,
-          "explanation": "Error: defendiste el precio comparándote con la competencia y ofreciste descuento, lo que valida su objeción y te coloca en una posición débil."
-        },
-        {
-          "id": "opt-3",
-          "text": "Vale, pues quizás no es el momento. Si en Q3 tenéis presupuesto me avisas y retomamos.",
-          "correct": false,
-          "explanation": "Error: renunciaste sin explorar el dolor. No intentaste entender si realmente es un problema de precio o si hay otro motivo detrás."
-        }
-      ]
-    },
-    "node-feel-felt-found": {
-      "clientMessage": "Hmm, la verdad es que no lo tengo calculado... ¿qué me quieres decir con eso?",
-      "technique": "Pregunta de Situación (SPIN)",
+      "clientMessage": "Mira, el producto me gusta, pero sinceramente... es demasiado caro. Ya trabajo con un proveedor que me cobra bastante menos.",
+      "technique": "Patrón de Interrupción",
       "nextCorrectNode": "node-spin-situation",
       "options": [
         {
           "id": "opt-1",
-          "text": "Otros clientes míos en tu sector tenían el mismo pensamiento que tú ahora. Cuando vimos el coste oculto de mantener a 4 personas full-time reportando en Excel, la inversión pasó a ser secundaria. ¿Cómo gestionáis vosotros ahora ese seguimiento de proveedores?",
+          "text": "Te entiendo. ¿Cuánto dinero os está costando anualmente gestionar eso con el proveedor actual?",
           "correct": true,
-          "explanation": "Utilizas Feel-Felt-Found + Pregunta de Situación: reconoces su sentimiento, lo normalizas (otros han sentido lo mismo), y lanzas una pregunta de SITUACIÓN (SPIN) que le hace pensar en el proceso actual sin presión."
+          "explanation": "Utilizas Patrón de Interrupción: haces una pregunta sobre el COSTE OCULTO en lugar de defender precio. Pasas del precio al valor real."
         },
         {
           "id": "opt-2",
-          "text": "Bueno, el coste es que generalmente toma 10-15 horas mensuales. Pero con nosotros lo reduces a 30 minutos al mes, así que el ROI es inmediato.",
+          "text": "Entiendo, pero nosotros somos mucho mejores y tenemos más features. Además te dejo un descuento especial hoy.",
           "correct": false,
-          "explanation": "Error: hiciste matemáticas por él sin que te lo pidiera. Eso cierra la conversación, no la abre. Es Feature Dump disfrazado de ROI."
+          "explanation": "Error: defendiste precio y ofreciste descuento. Validaste su objeción y te colocas en posición débil frente al cliente."
         },
         {
           "id": "opt-3",
-          "text": "Pues dependerá de que tengas un equipo dedicado de compras. Si no lo tienes, entonces sí es caro.",
+          "text": "Vale, pues quizás no es el momento. Si en Q3 tenéis presupuesto avísame y retomamos.",
           "correct": false,
-          "explanation": "Error: competiste con él en una objeción, no exploraste. Te enfocaste en defender tu producto en lugar de entender su realidad."
+          "explanation": "Error: renunciaste sin explorar el dolor real detrás de la objeción de precio. No validaste si es realmente el presupuesto."
         }
       ]
     },
     "node-spin-situation": {
-      "clientMessage": "Tenemos un equipo de 4 personas en el departamento de compras. Básicamente hacen seguimiento de pedidos, plantillas de presupuestos y reportes a dirección. Lo hacen casi todo en Excel.",
+      "clientMessage": "Pues tenemos un equipo de 4 personas en compras. Lo hacen en Excel mayormente, tarda 2-3 días un reporte. A veces hay errores que luego corregir.",
       "technique": "Pregunta de Problema (SPIN)",
       "nextCorrectNode": "node-spin-problem",
       "options": [
         {
           "id": "opt-1",
-          "text": "Entiendo. ¿Cuáles son los principales problemas o ineficiencias que eso os genera? ¿Hay algo que te gustaría que fuera diferente en ese proceso?",
+          "text": "¿Qué tipo de problemas o ineficiencias te genera ese proceso? ¿Cuál es el mayor dolor en el día a día?",
           "correct": true,
-          "explanation": "Utilizas Pregunta de Problema (SPIN): exploras el DOLOR de usar Excel. No presionas, solo preguntas sobre las dificultades que genera su método actual."
+          "explanation": "Utilizas Pregunta de Problema (SPIN): exploras el DOLOR sin presionar. Haces que descubra los costes ocultos de Excel."
         },
         {
           "id": "opt-2",
-          "text": "Ah, Excel... Con nuestra solución eso cambiaría completamente. Tenéis dashboards en tiempo real, reportes automáticos, auditoría de cambios...",
+          "text": "Ah, Excel... Con nosotros tienes dashboards en tiempo real, reportes automáticos, auditoría de cambios. Mucho más potente.",
           "correct": false,
-          "explanation": "Error: Feature Dump. Empezaste a vender sin explorar el dolor. Es un reflejo de inseguridad: intentas convencerlo con features en lugar de hacerle descubrir el problema."
+          "explanation": "Error: Feature Dump. Vendiste tus features sin que el cliente descubriera primero sus problemas. Refleja inseguridad."
         },
         {
           "id": "opt-3",
-          "text": "Vale, eso tiene lógica. Entonces con nosotros ahorraría 2 horas diarias por empleado. Eso son 40 horas/mes, que a 30€/hora son 1.200€ mensuales de ahorro.",
+          "text": "Eso significa 48 horas anuales de pérdida. A 30€/hora son 1.440€. Mi solución cuesta menos que eso.",
           "correct": false,
-          "explanation": "Error: intentaste hacer matemáticas sin permiso. Él no te autorizó a calcular el ahorro, solo te contó el proceso. Presupones números que no ha confirmado."
+          "explanation": "Error: hiciste matemáticas sin que el cliente lo pidiera. Presupones números que él no confirmó ni autorizó."
         }
       ]
     },
     "node-spin-problem": {
-      "clientMessage": "Pues la verdad es que sí... No voy a mentirte, a veces tarda 2-3 días en hacerse un reporte, hay errores que luego hay que corregir, y en algunas reuniones de dirección hemos llegado con datos desactualizados. Es frustrante.",
-      "technique": "Pregunta de Implicación (SPIN)",
-      "nextCorrectNode": "node-spin-implication",
-      "options": [
-        {
-          "id": "opt-1",
-          "text": "Entiendo. ¿Qué significa que dirección reciba datos desactualizados? ¿Qué tipo de decisiones toma dirección basándose en esos reportes?",
-          "correct": true,
-          "explanation": "Utilizas Pregunta de Implicación (SPIN): amplíficas el dolor sin presionar, haciéndole descubrir la MAGNITUD del impacto en decisiones de negocio."
-        },
-        {
-          "id": "opt-2",
-          "text": "Eso es exactamente lo que nosotros solucionamos. Con actualizaciones en tiempo real no hay errores ni retrasos. Además el soporte está 24/7. ¿Necesitarías SLA?",
-          "correct": false,
-          "explanation": "Error: ya estás cerrando, no explorando. Hiciste de nuevo Feature Dump cuando el cliente apenas empeza a abrir sus problemas. Saltaste fases."
-        },
-        {
-          "id": "opt-3",
-          "text": "2-3 días es bastante tiempo. Eso te cuesta... a ver, si cada reporte que dirección necesita tarda 3 días, en Q1 habrás perdido... [haciendo cálculos]",
-          "correct": false,
-          "explanation": "Error: hablaste para ti. No hiciste una pregunta, dimos un sermón sobre los costes. Eso cierra la puerta, no la abre."
-        }
-      ]
-    },
-    "node-spin-implication": {
-      "clientMessage": "Bien... dirección usa esos reportes para decidir qué proveedores escalamos, cuáles reducimos, y en qué nuevos productos invertimos. Si los datos son erróneos o llegan desfasados...",
-      "technique": "Cierre por descubrimiento",
+      "clientMessage": "Bueno, que dirección usa esos reportes para decidir qué proveedores escalamos y en qué invertir. Si los datos son erróneos o desfasados, las decisiones de negocio son malas. Es frustrante porque yo cargo con la responsabilidad.",
+      "technique": "Cierre por Descubrimiento",
       "nextCorrectNode": "end-success",
       "options": [
         {
           "id": "opt-1",
-          "text": "[Silencio empático. 3 segundos]. Exacto. Pocas cosas son más costosas que una decisión estratégica basada en datos malos. ¿Qué te gustaría tener para que eso no vuelva a pasar?",
+          "text": "[Silencio empático 3 segundos]. Exacto. Pocas cosas cuestan más que decisiones estratégicas basadas en datos malos. ¿Qué necesitarías para que no vuelva a pasar?",
           "correct": true,
-          "explanation": "Utilizas Cierre por Descubrimiento: con silencio empático dejas que ÉL descubra la magnitud. Luego una pregunta abierta que lo lleva a QUERER la solución, no a que tú la vendas."
+          "explanation": "Utilizas Cierre por Descubrimiento: silencio empático + pregunta abierta lo llevan a QUERER la solución, no a que tú la vendas forzado."
         },
         {
           "id": "opt-2",
-          "text": "Exacto, por eso nuestra solución es perfecta. Con nosotros tienes reporting en tiempo real, auditoría completa, y escalabilidad sin límites. ¿Hacemos un piloto de 30 días gratis?",
+          "text": "Perfecto, por eso mi solución es ideal. Reporting en tiempo real, escalable sin límites. ¿Agendar un piloto de 30 días?",
           "correct": false,
-          "explanation": "Error: cerraste venta sin dejarle que SÍ mismo descubriera. Dijiste la solución en lugar de hacerle llegar a ella. Ahora es TU venta, no SU descubrimiento."
+          "explanation": "Error: cerraste sin dejar que ÉL descubriera primero. Dijiste la solución en lugar de hacerlo llegar a ella. Pierdes su convencimiento."
         },
         {
           "id": "opt-3",
-          "text": "Bueno, eso es un riesgo inherente del negocio. Pero con los dashboard en vivo lo minimizamos bastante. ¿Cuándo querrías implementarlo?",
+          "text": "Bueno, eso es un riesgo del negocio. Con dashboards en vivo lo minimizamos. ¿Cuándo lo querrías implementar?",
           "correct": false,
-          "explanation": "Error: minimizaste su problema (\"riesgo inherente\") en lugar de amplificarlo. También intentaste cerrar antes de que ÉL pidiera la solución."
+          "explanation": "Error: minimizaste su problema en lugar de amplificarlo. Cerraste antes de que el cliente pidiera la solución. Fuerza excesiva."
         }
       ]
     },
     "end-success": {
-      "clientMessage": "[El cliente continuaría aquí, pero en MVP marcamos esto como ÉXITO Si llegaste hasta aquí haciendo las preguntas SPIN correctas]",
+      "clientMessage": "[El cliente quiere seguir escuchando. Has ganado: identificaste el dolor real, no defendiste precio, hiciste descubrir el valor.]",
       "isEndNode": true,
       "endType": "success"
     }

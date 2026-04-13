@@ -2,6 +2,16 @@ import { useState, useEffect, useRef } from "react";
 import ValidationFeedback from "./ValidationFeedback";
 import { supabase } from "../supabaseClient";
 
+// Función para mezclar array aleatoriamente
+const shuffleArray = (arr) => {
+  const copy = [...arr];
+  for (let i = copy.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [copy[i], copy[j]] = [copy[j], copy[i]];
+  }
+  return copy;
+};
+
 export default function ChatSimulatorMVP({ conversationData, onFinish, userId }) {
   const [currentNodeId, setCurrentNodeId] = useState(conversationData.initialNode || "start");
   const [messages, setMessages] = useState([]);
@@ -12,6 +22,7 @@ export default function ChatSimulatorMVP({ conversationData, onFinish, userId })
   const [selectedOption, setSelectedOption] = useState(null);
   const [isAnimating, setIsAnimating] = useState(false);
   const [turnCount, setTurnCount] = useState(0);
+  const [shuffledOptions, setShuffledOptions] = useState([]);
   const chatRef = useRef(null);
 
   const currentNode = conversationData.nodes?.[currentNodeId];
@@ -27,6 +38,10 @@ export default function ChatSimulatorMVP({ conversationData, onFinish, userId })
           technique: currentNode.technique 
         }
       ]);
+      // Mezclar las opciones cuando cambia el nodo
+      if (currentNode.options) {
+        setShuffledOptions(shuffleArray(currentNode.options));
+      }
     }
   }, [currentNode]);
 
@@ -213,8 +228,19 @@ export default function ChatSimulatorMVP({ conversationData, onFinish, userId })
       </div>
 
       {!ended && hasOptions && !isAnimating && (
-        <div style={{ padding: "14px", display: "flex", flexDirection: "column", gap: "10px" }}>
-          {currentNode.options.map((option) => (
+          <div style={{ padding: "16px", display: "flex", flexDirection: "column", gap: "12px" }}>
+            <div style={{
+              background: "#1e293b",
+              border: "1px solid #334155",
+              borderRadius: "12px",
+              padding: "14px 16px",
+              marginBottom: "4px"
+            }}>
+              <h3 style={{ margin: "0 0 8px 0", fontSize: "14px", fontWeight: "700", color: "#f1f5f9" }}>
+                ⬇️ Escoge una opción
+              </h3>
+            </div>
+            {shuffledOptions.map((option) => (
             <button
               key={option.id}
               onClick={() => handleOptionSelect(option)}
