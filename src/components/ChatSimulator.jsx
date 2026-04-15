@@ -393,7 +393,7 @@ export default function ChatSimulator({ conversationData, salesRole = "setter", 
     }
   };
 
-  const qualityColors = { positive: "#22c55e", negative: "#ef4444", nomatch: "#f59e0b" };
+  const qualityColors = { positive: "#22c55e", negative: "#ef4444", nomatch: "var(--brand)" };
 
   const isInterviewScenario = conversationData.id?.startsWith("entrevista");
   const dealValue = scenario.dealValue || 0;

@@ -14,9 +14,9 @@ const TRACK_LABELS = {
 const TRACK_COLORS = {
   core: "var(--brand)",
   seguros: "var(--green)",
-  infoproductos: "#f59e0b",
+  infoproductos: "var(--brand)",
   software: "var(--brand2)",
-  entrevistas: "#ec4899",
+  entrevistas: "var(--brand2)",
 };
 
 const EMPTY_SCENARIO_FORM = {
@@ -32,9 +32,9 @@ const EMPTY_SCENARIO_FORM = {
 };
 
 function statusFromThreshold(value, good, warn) {
-  if (value >= good) return { label: "Verde", color: "#22c55e" };
-  if (value >= warn) return { label: "Ambar", color: "#f59e0b" };
-  return { label: "Rojo", color: "#ef4444" };
+  if (value >= good) return { label: "Verde", color: "var(--green)" };
+  if (value >= warn) return { label: "Ambar", color: "var(--brand)" };
+  return { label: "Rojo", color: "var(--red)" };
 }
 
 function trackFromConversationId(conversationId = "") {
@@ -463,30 +463,30 @@ export default function AdminPanel({ userEmail, onClose, theme = "dark" }) {
               )}
             </div>
 
-            <div style={{ color: "#475569", fontSize: "11px", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: "12px" }}>
+            <div style={{ color: "var(--gray2)", fontSize: "11px", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: "12px" }}>
               Validación de producto
             </div>
             <div style={{ display: "flex", gap: "14px", flexWrap: "wrap", marginBottom: "24px" }}>
-              {card("Respuestas feedback", metrics.totalFeedback, "Formularios enviados", "#f59e0b")}
+              {card("Respuestas feedback", metrics.totalFeedback, "Formularios enviados", "var(--brand)")}
               {card("Repetirían", metrics.repetirian, `de ${metrics.totalFeedback} encuestados`, "var(--green)")}
-              {card("NPS", metrics.npsScore, `${metrics.npsTotal} respuestas`, metrics.npsScore >= 30 ? "var(--green)" : metrics.npsScore >= 0 ? "#f59e0b" : "var(--red)")}
+              {card("NPS", metrics.npsScore, `${metrics.npsTotal} respuestas`, metrics.npsScore >= 30 ? "var(--green)" : metrics.npsScore >= 0 ? "var(--brand)" : "var(--red)")}
               {distCard("¿Pagarían?", {
                 "Sí": metrics.pagarian.si || 0,
                 "Quizás": metrics.pagarian.quizas || 0,
                 "No": metrics.pagarian.no || 0,
-              }, "#f59e0b")}
+              }, "var(--brand)")}
               {distCard("Precio ideal mensual", {
                 "0€": metrics.precioIdeal["0"] || 0,
                 "10-29€": metrics.precioIdeal["10-29"] || 0,
                 "30-59€": metrics.precioIdeal["30-59"] || 0,
                 "60-99€": metrics.precioIdeal["60-99"] || 0,
                 "100€+": metrics.precioIdeal["100+"] || 0,
-              }, "#38bdf8")}
+              }, "var(--brand2)")}
               {distCard("Uso del producto", {
                 "Individual": metrics.usoProducto.individual || 0,
                 "Equipo": metrics.usoProducto.equipo || 0,
                 "Ambos": metrics.usoProducto.ambos || 0,
-              }, "#a78bfa")}
+              }, "var(--brand)")}
             </div>
 
               <div style={{ color: "var(--gray2)", fontSize: "11px", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: "12px" }}>
@@ -577,7 +577,7 @@ export default function AdminPanel({ userEmail, onClose, theme = "dark" }) {
             </form>
 
             {metrics.customScenariosError ? (
-              <div style={{ color: "#fbbf24", fontSize: "12px", marginBottom: "10px" }}>
+              <div style={{ color: "var(--brand)", fontSize: "12px", marginBottom: "10px" }}>
                 ⚠️ No se pudo leer company_scenarios: {metrics.customScenariosError}
               </div>
             ) : null}
