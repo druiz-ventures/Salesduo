@@ -12,10 +12,10 @@ const TRACK_LABELS = {
 };
 
 const TRACK_COLORS = {
-  core: "#38bdf8",
-  seguros: "#22c55e",
+  core: "var(--brand)",
+  seguros: "var(--green)",
   infoproductos: "#f59e0b",
-  software: "#6366f1",
+  software: "var(--brand2)",
   entrevistas: "#ec4899",
 };
 
@@ -123,7 +123,7 @@ export default function AdminPanel({ userEmail, onClose, theme = "dark" }) {
         return {
           track,
           label: TRACK_LABELS[track] || track,
-          color: TRACK_COLORS[track] || "#94a3b8",
+          color: TRACK_COLORS[track] || "var(--gray)",
           ...stats,
           successRate,
           avgScore,
@@ -238,17 +238,16 @@ export default function AdminPanel({ userEmail, onClose, theme = "dark" }) {
 
   if (userEmail !== ADMIN_EMAIL) return null;
 
-  const isLight = theme === "light";
   const C = {
-    panelBg: isLight ? "#f8fafc" : "#0f172a",
-    cardBg: isLight ? "#ffffff" : "#1e293b",
-    border: isLight ? "#cbd5e1" : "#334155",
-    text: isLight ? "#0f172a" : "#f1f5f9",
-    textMuted: isLight ? "#475569" : "#94a3b8",
-    textSoft: isLight ? "#64748b" : "#64748b",
+    panelBg: "rgba(6, 8, 16, 0.96)",
+    cardBg: "var(--surface2)",
+    border: "var(--border)",
+    text: "var(--white)",
+    textMuted: "var(--gray)",
+    textSoft: "var(--gray2)",
   };
 
-  const card = (label, value, sub, color = "#6366f1") => (
+  const card = (label, value, sub, color = "var(--brand)") => (
     <div style={{
       background: C.cardBg,
       borderRadius: "12px",
@@ -263,7 +262,7 @@ export default function AdminPanel({ userEmail, onClose, theme = "dark" }) {
     </div>
   );
 
-  const distCard = (title, data, color = "#6366f1") => {
+  const distCard = (title, data, color = "var(--brand)") => {
     const total = Object.values(data).reduce((a, b) => a + b, 0);
     return (
       <div style={{
@@ -330,7 +329,7 @@ export default function AdminPanel({ userEmail, onClose, theme = "dark" }) {
         </div>
 
         {loading ? (
-          <div style={{ textAlign: "center", padding: "60px 0", color: "#6366f1", fontSize: "16px" }}>
+          <div style={{ textAlign: "center", padding: "60px 0", color: "var(--brand)", fontSize: "16px" }}>
             Cargando métricas...
           </div>
         ) : (
@@ -397,7 +396,7 @@ export default function AdminPanel({ userEmail, onClose, theme = "dark" }) {
                   <div style={{ display: "flex", gap: "12px", flexWrap: "wrap", marginBottom: "24px" }}>
                     {investorKpis.map((kpi) => (
                       <div key={kpi.title} style={{
-                        background: "#1e293b",
+                        background: "var(--surface2)",
                         borderRadius: "12px",
                         border: `1px solid ${kpi.status.color}55`,
                         padding: "14px 16px",
@@ -405,11 +404,11 @@ export default function AdminPanel({ userEmail, onClose, theme = "dark" }) {
                         flex: "1 1 150px",
                       }}>
                         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "8px" }}>
-                          <span style={{ color: "#94a3b8", fontSize: "11px", textTransform: "uppercase", letterSpacing: "0.05em" }}>{kpi.title}</span>
+                          <span style={{ color: "var(--gray)", fontSize: "11px", textTransform: "uppercase", letterSpacing: "0.05em" }}>{kpi.title}</span>
                           <span style={{ color: kpi.status.color, fontSize: "11px", fontWeight: "700" }}>{kpi.status.label}</span>
                         </div>
-                        <div style={{ color: "#f8fafc", fontSize: "28px", fontWeight: "900", lineHeight: 1 }}>{kpi.value}</div>
-                        <div style={{ color: "#64748b", fontSize: "11px", marginTop: "6px" }}>{kpi.sub}</div>
+                        <div style={{ color: "var(--white)", fontSize: "28px", fontWeight: "900", lineHeight: 1 }}>{kpi.value}</div>
+                        <div style={{ color: "var(--gray2)", fontSize: "11px", marginTop: "6px" }}>{kpi.sub}</div>
                       </div>
                     ))}
                   </div>
@@ -421,43 +420,43 @@ export default function AdminPanel({ userEmail, onClose, theme = "dark" }) {
               Usuarios
             </div>
             <div style={{ display: "flex", gap: "14px", flexWrap: "wrap", marginBottom: "24px" }}>
-              {card("Total usuarios", metrics.totalUsuarios, "Google + Email", "#6366f1")}
-              {distCard("Por tipo", metrics.porTipo, "#818cf8")}
-              {distCard("Por sector", metrics.porSector, "#a78bfa")}
+              {card("Total usuarios", metrics.totalUsuarios, "Google + Email", "var(--brand)")}
+              {distCard("Por tipo", metrics.porTipo, "var(--brand)")}
+              {distCard("Por sector", metrics.porSector, "var(--brand2)")}
             </div>
 
             <div style={{ color: "#475569", fontSize: "11px", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: "12px" }}>
               Sesiones de entrenamiento
             </div>
             <div style={{ display: "flex", gap: "14px", flexWrap: "wrap", marginBottom: "16px" }}>
-              {card("Total sesiones", metrics.totalSesiones, "Entrenamientos completados", "#06b6d4")}
-              {card("Éxitos", metrics.success, `${metrics.pctSuccess}% del total`, "#22c55e")}
-              {card("Fracasos", metrics.failure, `${metrics.pctFailure}% del total`, "#ef4444")}
+              {card("Total sesiones", metrics.totalSesiones, "Entrenamientos completados", "var(--brand)")}
+              {card("Éxitos", metrics.success, `${metrics.pctSuccess}% del total`, "var(--green)")}
+              {card("Fracasos", metrics.failure, `${metrics.pctFailure}% del total`, "var(--red)")}
             </div>
 
             <div style={{
-              background: "#1e293b", borderRadius: "12px", padding: "18px 20px",
-              border: "1px solid #334155", marginBottom: "24px",
+              background: "var(--surface2)", borderRadius: "12px", padding: "18px 20px",
+              border: "1px solid var(--border)", marginBottom: "24px",
             }}>
-              <div style={{ color: "#64748b", fontSize: "12px", marginBottom: "12px", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+              <div style={{ color: "var(--gray2)", fontSize: "12px", marginBottom: "12px", textTransform: "uppercase", letterSpacing: "0.05em" }}>
                 Ranking por track (tasa de éxito)
               </div>
               {metrics.rankingTracks.length === 0 ? (
-                <div style={{ color: "#475569", fontSize: "13px" }}>Aún no hay sesiones para calcular ranking.</div>
+                <div style={{ color: "var(--gray)", fontSize: "13px" }}>Aún no hay sesiones para calcular ranking.</div>
               ) : (
                 <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
                   {metrics.rankingTracks.map((r, idx) => (
                     <div key={r.track} style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                      <div style={{ width: "20px", color: "#64748b", fontSize: "12px" }}>#{idx + 1}</div>
-                      <div style={{ width: "120px", color: "#e2e8f0", fontSize: "13px", fontWeight: "700" }}>{r.label}</div>
+                      <div style={{ width: "20px", color: "var(--gray)", fontSize: "12px" }}>#{idx + 1}</div>
+                      <div style={{ width: "120px", color: "var(--white)", fontSize: "13px", fontWeight: "700" }}>{r.label}</div>
                       <div style={{
-                        flex: 1, height: "8px", borderRadius: "999px", overflow: "hidden", background: "#0f172a",
+                        flex: 1, height: "8px", borderRadius: "999px", overflow: "hidden", background: "var(--bg)",
                       }}>
                         <div style={{ width: `${r.successRate}%`, height: "100%", background: r.color }} />
                       </div>
                       <div style={{ width: "70px", color: r.color, fontSize: "13px", fontWeight: "800", textAlign: "right" }}>{r.successRate}%</div>
-                      <div style={{ width: "90px", color: "#64748b", fontSize: "12px", textAlign: "right" }}>{r.total} sesiones</div>
-                      <div style={{ width: "80px", color: "#94a3b8", fontSize: "12px", textAlign: "right" }}>avg {r.avgScore}</div>
+                      <div style={{ width: "90px", color: "var(--gray)", fontSize: "12px", textAlign: "right" }}>{r.total} sesiones</div>
+                      <div style={{ width: "80px", color: "var(--gray2)", fontSize: "12px", textAlign: "right" }}>avg {r.avgScore}</div>
                     </div>
                   ))}
                 </div>
@@ -469,8 +468,8 @@ export default function AdminPanel({ userEmail, onClose, theme = "dark" }) {
             </div>
             <div style={{ display: "flex", gap: "14px", flexWrap: "wrap", marginBottom: "24px" }}>
               {card("Respuestas feedback", metrics.totalFeedback, "Formularios enviados", "#f59e0b")}
-              {card("Repetirían", metrics.repetirian, `de ${metrics.totalFeedback} encuestados`, "#10b981")}
-              {card("NPS", metrics.npsScore, `${metrics.npsTotal} respuestas`, metrics.npsScore >= 30 ? "#22c55e" : metrics.npsScore >= 0 ? "#f59e0b" : "#ef4444")}
+              {card("Repetirían", metrics.repetirian, `de ${metrics.totalFeedback} encuestados`, "var(--green)")}
+              {card("NPS", metrics.npsScore, `${metrics.npsTotal} respuestas`, metrics.npsScore >= 30 ? "var(--green)" : metrics.npsScore >= 0 ? "#f59e0b" : "var(--red)")}
               {distCard("¿Pagarían?", {
                 "Sí": metrics.pagarian.si || 0,
                 "Quizás": metrics.pagarian.quizas || 0,
@@ -490,39 +489,39 @@ export default function AdminPanel({ userEmail, onClose, theme = "dark" }) {
               }, "#a78bfa")}
             </div>
 
-            <div style={{ color: "#475569", fontSize: "11px", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: "12px" }}>
+              <div style={{ color: "var(--gray2)", fontSize: "11px", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: "12px" }}>
               Comentarios de mejora ({metrics.comentarios.length})
             </div>
             {metrics.comentarios.length === 0 ? (
-              <div style={{ color: "#334155", fontSize: "13px", padding: "16px", background: "#1e293b", borderRadius: "10px", textAlign: "center", marginBottom: "28px" }}>
+              <div style={{ color: "var(--gray)", fontSize: "13px", padding: "16px", background: "var(--surface2)", borderRadius: "10px", textAlign: "center", marginBottom: "28px", border: "1px solid var(--border)" }}>
                 Ningún usuario ha dejado comentario todavía.
               </div>
             ) : (
               <div style={{ display: "flex", flexDirection: "column", gap: "10px", marginBottom: "28px" }}>
                 {metrics.comentarios.map((c, i) => (
                   <div key={i} style={{
-                    background: "#1e293b", borderRadius: "10px", padding: "14px 18px",
-                    border: "1px solid #334155", display: "flex", gap: "14px", alignItems: "flex-start",
+                    background: "var(--surface2)", borderRadius: "10px", padding: "14px 18px",
+                    border: "1px solid var(--border)", display: "flex", gap: "14px", alignItems: "flex-start",
                   }}>
                     <span style={{ fontSize: "18px", flexShrink: 0 }}>💬</span>
                     <div style={{ flex: 1 }}>
                       <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "6px" }}>
-                        <span style={{ color: "#6366f1", fontSize: "12px", fontWeight: "600" }}>{c.email}</span>
+                        <span style={{ color: "var(--brand)", fontSize: "12px", fontWeight: "600" }}>{c.email}</span>
                       </div>
-                      <p style={{ color: "#f1f5f9", fontSize: "14px", margin: "0 0 6px", lineHeight: 1.5 }}>
+                      <p style={{ color: "var(--white)", fontSize: "14px", margin: "0 0 6px", lineHeight: 1.5 }}>
                         "{c.mejoria}"
                       </p>
                       <div style={{ display: "flex", gap: "12px" }}>
-                        <span style={{ color: c.repetirias ? "#22c55e" : "#ef4444", fontSize: "11px" }}>
+                        <span style={{ color: c.repetirias ? "var(--green)" : "var(--red)", fontSize: "11px" }}>
                           {c.repetirias ? "✅ Repetiría" : "❌ No repetiría"}
                         </span>
                         {c.pagarias && (
-                          <span style={{ color: "#94a3b8", fontSize: "11px" }}>
+                          <span style={{ color: "var(--gray)", fontSize: "11px" }}>
                             💳 Pagaría: {c.pagarias}
                           </span>
                         )}
                         {c.created_at && (
-                          <span style={{ color: "#334155", fontSize: "11px", marginLeft: "auto" }}>
+                          <span style={{ color: "var(--gray2)", fontSize: "11px", marginLeft: "auto" }}>
                             {new Date(c.created_at).toLocaleDateString("es-ES", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })}
                           </span>
                         )}
@@ -537,7 +536,7 @@ export default function AdminPanel({ userEmail, onClose, theme = "dark" }) {
               Generador de escenarios por empresa
             </div>
             <form onSubmit={handleCreateScenario} style={{
-              background: "#1e293b", border: "1px solid #334155", borderRadius: "12px", padding: "18px", marginBottom: "14px",
+              background: "var(--surface2)", border: "1px solid var(--border)", borderRadius: "12px", padding: "18px", marginBottom: "14px",
               display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px",
             }}>
               <input value={scenarioForm.company_name} onChange={(e) => handleScenarioChange("company_name", e.target.value)} placeholder="Empresa (ej. Acme Logistics)" style={inputStyle} />
@@ -566,11 +565,11 @@ export default function AdminPanel({ userEmail, onClose, theme = "dark" }) {
 
               <div style={{ gridColumn: "1 / span 2", display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "4px" }}>
                 <div>
-                  {scenarioErr && <div style={{ color: "#f87171", fontSize: "12px" }}>{scenarioErr}</div>}
-                  {scenarioMsg && <div style={{ color: "#22c55e", fontSize: "12px" }}>{scenarioMsg}</div>}
+                  {scenarioErr && <div style={{ color: "var(--red)", fontSize: "12px" }}>{scenarioErr}</div>}
+                  {scenarioMsg && <div style={{ color: "var(--green)", fontSize: "12px" }}>{scenarioMsg}</div>}
                 </div>
                 <button type="submit" disabled={scenarioSaving} style={{
-                  background: "#6366f1", border: "none", color: "#fff", borderRadius: "8px", padding: "9px 14px", fontSize: "13px", fontWeight: "700", cursor: "pointer",
+                  background: "linear-gradient(135deg, var(--brand), var(--brand2))", border: "none", color: "var(--white)", borderRadius: "8px", padding: "9px 14px", fontSize: "13px", fontWeight: "700", cursor: "pointer",
                 }}>
                   {scenarioSaving ? "Guardando..." : "Guardar escenario"}
                 </button>
@@ -584,19 +583,19 @@ export default function AdminPanel({ userEmail, onClose, theme = "dark" }) {
             ) : null}
 
             <div style={{
-              background: "#1e293b", border: "1px solid #334155", borderRadius: "12px", padding: "14px",
+              background: "var(--surface2)", border: "1px solid var(--border)", borderRadius: "12px", padding: "14px",
             }}>
-              <div style={{ color: "#94a3b8", fontSize: "12px", marginBottom: "10px" }}>Últimos escenarios guardados ({metrics.customScenarios.length})</div>
+              <div style={{ color: "var(--gray)", fontSize: "12px", marginBottom: "10px" }}>Últimos escenarios guardados ({metrics.customScenarios.length})</div>
               {metrics.customScenarios.length === 0 ? (
-                <div style={{ color: "#475569", fontSize: "12px" }}>Todavía no hay escenarios personalizados.</div>
+                <div style={{ color: "var(--gray)", fontSize: "12px" }}>Todavía no hay escenarios personalizados.</div>
               ) : (
                 <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
                   {metrics.customScenarios.map((s) => (
                     <div key={s.id} style={{ display: "flex", gap: "10px", alignItems: "center", fontSize: "12px" }}>
-                      <span style={{ color: TRACK_COLORS[s.track] || "#94a3b8", width: "92px" }}>{TRACK_LABELS[s.track] || s.track}</span>
-                      <span style={{ color: "#e2e8f0", flex: 1 }}>{s.company_name} · {s.scenario_name}</span>
-                      <span style={{ color: "#64748b" }}>{s.difficulty || "-"}</span>
-                      <span style={{ color: "#64748b" }}>{s.deal_value ? `${s.deal_value}€` : "-"}</span>
+                      <span style={{ color: TRACK_COLORS[s.track] || "var(--gray)", width: "92px" }}>{TRACK_LABELS[s.track] || s.track}</span>
+                      <span style={{ color: "var(--white)", flex: 1 }}>{s.company_name} · {s.scenario_name}</span>
+                      <span style={{ color: "var(--gray)" }}>{s.difficulty || "-"}</span>
+                      <span style={{ color: "var(--gray)" }}>{s.deal_value ? `${s.deal_value}€` : "-"}</span>
                     </div>
                   ))}
                 </div>
@@ -611,9 +610,9 @@ export default function AdminPanel({ userEmail, onClose, theme = "dark" }) {
 
 const inputStyle = {
   width: "100%",
-  border: "1px solid #334155",
-  background: "#0f172a",
-  color: "#f1f5f9",
+  border: "1px solid var(--border)",
+  background: "var(--surface)",
+  color: "var(--white)",
   borderRadius: "8px",
   padding: "10px 12px",
   fontSize: "13px",

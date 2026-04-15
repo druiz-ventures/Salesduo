@@ -105,13 +105,13 @@ export default function LessonMap({ onSelectLesson, completedLessons, theoriesRe
                 setExpandedLesson(null);
               }}
               style={{
-                border: selectedTrack === track.id ? "1px solid #6366f1" : "1px solid #334155",
+                border: selectedTrack === track.id ? "1px solid var(--brand)" : "1px solid var(--border)",
                 background: selectedTrack === track.id
-                  ? "rgba(99,102,241,0.15)"
-                  : recommendedTrack === track.id ? "rgba(34,197,94,0.12)" : "#0f172a",
+                  ? "rgba(0,212,255,0.08)"
+                  : recommendedTrack === track.id ? "rgba(0,230,118,0.08)" : "var(--surface)",
                 color: selectedTrack === track.id
-                  ? "#a5b4fc"
-                  : recommendedTrack === track.id ? "#86efac" : "#94a3b8",
+                  ? "var(--white)"
+                  : recommendedTrack === track.id ? "var(--green)" : "var(--gray)",
                 borderRadius: "999px",
                 padding: "8px 12px",
                 fontSize: "12px",

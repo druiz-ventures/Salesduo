@@ -119,15 +119,15 @@ export default function Onboarding({ onComplete, hasTipo = false, onlyTipo = fal
                   alignItems: "center",
                   gap: "16px",
                   padding: "18px 20px",
-                  borderRadius: "12px",
+                  borderRadius: "16px",
                   border: "2px solid var(--border)",
                   background: "var(--surface2)",
                   cursor: "pointer",
                   textAlign: "left",
-                  transition: "all 0.15s ease-in-out",
+                  transition: "all 0.25s ease",
                   width: "100%",
                 }}
-                onMouseEnter={e => { e.currentTarget.style.borderColor = "var(--brand)"; e.currentTarget.style.background = "var(--glow)"; }}
+                onMouseEnter={e => { e.currentTarget.style.borderColor = "rgba(0, 212, 255, 0.28)"; e.currentTarget.style.background = "rgba(0, 212, 255, 0.06)"; }}
                 onMouseLeave={e => { e.currentTarget.style.borderColor = "var(--border)"; e.currentTarget.style.background = "var(--surface2)"; }}
               >
                 <span style={{ fontSize: "32px" }}>{opt.emoji}</span>
@@ -202,7 +202,7 @@ export default function Onboarding({ onComplete, hasTipo = false, onlyTipo = fal
           <p className="onboarding-description">Lo usaremos para adaptar los escenarios de práctica.</p>
           <div style={{ display: "flex", flexDirection: "column", gap: "14px", margin: "24px 0", textAlign: "left" }}>
             <div>
-              <label style={{ color: "#94a3b8", fontSize: "13px", fontWeight: "600", display: "block", marginBottom: "6px" }}>NOMBRE DE LA EMPRESA</label>
+              <label style={{ color: "var(--gray)", fontSize: "13px", fontWeight: "600", display: "block", marginBottom: "6px", letterSpacing: "0.05em" }}>NOMBRE DE LA EMPRESA</label>
               <input
                 type="text"
                 placeholder="Ej: Acme Soluciones S.L."
@@ -210,14 +210,14 @@ export default function Onboarding({ onComplete, hasTipo = false, onlyTipo = fal
                 onChange={e => setEmpresa(e.target.value)}
                 style={{
                   width: "100%", padding: "14px 16px", borderRadius: "10px",
-                  border: "1px solid #334155", background: "#0f172a",
-                  color: "#f1f5f9", fontSize: "15px", outline: "none",
+                  border: "1px solid var(--border)", background: "var(--surface)",
+                  color: "var(--white)", fontSize: "15px", outline: "none",
                   boxSizing: "border-box",
                 }}
               />
             </div>
             <div>
-              <label style={{ color: "#94a3b8", fontSize: "13px", fontWeight: "600", display: "block", marginBottom: "8px" }}>SECTOR PRINCIPAL</label>
+              <label style={{ color: "var(--gray)", fontSize: "13px", fontWeight: "600", display: "block", marginBottom: "8px", letterSpacing: "0.05em" }}>SECTOR PRINCIPAL</label>
               <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
                 {SECTOR_OPTIONS.map(opt => (
                   <button
@@ -226,14 +226,14 @@ export default function Onboarding({ onComplete, hasTipo = false, onlyTipo = fal
                     style={{
                       display: "flex", alignItems: "center", gap: "12px",
                       padding: "12px 16px", borderRadius: "10px",
-                      border: `2px solid ${sector === opt.id ? "#6366f1" : "#334155"}`,
-                      background: sector === opt.id ? "rgba(99,102,241,0.15)" : "#0f172a",
+                      border: `2px solid ${sector === opt.id ? "var(--brand)" : "var(--border)"}`,
+                      background: sector === opt.id ? "rgba(0, 212, 255, 0.08)" : "var(--surface)",
                       cursor: "pointer", textAlign: "left", width: "100%",
-                      transition: "all 0.15s",
+                      transition: "all 0.2s",
                     }}
                   >
                     <span style={{ fontSize: "20px" }}>{opt.emoji}</span>
-                    <span style={{ color: "#f1f5f9", fontWeight: "600", fontSize: "14px" }}>{opt.label}</span>
+                    <span style={{ color: "var(--white)", fontWeight: "600", fontSize: "14px" }}>{opt.label}</span>
                   </button>
                 ))}
               </div>

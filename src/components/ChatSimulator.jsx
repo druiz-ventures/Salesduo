@@ -420,22 +420,22 @@ export default function ChatSimulator({ conversationData, salesRole = "setter", 
       {dealValue > 0 && !isInterviewScenario && (
         <div style={{
           display: "flex", gap: "10px", margin: "0 0 12px",
-          background: "#0f172a", borderRadius: "10px", padding: "10px 14px",
-          border: "1px solid #1e293b", flexWrap: "wrap",
+          background: "var(--surface2)", borderRadius: "10px", padding: "10px 14px",
+          border: "1px solid var(--border)", flexWrap: "wrap",
         }}>
           <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
             <span style={{ fontSize: "16px" }}>💰</span>
-            <span style={{ color: "#64748b", fontSize: "12px" }}>Venta:</span>
-            <span style={{ color: "#f1f5f9", fontWeight: "700", fontSize: "14px" }}>{fmt(dealValue)}€</span>
+            <span style={{ color: "var(--gray2)", fontSize: "12px" }}>Venta:</span>
+            <span style={{ color: "var(--white)", fontWeight: "700", fontSize: "14px" }}>{fmt(dealValue)}€</span>
           </div>
-          <div style={{ width: "1px", background: "#1e293b" }} />
+          <div style={{ width: "1px", background: "var(--border)" }} />
           <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
             <span style={{ fontSize: "16px" }}>💸</span>
-            <span style={{ color: "#64748b", fontSize: "12px" }}>Tu comisión ({commissionRate}%):</span>
-            <span style={{ color: "#22c55e", fontWeight: "800", fontSize: "15px" }}>{fmt(commission)}€</span>
+            <span style={{ color: "var(--gray2)", fontSize: "12px" }}>Tu comisión ({commissionRate}%):</span>
+            <span style={{ color: "var(--green)", fontWeight: "800", fontSize: "15px" }}>{fmt(commission)}€</span>
           </div>
           <div style={{ marginLeft: "auto", display: "flex", alignItems: "center" }}>
-            <span style={{ color: "#475569", fontSize: "11px" }}>si cierras esta venta</span>
+            <span style={{ color: "var(--gray2)", fontSize: "11px" }}>si cierras esta venta</span>
           </div>
         </div>
       )}
@@ -445,11 +445,11 @@ export default function ChatSimulator({ conversationData, salesRole = "setter", 
           if (msg.sender === "feedback") {
             return (
               <div key={i} className="message feedback-row">
-                <div className="feedback-bubble" style={{ borderLeftColor: qualityColors[msg.quality] || "#94a3b8" }}>
+                <div className="feedback-bubble" style={{ borderLeftColor: qualityColors[msg.quality] || "var(--gray2)" }}>
                   <span className="feedback-text">{msg.text}</span>
                   <div className="feedback-meta">
                     <span className="feedback-technique">{msg.technique}</span>
-                    <span className="feedback-score-delta" style={{ color: msg.scoreImpact >= 0 ? "#22c55e" : "#ef4444" }}>
+                    <span className="feedback-score-delta" style={{ color: msg.scoreImpact >= 0 ? "var(--green)" : "var(--red)" }}>
                       {msg.scoreImpact >= 0 ? "+" : ""}{msg.scoreImpact} pts
                     </span>
                   </div>
@@ -493,7 +493,7 @@ export default function ChatSimulator({ conversationData, salesRole = "setter", 
             <button
               onClick={handleAbortTraining}
               className="btn-back"
-              style={{ background: "transparent", border: "1px solid #334155", color: "#94a3b8" }}
+              style={{ background: "transparent", border: "1px solid var(--border)", color: "var(--gray)" }}
             >
               ← Abandonar entrenamiento
             </button>
@@ -505,22 +505,22 @@ export default function ChatSimulator({ conversationData, salesRole = "setter", 
           <p>{result.message}</p>
           {dealValue > 0 && !isInterviewScenario && (
             <div style={{
-              background: endType === "success" ? "rgba(34,197,94,0.1)" : "rgba(239,68,68,0.1)",
-              border: `1px solid ${endType === "success" ? "#22c55e44" : "#ef444444"}`,
+              background: endType === "success" ? "rgba(0,230,118,0.08)" : "rgba(255,77,109,0.08)",
+              border: `1px solid ${endType === "success" ? "rgba(0,230,118,0.24)" : "rgba(255,77,109,0.24)"}`,
               borderRadius: "12px", padding: "14px 18px", margin: "12px 0",
               textAlign: "center",
             }}>
               {endType === "success" ? (
                 <>
-                  <div style={{ color: "#22c55e", fontSize: "13px", marginBottom: "4px" }}>🎉 Comisión ganada</div>
-                  <div style={{ color: "#22c55e", fontSize: "36px", fontWeight: "900", lineHeight: 1 }}>+{commission.toLocaleString("es-ES")}€</div>
-                  <div style={{ color: "#64748b", fontSize: "12px", marginTop: "4px" }}>sobre una venta de {dealValue.toLocaleString("es-ES")}€</div>
+                  <div style={{ color: "var(--green)", fontSize: "13px", marginBottom: "4px" }}>🎉 Comisión ganada</div>
+                  <div style={{ color: "var(--green)", fontSize: "36px", fontWeight: "900", lineHeight: 1 }}>+{commission.toLocaleString("es-ES")}€</div>
+                  <div style={{ color: "var(--gray2)", fontSize: "12px", marginTop: "4px" }}>sobre una venta de {dealValue.toLocaleString("es-ES")}€</div>
                 </>
               ) : (
                 <>
-                  <div style={{ color: "#ef4444", fontSize: "13px", marginBottom: "4px" }}>📉 Comisión perdida</div>
-                  <div style={{ color: "#ef4444", fontSize: "36px", fontWeight: "900", lineHeight: 1 }}>-{commission.toLocaleString("es-ES")}€</div>
-                  <div style={{ color: "#64748b", fontSize: "12px", marginTop: "4px" }}>no cerrarás esta venta de {dealValue.toLocaleString("es-ES")}€</div>
+                  <div style={{ color: "var(--red)", fontSize: "13px", marginBottom: "4px" }}>📉 Comisión perdida</div>
+                  <div style={{ color: "var(--red)", fontSize: "36px", fontWeight: "900", lineHeight: 1 }}>-{commission.toLocaleString("es-ES")}€</div>
+                  <div style={{ color: "var(--gray2)", fontSize: "12px", marginTop: "4px" }}>no cerrarás esta venta de {dealValue.toLocaleString("es-ES")}€</div>
                 </>
               )}
             </div>
@@ -529,11 +529,11 @@ export default function ChatSimulator({ conversationData, salesRole = "setter", 
           <button
             onClick={() => setShowValidation(true)}
             className="btn-back"
-            style={{ background: "#6366f1", marginBottom: "10px" }}
+            style={{ background: "linear-gradient(135deg, var(--brand), var(--brand2))", marginBottom: "10px" }}
           >
             ⭐ Valorar esta sesión
           </button>
-          <button onClick={handleFinish} className="btn-back" style={{ background: "transparent", border: "1px solid #334155", color: "#64748b" }}>
+          <button onClick={handleFinish} className="btn-back" style={{ background: "transparent", border: "1px solid var(--border)", color: "var(--gray)" }}>
             Ahora no → Volver al menú
           </button>
         </div>

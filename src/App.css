@@ -2227,6 +2227,614 @@
   color: #94a3b8;
 }
 
+/* ===== LANDING-STYLE OVERRIDES ===== */
+body {
+  background: var(--bg);
+}
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  min-height: 72px;
+  padding: 0 5vw;
+  background: rgba(6, 8, 16, 0.72);
+  backdrop-filter: blur(24px) saturate(180%);
+  border-bottom: 1px solid var(--border);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
+}
+
+.topbar-logo {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  letter-spacing: -0.03em;
+}
+
+.topbar-stats {
+  align-items: center;
+  gap: 12px;
+  color: var(--gray2);
+}
+
+.topbar-stat {
+  gap: 5px;
+}
+
+.btn-dashboard,
+.btn-back,
+.btn-skip,
+.btn-next,
+.btn-send,
+.theory-back-btn,
+.theory-btn-prev,
+.theory-btn-next,
+.theory-btn-practice {
+  transition: all 0.25s ease;
+}
+
+.btn-dashboard {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--gray);
+  border-radius: 999px;
+  padding: 7px 14px;
+}
+
+.btn-dashboard:hover {
+  border-color: rgba(0, 212, 255, 0.3);
+  color: var(--white);
+  background: rgba(0, 212, 255, 0.08);
+}
+
+.lesson-selector,
+.lesson-map-wrapper,
+.chat-container,
+.theory-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 48px 5vw 72px;
+}
+
+.lesson-selector h1,
+.lesson-map-title,
+.dashboard-title,
+.theory-title,
+.theory-lesson-title,
+.onboarding-title,
+.auth-title,
+.auth-screen h1,
+.result-card h3 {
+  font-family: var(--font-display);
+  letter-spacing: -0.03em;
+}
+
+.lesson-selector h1,
+.lesson-map-title,
+.dashboard-title,
+.theory-title,
+.onboarding-title,
+.result-card h3 {
+  color: var(--white);
+}
+
+.lesson-selector .subtitle,
+.lesson-map-subtitle,
+.chat-role,
+.chat-context,
+.onboarding-description,
+.dashboard-xp-next,
+.dashboard-stat-label,
+.profile-bar-text,
+.profile-bar-rec,
+.result-card p,
+.theory-body,
+.theory-highlight-text,
+.feedback-text,
+.feedback-technique,
+.feedback-score-delta,
+.dashboard-badge-desc,
+.dashboard-xp-next,
+.dashboard-stat-label,
+.dashboard-card p,
+.auth-subtitle {
+  color: var(--gray);
+}
+
+.lesson-card,
+.map-node,
+.map-substep,
+.chat-messages,
+.theory-slide,
+.onboarding-card,
+.dashboard-card,
+.result-card,
+.feedback-bubble,
+.profile-chip,
+.demo-banner,
+.lesson-badge,
+.dashboard-stat-box,
+.dashboard-badge,
+.theory-highlight-box,
+.theory-technique-tag {
+  border-radius: var(--radius);
+}
+
+.lesson-card,
+.map-node,
+.map-substep,
+.chat-messages,
+.theory-slide,
+.onboarding-card,
+.dashboard-card,
+.result-card,
+.feedback-bubble,
+.profile-chip,
+.dashboard-stat-box,
+.dashboard-badge,
+.theory-highlight-box,
+.theory-technique-tag {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.28);
+}
+
+.lesson-card:hover:not(.locked),
+.map-node:hover,
+.map-substep:hover,
+.profile-chip:hover,
+.dashboard-badge:hover,
+.theory-slide:hover {
+  transform: translateY(-4px);
+  border-color: rgba(0, 212, 255, 0.28);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.34), 0 0 0 1px rgba(0, 212, 255, 0.08) inset;
+}
+
+.lesson-card.completed,
+.map-node.done,
+.map-substep.substep-done,
+.dashboard-badge.unlocked {
+  border-color: rgba(0, 230, 118, 0.3);
+  background: rgba(0, 230, 118, 0.08);
+}
+
+.lesson-badge,
+.lesson-map-profile-bar,
+.profile-step-label,
+.profile-step-sub,
+.dashboard-badges-title,
+.theory-counter,
+.section-label,
+.demo-banner {
+  letter-spacing: 0.08em;
+}
+
+.lesson-badge,
+.badge-beginner,
+.badge-intermediate,
+.badge-hard,
+.map-badge-diff,
+.theory-technique-tag,
+.profile-bar-rec,
+.section-label {
+  font-weight: 600;
+}
+
+.lesson-selector h1,
+.lesson-map-title,
+.dashboard-title,
+.theory-title,
+.theory-lesson-title,
+.onboarding-title {
+  font-size: clamp(2rem, 3.6vw, 3.4rem);
+  line-height: 1.08;
+}
+
+.lesson-map-title,
+.lesson-selector h1,
+.dashboard-title,
+.theory-lesson-title {
+  text-align: center;
+}
+
+.section-label,
+.profile-bar-rec,
+.map-recommended-badge,
+.lesson-badge,
+.theory-technique-tag {
+  color: var(--brand);
+}
+
+.lesson-map-subtitle,
+.lesson-selector .subtitle,
+.auth-subtitle,
+.onboarding-description,
+.result-card p {
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
+.chat-messages,
+.theory-slide,
+.dashboard-card,
+.onboarding-card,
+.result-card,
+.feedback-bubble {
+  position: relative;
+  overflow: hidden;
+}
+
+.chat-messages::before,
+.theory-slide::before,
+.dashboard-card::before,
+.onboarding-card::before,
+.result-card::before,
+.feedback-bubble::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(135deg, rgba(255,255,255,0.02), transparent 30%, rgba(0,212,255,0.02));
+}
+
+.message.user .message-bubble,
+.btn-send,
+.btn-back,
+.btn-next,
+.btn-skip,
+.theory-btn-next,
+.theory-btn-practice,
+.form-submit,
+.submitBtn,
+.dashboard-level-circle {
+  background: linear-gradient(135deg, var(--brand), var(--brand2));
+  color: var(--bg);
+  box-shadow: 0 0 40px rgba(0, 212, 255, 0.18);
+}
+
+.message.client .message-bubble,
+.chat-input,
+.form-group input,
+.form-group select,
+.auth-input,
+.textarea,
+.inputStyle,
+.theory-back-btn,
+.btn-skip,
+.btn-back,
+.dashboard-close,
+.result-card .btn-back,
+.profile-chip {
+  background: var(--surface);
+  color: var(--white);
+  border: 1px solid var(--border);
+}
+
+.message.hint .message-bubble,
+.theory-highlight-box,
+.onboarding-highlight,
+.map-recommended-badge,
+.profile-bar-rec {
+  background: rgba(0, 212, 255, 0.08);
+  border-color: rgba(0, 212, 255, 0.18);
+}
+
+.message.feedback-row .feedback-bubble {
+  border-left: 3px solid var(--green);
+}
+
+.demo-banner {
+  background: linear-gradient(135deg, rgba(0, 145, 255, 0.92), rgba(0, 212, 255, 0.92));
+  color: var(--white);
+  text-align: center;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 8px 16px;
+}
+
+.lesson-map-title span,
+.footer-logo span,
+.nav-logo span {
+  color: var(--brand);
+}
+
+.lesson-map-path,
+.chat-input-area,
+.onboarding-buttons,
+.theory-nav,
+.dashboard-stats,
+.dashboard-level-section,
+.roi-grid,
+.who-grid,
+.problem-grid,
+.steps,
+.stats-inner,
+.form-row {
+  gap: 1rem;
+}
+
+.lesson-map-path,
+.chat-container,
+.theory-container,
+.dashboard-card,
+.onboarding-card {
+  width: 100%;
+}
+
+.theory-container {
+  max-width: 900px;
+}
+
+.dashboard-overlay,
+.onboarding-overlay {
+  backdrop-filter: blur(24px);
+}
+
+.dashboard-overlay {
+  background: rgba(6, 8, 16, 0.92);
+}
+
+.onboarding-overlay {
+  background:
+    radial-gradient(circle at top, rgba(0, 145, 255, 0.08), transparent 28%),
+    radial-gradient(circle at bottom right, rgba(0, 212, 255, 0.08), transparent 30%),
+    var(--bg);
+}
+
+.dashboard-card,
+.onboarding-card {
+  border: 1px solid var(--border);
+}
+
+.dashboard-level-section {
+  background: rgba(0, 212, 255, 0.06);
+  border: 1px solid rgba(0, 212, 255, 0.18);
+  border-radius: var(--radius);
+}
+
+.dashboard-progress-bar,
+.theory-progress-track {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.dashboard-progress-fill,
+.theory-progress-fill {
+  background: linear-gradient(135deg, var(--brand), var(--brand2));
+}
+
+.dashboard-stat-box,
+.dashboard-badge,
+.result-card,
+.feedback-bubble {
+  padding: 16px;
+}
+
+.dashboard-badge.locked {
+  opacity: 0.45;
+}
+
+.theory-btn-prev,
+.theory-back-btn,
+.btn-skip,
+.btn-back,
+.dashboard-close {
+  color: var(--gray);
+  background: var(--surface);
+}
+
+.theory-btn-prev:hover,
+.theory-back-btn:hover,
+.btn-skip:hover,
+.btn-back:hover,
+.dashboard-close:hover {
+  color: var(--white);
+  border-color: rgba(0, 212, 255, 0.3);
+}
+
+.theory-btn-next:hover,
+.theory-btn-practice:hover,
+.btn-next:hover,
+.btn-send:hover,
+.form-submit:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 60px rgba(0, 212, 255, 0.34);
+}
+
+.chat-input:focus,
+.form-group input:focus,
+.form-group select:focus,
+.textarea:focus {
+  border-color: rgba(0, 212, 255, 0.38);
+}
+
+.message.client .message-bubble {
+  border-bottom-left-radius: 4px;
+}
+
+.message.user .message-bubble {
+  border-bottom-right-radius: 4px;
+}
+
+.result-card.success,
+.dashboard-badge.unlocked,
+.lesson-card.completed,
+.map-substep.substep-done {
+  background: rgba(0, 230, 118, 0.08);
+}
+
+.result-card.failure {
+  background: rgba(255, 77, 109, 0.08);
+}
+
+.chat-score,
+.lesson-xp,
+.map-node-xp,
+.dashboard-xp-total,
+.dashboard-stat-number,
+.result-card .result-xp {
+  color: var(--brand);
+}
+
+.theory-emoji,
+.onboarding-emoji,
+.lesson-map-profile-bar,
+.profile-step-label,
+.profile-step-sub {
+  text-align: center;
+}
+
+.theory-emoji,
+.onboarding-emoji {
+  font-size: 3.5rem;
+}
+
+.profile-chip.selected,
+.lesson-card:hover:not(.locked),
+.map-node:hover,
+.map-substep:hover {
+  border-color: rgba(0, 212, 255, 0.28);
+}
+
+.profile-chip.selected {
+  background: rgba(0, 212, 255, 0.08);
+  box-shadow: 0 0 0 1px rgba(0, 212, 255, 0.12) inset;
+}
+
+.profile-chip.selected .chip-label,
+.profile-chip.selected .chip-emoji {
+  color: var(--white);
+}
+
+.lesson-map-wrapper,
+.lesson-selector,
+.chat-container,
+.theory-container {
+  position: relative;
+  z-index: 1;
+}
+
+.dashboard-stat-box,
+.dashboard-badge,
+.lesson-card,
+.map-node,
+.map-substep,
+.theory-example,
+.profile-chip {
+  transition: all 0.25s ease;
+}
+
+.lesson-map-path,
+.theory-examples,
+.dashboard-badges-grid,
+.profile-grid,
+.profile-grid-3 {
+  display: grid;
+}
+
+.profile-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.profile-grid-3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.theory-title em,
+.section-title em {
+  font-style: italic;
+  background: linear-gradient(135deg, var(--brand), var(--brand2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.theory-dot.active,
+.onboarding-dot.active {
+  background: var(--brand);
+}
+
+.theory-dot.done,
+.onboarding-dot.done {
+  background: var(--green);
+}
+
+.feedback-bubble {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.feedback-meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: center;
+}
+
+.feedback-technique {
+  font-size: 11px;
+}
+
+.feedback-score-delta {
+  font-weight: 700;
+}
+
+.result-card {
+  border-radius: var(--radius);
+  padding: 28px;
+}
+
+.result-card.success,
+.result-card.failure,
+.result-card.partial {
+  border: 1px solid var(--border);
+}
+
+.theory-btn-practice,
+.btn-next,
+.btn-send,
+.form-submit {
+  box-shadow: 0 0 30px rgba(0, 212, 255, 0.22);
+}
+
+@media (max-width: 768px) {
+  .topbar {
+    padding: 12px 16px;
+    height: auto;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .topbar-stats {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .lesson-selector,
+  .lesson-map-wrapper,
+  .chat-container,
+  .theory-container {
+    padding: 32px 16px 56px;
+  }
+
+  .profile-grid,
+  .profile-grid-3 {
+    grid-template-columns: 1fr;
+  }
+
+  .dashboard-stats,
+  .dashboard-badges-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .dashboard-level-section,
+  .chat-input-area,
+  .onboarding-buttons,
+  .theory-nav {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
 .profile-bar-rec {
   font-size: 12px;
   color: #f59e0b;

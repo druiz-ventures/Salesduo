@@ -196,9 +196,9 @@ export default function ChatSimulatorMVP({ conversationData, onFinish, onAbort, 
       <div className="chat-messages" ref={chatRef}>
         {messages.map((msg, i) => {
           if (msg.sender === "feedback") {
-            const bgColor = msg.correct ? "rgba(34,197,94,0.1)" : "rgba(239,68,68,0.1)";
-            const borderColor = msg.correct ? "#22c55e44" : "#ef444444";
-            const textColor = msg.correct ? "#22c55e" : "#ef4444";
+            const bgColor = msg.correct ? "rgba(0,230,118,0.08)" : "rgba(255,77,109,0.08)";
+            const borderColor = msg.correct ? "rgba(0,230,118,0.24)" : "rgba(255,77,109,0.24)";
+            const textColor = msg.correct ? "var(--green)" : "var(--red)";
             
             return (
               <div key={i} className="message feedback-row">
@@ -215,7 +215,7 @@ export default function ChatSimulatorMVP({ conversationData, onFinish, onAbort, 
                   <div style={{ fontSize: "13px", lineHeight: "1.5", marginBottom: "8px" }}>
                     {msg.explanation}
                   </div>
-                  <div style={{ fontSize: "11px", color: "#64748b", fontWeight: "600" }}>
+                  <div style={{ fontSize: "11px", color: "var(--gray)", fontWeight: "600" }}>
                     Técnica: {msg.technique}
                   </div>
                 </div>
@@ -240,7 +240,7 @@ export default function ChatSimulatorMVP({ conversationData, onFinish, onAbort, 
       </div>
 
       {!ended && hasOptions && !isAnimating && (
-          <div style={{ padding: "16px", display: "flex", flexDirection: "column", gap: "12px" }}>
+            <div style={{ padding: "16px", display: "flex", flexDirection: "column", gap: "12px" }}>
             <div style={{
               background: "var(--surface2)",
               border: "1px solid var(--border)",
@@ -293,8 +293,8 @@ export default function ChatSimulatorMVP({ conversationData, onFinish, onAbort, 
 
           {dealValue > 0 && (
             <div style={{
-              background: endType === "success" ? "rgba(34,197,94,0.1)" : "rgba(239,68,68,0.1)",
-              border: `1px solid ${endType === "success" ? "#22c55e44" : "#ef444444"}`,
+              background: endType === "success" ? "rgba(0,230,118,0.08)" : "rgba(255,77,109,0.08)",
+              border: `1px solid ${endType === "success" ? "rgba(0,230,118,0.24)" : "rgba(255,77,109,0.24)"}`,
               borderRadius: "12px",
               padding: "14px 18px",
               margin: "12px 0",

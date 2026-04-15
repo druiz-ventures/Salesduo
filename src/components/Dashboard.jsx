@@ -60,11 +60,11 @@ export default function Dashboard({ totalXP, completedLessons, badges, sessionSt
 
         {/* Sesiones & Racha */}
         <div className="dashboard-stats" style={{ marginTop: "12px" }}>
-          <div className="dashboard-stat-box" style={{ background: "rgba(99,102,241,0.1)", border: "1px solid rgba(99,102,241,0.3)" }}>
+          <div className="dashboard-stat-box" style={{ background: "rgba(0,212,255,0.08)", border: "1px solid rgba(0,212,255,0.18)" }}>
             <span className="dashboard-stat-number">🎯 {sessionStats.total}</span>
             <span className="dashboard-stat-label">Sesiones totales</span>
           </div>
-          <div className="dashboard-stat-box" style={{ background: "rgba(249,115,22,0.1)", border: "1px solid rgba(249,115,22,0.3)" }}>
+          <div className="dashboard-stat-box" style={{ background: "rgba(0,230,118,0.08)", border: "1px solid rgba(0,230,118,0.18)" }}>
             <span className="dashboard-stat-number">🔥 {sessionStats.racha}</span>
             <span className="dashboard-stat-label">Días seguidos</span>
           </div>
@@ -72,19 +72,19 @@ export default function Dashboard({ totalXP, completedLessons, badges, sessionSt
 
         <div style={{
           marginTop: "14px",
-          background: "rgba(99,102,241,0.08)",
-          border: "1px solid rgba(99,102,241,0.3)",
+          background: "rgba(0,212,255,0.06)",
+          border: "1px solid rgba(0,212,255,0.18)",
           borderRadius: "12px",
           padding: "12px 14px",
         }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8px" }}>
-            <span style={{ color: "#c7d2fe", fontSize: "13px", fontWeight: 700 }}>🎯 Reto semanal</span>
-            <span style={{ color: "#a5b4fc", fontSize: "12px" }}>{currentWeekSessions}/{weeklyGoal} sesiones</span>
+            <span style={{ color: "var(--white)", fontSize: "13px", fontWeight: 700 }}>🎯 Reto semanal</span>
+            <span style={{ color: "var(--gray)", fontSize: "12px" }}>{currentWeekSessions}/{weeklyGoal} sesiones</span>
           </div>
-          <div style={{ height: "8px", background: "#0f172a", borderRadius: "999px", overflow: "hidden" }}>
-            <div style={{ width: `${weeklyProgress}%`, height: "100%", background: "#6366f1" }} />
+          <div style={{ height: "8px", background: "var(--bg)", borderRadius: "999px", overflow: "hidden" }}>
+            <div style={{ width: `${weeklyProgress}%`, height: "100%", background: "linear-gradient(135deg, var(--brand), var(--brand2))" }} />
           </div>
-          <p style={{ color: "#94a3b8", fontSize: "11px", margin: "8px 0 0" }}>
+          <p style={{ color: "var(--gray2)", fontSize: "11px", margin: "8px 0 0" }}>
             Completa 3 sesiones por semana para acelerar aprendizaje y retención.
           </p>
         </div>
