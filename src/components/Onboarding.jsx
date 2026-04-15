@@ -105,7 +105,7 @@ export default function Onboarding({ onComplete, hasTipo = false, onlyTipo = fal
     ];
     return (
       <div className="onboarding-overlay">
-        <div className="onboarding-card" style={{ textAlign: "center" }}>
+        <div className="onboarding-card">
           <div className="onboarding-emoji">🎯</div>
           <h2 className="onboarding-title">¿Cómo practicas las ventas?</h2>
           <p className="onboarding-description">Elige cómo mejor te describes. Lo usaremos para personalizar tu entrenamiento.</p>
@@ -120,20 +120,20 @@ export default function Onboarding({ onComplete, hasTipo = false, onlyTipo = fal
                   gap: "16px",
                   padding: "18px 20px",
                   borderRadius: "12px",
-                  border: "2px solid #334155",
-                  background: "#0f172a",
+                  border: "2px solid var(--border)",
+                  background: "var(--surface2)",
                   cursor: "pointer",
                   textAlign: "left",
-                  transition: "all 0.15s",
+                  transition: "all 0.15s ease-in-out",
                   width: "100%",
                 }}
-                onMouseEnter={e => { e.currentTarget.style.borderColor = "#6366f1"; e.currentTarget.style.background = "rgba(99,102,241,0.1)"; }}
-                onMouseLeave={e => { e.currentTarget.style.borderColor = "#334155"; e.currentTarget.style.background = "#0f172a"; }}
+                onMouseEnter={e => { e.currentTarget.style.borderColor = "var(--brand)"; e.currentTarget.style.background = "var(--glow)"; }}
+                onMouseLeave={e => { e.currentTarget.style.borderColor = "var(--border)"; e.currentTarget.style.background = "var(--surface2)"; }}
               >
                 <span style={{ fontSize: "32px" }}>{opt.emoji}</span>
                 <div>
-                  <div style={{ color: "#f1f5f9", fontWeight: "700", fontSize: "16px" }}>{opt.label}</div>
-                  <div style={{ color: "#64748b", fontSize: "12px", marginTop: "3px" }}>{opt.sub}</div>
+                  <div style={{ color: "var(--white)", fontWeight: "700", fontSize: "16px" }}>{opt.label}</div>
+                  <div style={{ color: "var(--gray2)", fontSize: "12px", marginTop: "3px" }}>{opt.sub}</div>
                 </div>
               </button>
             ))}
@@ -156,7 +156,7 @@ export default function Onboarding({ onComplete, hasTipo = false, onlyTipo = fal
     if (tipo === "particular") {
       return (
         <div className="onboarding-overlay">
-          <div className="onboarding-card" style={{ textAlign: "center" }}>
+          <div className="onboarding-card">
             <div className="onboarding-emoji">🎯</div>
             <h2 className="onboarding-title">¿En qué sector vendes?</h2>
             <p className="onboarding-description">Lo usaremos para personalizar tus simulaciones.</p>
@@ -175,15 +175,15 @@ export default function Onboarding({ onComplete, hasTipo = false, onlyTipo = fal
                   style={{
                     display: "flex", alignItems: "center", gap: "14px",
                     padding: "16px 18px", borderRadius: "12px",
-                    border: "2px solid #334155", background: "#0f172a",
+                    border: "2px solid var(--border)", background: "var(--surface2)",
                     cursor: "pointer", textAlign: "left", width: "100%",
-                    transition: "all 0.15s",
+                    transition: "all 0.15s ease-in-out",
                   }}
-                  onMouseEnter={e => { e.currentTarget.style.borderColor = "#6366f1"; e.currentTarget.style.background = "rgba(99,102,241,0.1)"; }}
-                  onMouseLeave={e => { e.currentTarget.style.borderColor = "#334155"; e.currentTarget.style.background = "#0f172a"; }}
+                  onMouseEnter={e => { e.currentTarget.style.borderColor = "var(--brand)"; e.currentTarget.style.background = "var(--glow)"; }}
+                  onMouseLeave={e => { e.currentTarget.style.borderColor = "var(--border)"; e.currentTarget.style.background = "var(--surface2)"; }}
                 >
                   <span style={{ fontSize: "28px" }}>{opt.emoji}</span>
-                  <span style={{ color: "#f1f5f9", fontWeight: "600", fontSize: "15px" }}>{opt.label}</span>
+                  <span style={{ color: "var(--white)", fontWeight: "600", fontSize: "15px" }}>{opt.label}</span>
                 </button>
               ))}
             </div>
@@ -196,7 +196,7 @@ export default function Onboarding({ onComplete, hasTipo = false, onlyTipo = fal
     // tipo === "empresa"
     return (
       <div className="onboarding-overlay">
-        <div className="onboarding-card" style={{ textAlign: "center" }}>
+        <div className="onboarding-card">
           <div className="onboarding-emoji">🏢</div>
           <h2 className="onboarding-title">Cuéntanos sobre tu empresa</h2>
           <p className="onboarding-description">Lo usaremos para adaptar los escenarios de práctica.</p>

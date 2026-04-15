@@ -100,8 +100,7 @@ async function loadProgressFromCloud(userId) {
 }
 
 function App() {
-  const [themeMode, setThemeMode] = useState(() => localStorage.getItem("theme-mode") || "system");
-  const [resolvedTheme, setResolvedTheme] = useState("dark");
+  const resolvedTheme = "dark";
   const [salesRole, setSalesRole] = useState(() => localStorage.getItem("sales-role") || "setter");
   const [authUser, setAuthUser] = useState(null);           // usuario Supabase
   const [authLoading, setAuthLoading] = useState(true);     // cargando sesión
@@ -121,26 +120,10 @@ function App() {
   const [showQuickValidation, setShowQuickValidation] = useState(false);
 
   useEffect(() => {
-    const media = window.matchMedia("(prefers-color-scheme: dark)");
-
-    const applyTheme = () => {
-      const nextTheme = themeMode === "system"
-        ? (media.matches ? "dark" : "light")
-        : themeMode;
-      setResolvedTheme(nextTheme);
-      document.documentElement.setAttribute("data-theme", nextTheme);
-    };
-
-    applyTheme();
-    const onChange = () => applyTheme();
-    media.addEventListener("change", onChange);
-    return () => media.removeEventListener("change", onChange);
-  }, [themeMode]);
-
-  const handleThemeChange = (nextMode) => {
-    setThemeMode(nextMode);
-    localStorage.setItem("theme-mode", nextMode);
-  };
+    // MVP: tema fijo oscuro para mantener consistencia visual.
+    document.documentElement.setAttribute("data-theme", "dark");
+    localStorage.setItem("theme-mode", "dark");
+  }, []);
 
   const handleSalesRoleChange = (nextRole) => {
     setSalesRole(nextRole);
@@ -377,9 +360,9 @@ function App() {
   // ── Renders ────────────────────────────────────────────────────────────────
   if (authLoading || currentScreen === "loading") {
     return (
-      <div style={{ minHeight:"100vh", background:"var(--bg-900)", display:"flex",
+      <div style={{ minHeight:"100vh", background:"var(--bg)", display:"flex",
         alignItems:"center", justifyContent:"center" }}>
-        <p style={{ color:"#6366f1", fontSize:"20px" }}>🎯 Cargando SalesDuo...</p>
+        <p style={{ color:"var(--brand)", fontSize:"20px" }}>🎯 Cargando SalesDuo...</p>
       </div>
     );
   }
@@ -423,34 +406,11 @@ function App() {
           <button className="btn-dashboard" onClick={() => setShowQuickValidation(true)}>
             ✅ Validar
           </button>
-          <div className="theme-switch" role="group" aria-label="Tema">
-            <button
-              className={`theme-switch-btn ${themeMode === "light" ? "active" : ""}`}
-              onClick={() => handleThemeChange("light")}
-              title="Modo claro"
-            >
-              ☀️
-            </button>
-            <button
-              className={`theme-switch-btn ${themeMode === "system" ? "active" : ""}`}
-              onClick={() => handleThemeChange("system")}
-              title="Usar tema del sistema"
-            >
-              🖥️
-            </button>
-            <button
-              className={`theme-switch-btn ${themeMode === "dark" ? "active" : ""}`}
-              onClick={() => handleThemeChange("dark")}
-              title="Modo oscuro"
-            >
-              🌙
-            </button>
-          </div>
           {authUser?.email === "crd713ncb@gmail.com" && (
             <button
               onClick={() => setShowAdmin(true)}
-              style={{ background:"#1e293b", border:"1px solid #6366f1",
-                color:"#6366f1", borderRadius:"8px", padding:"6px 12px",
+              style={{ background:"var(--surface2)", border:"1px solid var(--brand)",
+                color:"var(--brand)", borderRadius:"8px", padding:"6px 12px",
                 cursor:"pointer", fontSize:"12px" }}
             >
               🛡️ Admin
@@ -458,8 +418,8 @@ function App() {
           )}
           <button
             onClick={handleLogout}
-            style={{ background:"transparent", border:"1px solid #334155",
-              color:"#64748b", borderRadius:"8px", padding:"6px 12px",
+            style={{ background:"transparent", border:"1px solid var(--border)",
+              color:"var(--gray)", borderRadius:"8px", padding:"6px 12px",
               cursor:"pointer", fontSize:"12px" }}
           >
             Salir

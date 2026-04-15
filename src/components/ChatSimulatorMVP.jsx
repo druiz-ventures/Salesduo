@@ -169,24 +169,24 @@ export default function ChatSimulatorMVP({ conversationData, onFinish, onAbort, 
           display: "flex",
           gap: "10px",
           margin: "0 0 12px",
-          background: "#0f172a",
+          background: "var(--surface2)",
           borderRadius: "10px",
           padding: "10px 14px",
-          border: "1px solid #1e293b",
+          border: "1px solid var(--border)",
           flexWrap: "wrap",
         }}>
           <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
             <span style={{ fontSize: "16px" }}>💰</span>
-            <span style={{ color: "#64748b", fontSize: "12px" }}>Venta:</span>
-            <span style={{ color: "#f1f5f9", fontWeight: "700", fontSize: "14px" }}>
+            <span style={{ color: "var(--gray2)", fontSize: "12px" }}>Venta:</span>
+            <span style={{ color: "var(--white)", fontWeight: "700", fontSize: "14px" }}>
               {fmt(dealValue)}€
             </span>
           </div>
-          <div style={{ width: "1px", background: "#1e293b" }} />
+          <div style={{ width: "1px", background: "var(--border)" }} />
           <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
             <span style={{ fontSize: "16px" }}>💸</span>
-            <span style={{ color: "#64748b", fontSize: "12px" }}>Tu comisión ({commissionRate}%):</span>
-            <span style={{ color: "#22c55e", fontWeight: "800", fontSize: "15px" }}>
+            <span style={{ color: "var(--gray2)", fontSize: "12px" }}>Tu comisión ({commissionRate}%):</span>
+            <span style={{ color: "var(--green)", fontWeight: "800", fontSize: "15px" }}>
               {fmt(commission)}€
             </span>
           </div>
@@ -242,13 +242,13 @@ export default function ChatSimulatorMVP({ conversationData, onFinish, onAbort, 
       {!ended && hasOptions && !isAnimating && (
           <div style={{ padding: "16px", display: "flex", flexDirection: "column", gap: "12px" }}>
             <div style={{
-              background: "#1e293b",
-              border: "1px solid #334155",
+              background: "var(--surface2)",
+              border: "1px solid var(--border)",
               borderRadius: "12px",
               padding: "14px 16px",
               marginBottom: "4px"
             }}>
-              <h3 style={{ margin: "0 0 8px 0", fontSize: "14px", fontWeight: "700", color: "#f1f5f9" }}>
+              <h3 style={{ margin: "0 0 8px 0", fontSize: "14px", fontWeight: "700", color: "var(--white)" }}>
                 ⬇️ Escoge una opción
               </h3>
             </div>
@@ -260,20 +260,18 @@ export default function ChatSimulatorMVP({ conversationData, onFinish, onAbort, 
               style={{
                 padding: "14px 16px",
                 borderRadius: "10px",
-                border: "1px solid #334155",
-                background: selectedOption === option.id ? "#6366f155" : "#0f172a",
-                color: "#f1f5f9",
+                border: "1px solid var(--border)",
+                background: selectedOption === option.id ? "rgba(0, 212, 255, 0.15)" : "var(--surface2)",
+                color: "var(--white)",
                 cursor: isAnimating ? "not-allowed" : "pointer",
-                transition: "all 0.15s",
+                transition: "all 0.15s ease-in-out",
                 fontSize: "14px",
                 textAlign: "left",
                 lineHeight: "1.5",
                 opacity: isAnimating ? 0.6 : 1,
-                "&:hover": !isAnimating ? {
-                  background: "#1e293b",
-                  borderColor: "#6366f1",
-                } : {},
               }}
+              onMouseEnter={e => { if (!isAnimating) { e.currentTarget.style.borderColor = "var(--brand)"; } }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = "var(--border)"; }}
             >
               {option.text}
             </button>
@@ -281,7 +279,7 @@ export default function ChatSimulatorMVP({ conversationData, onFinish, onAbort, 
           <button
             onClick={handleAbortTraining}
             className="btn-back"
-            style={{ background: "transparent", border: "1px solid #334155", color: "#94a3b8", marginTop: "4px" }}
+            style={{ background: "transparent", border: "1px solid var(--border)", color: "var(--gray)", marginTop: "4px" }}
           >
             ← Abandonar entrenamiento
           </button>
@@ -304,35 +302,35 @@ export default function ChatSimulatorMVP({ conversationData, onFinish, onAbort, 
             }}>
               {endType === "success" ? (
                 <>
-                  <div style={{ color: "#22c55e", fontSize: "13px", marginBottom: "4px" }}>
+                  <div style={{ color: "var(--green)", fontSize: "13px", marginBottom: "4px" }}>
                     🎉 Comisión ganada
                   </div>
                   <div style={{
-                    color: "#22c55e",
+                    color: "var(--green)",
                     fontSize: "36px",
                     fontWeight: "900",
                     lineHeight: 1,
                   }}>
                     +{commission.toLocaleString("es-ES")}€
                   </div>
-                  <div style={{ color: "#64748b", fontSize: "12px", marginTop: "4px" }}>
+                  <div style={{ color: "var(--gray2)", fontSize: "12px", marginTop: "4px" }}>
                     sobre una venta de {dealValue.toLocaleString("es-ES")}€
                   </div>
                 </>
               ) : (
                 <>
-                  <div style={{ color: "#ef4444", fontSize: "13px", marginBottom: "4px" }}>
+                  <div style={{ color: "var(--red)", fontSize: "13px", marginBottom: "4px" }}>
                     📉 Comisión perdida
                   </div>
                   <div style={{
-                    color: "#ef4444",
+                    color: "var(--red)",
                     fontSize: "36px",
                     fontWeight: "900",
                     lineHeight: 1,
                   }}>
                     -{commission.toLocaleString("es-ES")}€
                   </div>
-                  <div style={{ color: "#64748b", fontSize: "12px", marginTop: "4px" }}>
+                  <div style={{ color: "var(--gray2)", fontSize: "12px", marginTop: "4px" }}>
                     no ganarás esta venta de {dealValue.toLocaleString("es-ES")}€
                   </div>
                 </>
@@ -344,14 +342,14 @@ export default function ChatSimulatorMVP({ conversationData, onFinish, onAbort, 
           <button
             onClick={() => setShowValidation(true)}
             className="btn-back"
-            style={{ background: "#6366f1", marginBottom: "10px" }}
+            style={{ background: "linear-gradient(135deg, var(--brand), var(--brand2))", marginBottom: "10px" }}
           >
             ⭐ Valorar esta sesión
           </button>
           <button
             onClick={handleFinish}
             className="btn-back"
-            style={{ background: "transparent", border: "1px solid #334155", color: "#64748b" }}
+            style={{ background: "transparent", border: "1px solid var(--border)", color: "var(--gray2)" }}
           >
             Ahora no → Volver al menú
           </button>
