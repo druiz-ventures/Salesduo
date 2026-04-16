@@ -1,49 +1,50 @@
 import { useState } from "react";
 import "../App.css";
+import BrandIcon from "./BrandIcon";
 
 // ─── Perfil: qué vendes ────────────────────────────────────────────────────
 const SELL_OPTIONS = [
-  { id: "saas",        emoji: "💻", label: "Software / SaaS" },
-  { id: "servicios",   emoji: "🛠️", label: "Servicios profesionales" },
-  { id: "inmobiliaria",emoji: "🏠", label: "Inmobiliaria" },
-  { id: "formacion",   emoji: "🎓", label: "Formación / Cursos" },
-  { id: "retail",      emoji: "🛍️", label: "Producto físico" },
-  { id: "otro",        emoji: "✨", label: "Otro" },
+  { id: "saas",        icon: "laptop", label: "Software / SaaS" },
+  { id: "servicios",   icon: "handshake", label: "Servicios profesionales" },
+  { id: "inmobiliaria",icon: "house", label: "Inmobiliaria" },
+  { id: "formacion",   icon: "cap", label: "Formación / Cursos" },
+  { id: "retail",      icon: "money", label: "Producto físico" },
+  { id: "otro",        icon: "ai", label: "Otro" },
 ];
 
 // ─── Perfil: a quién vendes ────────────────────────────────────────────────
 const BUYER_OPTIONS = [
-  { id: "empresas",    emoji: "🏢", label: "Empresas (B2B)" },
-  { id: "particulares",emoji: "👤", label: "Particulares (B2C)" },
-  { id: "ambos",       emoji: "🔄", label: "Ambos" },
+  { id: "empresas",    icon: "building", label: "Empresas (B2B)" },
+  { id: "particulares",icon: "globe", label: "Particulares (B2C)" },
+  { id: "ambos",       icon: "handshake", label: "Ambos" },
 ];
 
 // ─── Perfil: mayor reto ────────────────────────────────────────────────────
 const CHALLENGE_OPTIONS = [
-  { id: "objeciones",  emoji: "🛡️", label: "Me frenan las objeciones" },
-  { id: "precio",      emoji: "💰", label: "Siempre me dicen que es caro" },
-  { id: "tiempo",      emoji: "⏰", label: "El cliente nunca tiene tiempo" },
-  { id: "competencia", emoji: "⚔️", label: "Me comparan con la competencia" },
-  { id: "cierre",      emoji: "🤝", label: "No sé cómo cerrar" },
-  { id: "confianza",   emoji: "😬", label: "Me falta confianza al vender" },
+  { id: "objeciones",  icon: "shield", label: "Me frenan las objeciones" },
+  { id: "precio",      icon: "money", label: "Siempre me dicen que es caro" },
+  { id: "tiempo",      icon: "phone", label: "El cliente nunca tiene tiempo" },
+  { id: "competencia", icon: "handshake", label: "Me comparan con la competencia" },
+  { id: "cierre",      icon: "handshake", label: "No sé cómo cerrar" },
+  { id: "confianza",   icon: "ai", label: "Me falta confianza al vender" },
 ];
 
 // ─── Pantallas informativas ────────────────────────────────────────────────
 const INFO_STEPS = [
   {
-    emoji: "😤",
+    icon: "target",
     title: "¿Cuántas veces has salido de una reunión pensando\u00A0'podría haberlo hecho mejor'?",
     description: "Esa sensación tiene nombre: es la distancia entre lo que sabes sobre tu producto y lo que sabes sobre vender. La buena noticia es que vender es una habilidad. Se entrena.",
     highlight: "No se nace vendedor. Se aprende.",
   },
   {
-    emoji: "🤖",
+    icon: "ai",
     title: "Entrena con clientes que reaccionan de verdad",
     description: "Escribe lo que quieras. El cliente simulado responde según tu técnica: si defiendes el precio, te pide descuento. Si preguntas bien, te abre sus problemas. Sin guiones, sin trampa.",
     highlight: "Como un piloto de vuelo, pero para ventas.",
   },
   {
-    emoji: "📈",
+    icon: "chart",
     title: "Cada error te hace mejor",
     description: "Recibes feedback en tiempo real después de cada respuesta: qué técnica usaste, si funcionó y por qué. Sumas XP, desbloqueas badges y ves tu progreso sesión a sesión.",
     highlight: "Aprende más en 20 minutos aquí que en un mes sin practicar.",
@@ -100,13 +101,13 @@ export default function Onboarding({ onComplete, hasTipo = false, onlyTipo = fal
   // ── Render: tipo ──────────────────────────────────────────────────────
   if (phase === "tipo") {
     const TIPO_OPTIONS = [
-      { id: "particular", emoji: "👤", label: "Por mi cuenta",           sub: "Freelance, autónomo o vendedor individual" },
-      { id: "empresa",    emoji: "🏢", label: "Represento a una empresa", sub: "Equipo comercial, startup o pyme" },
+      { id: "particular", icon: "globe", label: "Por mi cuenta",           sub: "Freelance, autónomo o vendedor individual" },
+      { id: "empresa",    icon: "building", label: "Represento a una empresa", sub: "Equipo comercial, startup o pyme" },
     ];
     return (
       <div className="onboarding-overlay">
         <div className="onboarding-card">
-          <div className="onboarding-emoji">🎯</div>
+          <div className="onboarding-emoji"><BrandIcon icon="target" size={2.2} /></div>
           <h2 className="onboarding-title">¿Cómo practicas las ventas?</h2>
           <p className="onboarding-description">Elige cómo mejor te describes. Lo usaremos para personalizar tu entrenamiento.</p>
           <div style={{ display: "flex", flexDirection: "column", gap: "14px", margin: "28px 0" }}>
@@ -130,7 +131,7 @@ export default function Onboarding({ onComplete, hasTipo = false, onlyTipo = fal
                 onMouseEnter={e => { e.currentTarget.style.borderColor = "rgba(0, 212, 255, 0.28)"; e.currentTarget.style.background = "rgba(0, 212, 255, 0.06)"; }}
                 onMouseLeave={e => { e.currentTarget.style.borderColor = "var(--border)"; e.currentTarget.style.background = "var(--surface2)"; }}
               >
-                <span style={{ fontSize: "32px" }}>{opt.emoji}</span>
+                <BrandIcon icon={opt.icon} size={2} style={{ flexShrink: 0 }} />
                 <div>
                   <div style={{ color: "var(--white)", fontWeight: "700", fontSize: "16px" }}>{opt.label}</div>
                   <div style={{ color: "var(--gray2)", fontSize: "12px", marginTop: "3px" }}>{opt.sub}</div>
@@ -146,18 +147,18 @@ export default function Onboarding({ onComplete, hasTipo = false, onlyTipo = fal
   // ── Render: sector ────────────────────────────────────────────────────
   if (phase === "sector") {
     const SECTOR_OPTIONS = [
-      { id: "seguros",       emoji: "🛡️", label: "Seguros" },
-      { id: "inmobiliario",  emoji: "🏠", label: "Inmobiliario" },
-      { id: "infoproductos", emoji: "🎓", label: "Infoproductos" },
-      { id: "kit-digital",   emoji: "💻", label: "Kit Digital" },
-      { id: "otros",         emoji: "✨", label: "Otros" },
+      { id: "seguros",       icon: "shield", label: "Seguros" },
+      { id: "inmobiliario",  icon: "house", label: "Inmobiliario" },
+      { id: "infoproductos", icon: "cap", label: "Infoproductos" },
+      { id: "kit-digital",   icon: "laptop", label: "Kit Digital" },
+      { id: "otros",         icon: "ai", label: "Otros" },
     ];
 
     if (tipo === "particular") {
       return (
         <div className="onboarding-overlay">
           <div className="onboarding-card">
-            <div className="onboarding-emoji">🎯</div>
+            <div className="onboarding-emoji"><BrandIcon icon="target" size={2.2} /></div>
             <h2 className="onboarding-title">¿En qué sector vendes?</h2>
             <p className="onboarding-description">Lo usaremos para personalizar tus simulaciones.</p>
             <div style={{ display: "flex", flexDirection: "column", gap: "12px", margin: "24px 0" }}>
@@ -182,7 +183,7 @@ export default function Onboarding({ onComplete, hasTipo = false, onlyTipo = fal
                   onMouseEnter={e => { e.currentTarget.style.borderColor = "var(--brand)"; e.currentTarget.style.background = "var(--glow)"; }}
                   onMouseLeave={e => { e.currentTarget.style.borderColor = "var(--border)"; e.currentTarget.style.background = "var(--surface2)"; }}
                 >
-                  <span style={{ fontSize: "28px" }}>{opt.emoji}</span>
+                  <BrandIcon icon={opt.icon} size={1.6} style={{ flexShrink: 0 }} />
                   <span style={{ color: "var(--white)", fontWeight: "600", fontSize: "15px" }}>{opt.label}</span>
                 </button>
               ))}
@@ -197,7 +198,7 @@ export default function Onboarding({ onComplete, hasTipo = false, onlyTipo = fal
     return (
       <div className="onboarding-overlay">
         <div className="onboarding-card">
-          <div className="onboarding-emoji">🏢</div>
+          <div className="onboarding-emoji"><BrandIcon icon="building" size={2.2} /></div>
           <h2 className="onboarding-title">Cuéntanos sobre tu empresa</h2>
           <p className="onboarding-description">Lo usaremos para adaptar los escenarios de práctica.</p>
           <div style={{ display: "flex", flexDirection: "column", gap: "14px", margin: "24px 0", textAlign: "left" }}>
@@ -232,7 +233,7 @@ export default function Onboarding({ onComplete, hasTipo = false, onlyTipo = fal
                       transition: "all 0.2s",
                     }}
                   >
-                    <span style={{ fontSize: "20px" }}>{opt.emoji}</span>
+                    <BrandIcon icon={opt.icon} size={1.2} style={{ flexShrink: 0 }} />
                     <span style={{ color: "var(--white)", fontWeight: "600", fontSize: "14px" }}>{opt.label}</span>
                   </button>
                 ))}
@@ -274,7 +275,7 @@ export default function Onboarding({ onComplete, hasTipo = false, onlyTipo = fal
             ))}
           </div>
 
-          <div className="onboarding-emoji">{step.emoji}</div>
+          <div className="onboarding-emoji"><BrandIcon icon={step.icon} size={2.2} /></div>
           <h2 className="onboarding-title">{step.title}</h2>
           <p className="onboarding-description">{step.description}</p>
           <div className="onboarding-highlight">{step.highlight}</div>
@@ -330,7 +331,7 @@ export default function Onboarding({ onComplete, hasTipo = false, onlyTipo = fal
                 className={`profile-chip ${sells.includes(opt.id) ? "selected" : ""}`}
                 onClick={() => toggleMulti(opt.id, sells, setSells)}
               >
-                <span className="chip-emoji">{opt.emoji}</span>
+                <BrandIcon icon={opt.icon} size={1.2} className="chip-emoji" />
                 <span className="chip-label">{opt.label}</span>
               </button>
             ))}
@@ -346,7 +347,7 @@ export default function Onboarding({ onComplete, hasTipo = false, onlyTipo = fal
                 className={`profile-chip ${buyer === opt.id ? "selected" : ""}`}
                 onClick={() => setBuyer(opt.id)}
               >
-                <span className="chip-emoji">{opt.emoji}</span>
+                <BrandIcon icon={opt.icon} size={1.2} className="chip-emoji" />
                 <span className="chip-label">{opt.label}</span>
               </button>
             ))}
@@ -362,7 +363,7 @@ export default function Onboarding({ onComplete, hasTipo = false, onlyTipo = fal
                 className={`profile-chip ${challenges.includes(opt.id) ? "selected" : ""}`}
                 onClick={() => toggleMulti(opt.id, challenges, setChallenges)}
               >
-                <span className="chip-emoji">{opt.emoji}</span>
+                <BrandIcon icon={opt.icon} size={1.2} className="chip-emoji" />
                 <span className="chip-label">{opt.label}</span>
               </button>
             ))}
@@ -381,7 +382,7 @@ export default function Onboarding({ onComplete, hasTipo = false, onlyTipo = fal
             disabled={!canContinueProfile()}
             style={{ opacity: canContinueProfile() ? 1 : 0.4 }}
           >
-            {profileStep < 2 ? "Continuar →" : "🚀 Empezar a entrenar"}
+            {profileStep < 2 ? "Continuar →" : "Empezar a entrenar"}
           </button>
         </div>
       </div>

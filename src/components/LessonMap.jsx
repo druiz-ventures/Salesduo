@@ -1,5 +1,6 @@
 import { useState } from "react";
 import lessons from "../data/lessons.json";
+import BrandIcon from "./BrandIcon";
 
 const CHALLENGE_LESSON_MAP = {
   "precio":      "objecion-precio",
@@ -11,12 +12,18 @@ const CHALLENGE_LESSON_MAP = {
 };
 
 const PRACTICE_TRACKS = [
-  { id: "all", label: "Todos", emoji: "🌐" },
-  { id: "seguros", label: "Seguros", emoji: "🛡️" },
-  { id: "infoproductos", label: "InfoProductos", emoji: "🎓" },
-  { id: "software", label: "Software", emoji: "💻" },
-  { id: "entrevistas", label: "Entrevistas", emoji: "🧑‍💼" },
+  { id: "all", label: "Todos", icon: "globe" },
+  { id: "seguros", label: "Seguros", icon: "shield" },
+  { id: "infoproductos", label: "InfoProductos", icon: "cap" },
+  { id: "software", label: "Software", icon: "laptop" },
+  { id: "entrevistas", label: "Entrevistas", icon: "building" },
 ];
+
+const DIFFICULTY_META = {
+  beginner: { icon: "target", label: "Fácil", className: "diff-easy" },
+  intermediate: { icon: "chart", label: "Medio", className: "diff-mid" },
+  hard: { icon: "shield", label: "Difícil", className: "diff-hard" },
+};
 
 function getRecommendedLesson(profile) {
   if (!profile || !profile.challenges || profile.challenges.length === 0) return null;
@@ -63,7 +70,7 @@ export default function LessonMap({ onSelectLesson, completedLessons, theoriesRe
   return (
     <div className="lesson-map-wrapper">
       <div className="lesson-map-header">
-        <h1 className="lesson-map-title">🎯 salesDuo</h1>
+        <h1 className="lesson-map-title">salesDuo</h1>
 
         {/* Personalized greeting */}
         {userProfile && (
@@ -82,7 +89,7 @@ export default function LessonMap({ onSelectLesson, completedLessons, theoriesRe
             )}
             {recommendedId && !completedLessons.includes(recommendedId) && (
               <span className="profile-bar-rec">
-                ⬇️ Empieza por aquí
+                <BrandIcon icon="target" size={0.85} /> Empieza por aquí
               </span>
             )}
           </div>
@@ -119,7 +126,7 @@ export default function LessonMap({ onSelectLesson, completedLessons, theoriesRe
                 cursor: "pointer",
               }}
             >
-              {track.emoji} {track.label}{recommendedTrack === track.id ? " · Recomendado" : ""}
+              <BrandIcon icon={track.icon} size={0.95} /> {track.label}{recommendedTrack === track.id ? " · Recomendado" : ""}
             </button>
           ))}
         </div>
@@ -144,7 +151,7 @@ export default function LessonMap({ onSelectLesson, completedLessons, theoriesRe
               )}
 
               {isRecommended && !isExpanded && (
-                <div className="map-recommended-badge">⭐ Recomendado para ti</div>
+                <div className="map-recommended-badge"><BrandIcon icon="trophy" size={0.95} /> Recomendado para ti</div>
               )}
 
               <div
@@ -152,21 +159,16 @@ export default function LessonMap({ onSelectLesson, completedLessons, theoriesRe
                 onClick={() => !locked && setExpandedLesson(isExpanded ? null : lesson.id)}
               >
                 <div className="map-node-icon">
-                  {locked ? "🔒" : fullyDone ? "✅" : theoryDone ? "🎯" : "📖"}
+                  <BrandIcon icon={locked ? "shield" : fullyDone ? "trophy" : theoryDone ? "target" : "book"} size={1.15} />
                 </div>
                 <div className="map-node-info">
                   <span className="map-node-title">{lesson.title}</span>
                   <span className="map-node-desc">{lesson.description}</span>
                 </div>
                 <div className="map-node-right">
-                  <span className={`map-badge-diff ${
-                    lesson.difficulty === "beginner" ? "diff-easy"
-                    : lesson.difficulty === "intermediate" ? "diff-mid"
-                    : "diff-hard"
-                  }`}>
-                    {lesson.difficulty === "beginner" ? "🟢 Fácil"
-                    : lesson.difficulty === "intermediate" ? "🟡 Medio"
-                    : "🔴 Difícil"}
+                  <span className={`map-badge-diff ${DIFFICULTY_META[lesson.difficulty]?.className || "diff-mid"}`}>
+                    <BrandIcon icon={DIFFICULTY_META[lesson.difficulty]?.icon || "chart"} size={0.9} />
+                    {DIFFICULTY_META[lesson.difficulty]?.label || "Medio"}
                   </span>
                   <span className="map-node-xp">+{lesson.xpReward} XP</span>
                   {!locked && (
@@ -182,7 +184,7 @@ export default function LessonMap({ onSelectLesson, completedLessons, theoriesRe
                     className={`map-substep ${theoryDone ? "substep-done" : "substep-available"}`}
                     onClick={() => onSelectLesson(lesson, "theory")}
                   >
-                    <div className="substep-icon">{theoryDone ? "✅" : "📚"}</div>
+                    <div className="substep-icon"><BrandIcon icon={theoryDone ? "trophy" : "book"} size={1} /></div>
                     <div className="substep-content">
                       <span className="substep-label">Paso 1 · Teoría</span>
                       <span className="substep-name">{lesson.theory.title}</span>
@@ -190,7 +192,7 @@ export default function LessonMap({ onSelectLesson, completedLessons, theoriesRe
                     </div>
                     <div className="substep-action">
                       <span className={theoryDone ? "substep-repeat" : "substep-start"}>
-                        {theoryDone ? "Repasar →" : "Empezar →"}
+                        <BrandIcon icon={theoryDone ? "book" : "target"} size={0.85} /> {theoryDone ? "Repasar →" : "Empezar →"}
                       </span>
                     </div>
                   </div>
@@ -203,20 +205,20 @@ export default function LessonMap({ onSelectLesson, completedLessons, theoriesRe
                     onClick={() => onSelectLesson(lesson, "practice")}
                   >
                     <div className="substep-icon">
-                      {practiceDone ? "✅" : "🎯"}
+                      <BrandIcon icon={practiceDone ? "trophy" : "target"} size={1} />
                     </div>
                     <div className="substep-content">
                       <span className="substep-label">Paso 2 · Práctica</span>
                       <span className="substep-name">Simulación con cliente real</span>
                       <span className="substep-meta">
                         {!theoryDone
-                          ? "💡 Recomendado: haz la teoría antes"
+                          ? "Recomendado: haz la teoría antes"
                           : `+${lesson.xpReward} XP al completar`}
                       </span>
                     </div>
                     <div className="substep-action">
                       <span className={practiceDone ? "substep-repeat" : "substep-start"}>
-                        {practiceDone ? "Repetir →" : "Practicar →"}
+                        <BrandIcon icon={practiceDone ? "trophy" : "target"} size={0.85} /> {practiceDone ? "Repetir →" : "Practicar →"}
                       </span>
                     </div>
                   </div>

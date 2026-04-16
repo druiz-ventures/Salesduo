@@ -1,5 +1,6 @@
 import "../App.css";
 import allBadges from "../data/badges.json";
+import BrandIcon from "./BrandIcon";
 
 export default function Dashboard({ totalXP, completedLessons, badges, sessionStats = { total: 0, racha: 0 }, onClose }) {
   const level = Math.floor(totalXP / 100) + 1;
@@ -16,7 +17,7 @@ export default function Dashboard({ totalXP, completedLessons, badges, sessionSt
           ✕
         </button>
 
-        <h2 className="dashboard-title">📊 Tu Progreso</h2>
+        <h2 className="dashboard-title"><BrandIcon icon="chart" size={1.25} /> Tu Progreso</h2>
 
         {/* Level & XP */}
         <div className="dashboard-level-section">
@@ -25,7 +26,7 @@ export default function Dashboard({ totalXP, completedLessons, badges, sessionSt
             <span className="dashboard-level-label">NIVEL</span>
           </div>
           <div className="dashboard-level-info">
-            <p className="dashboard-xp-total">⭐ {totalXP} XP totales</p>
+            <p className="dashboard-xp-total"><BrandIcon icon="trophy" size={0.95} /> {totalXP} XP totales</p>
             <div className="dashboard-progress-bar">
               <div
                 className="dashboard-progress-fill"
@@ -61,7 +62,7 @@ export default function Dashboard({ totalXP, completedLessons, badges, sessionSt
         {/* Sesiones & Racha */}
         <div className="dashboard-stats" style={{ marginTop: "12px" }}>
           <div className="dashboard-stat-box" style={{ background: "rgba(0,212,255,0.08)", border: "1px solid rgba(0,212,255,0.18)" }}>
-            <span className="dashboard-stat-number">🎯 {sessionStats.total}</span>
+            <span className="dashboard-stat-number"><BrandIcon icon="target" size={0.9} /> {sessionStats.total}</span>
             <span className="dashboard-stat-label">Sesiones totales</span>
           </div>
           <div className="dashboard-stat-box" style={{ background: "rgba(0,230,118,0.08)", border: "1px solid rgba(0,230,118,0.18)" }}>
@@ -78,7 +79,7 @@ export default function Dashboard({ totalXP, completedLessons, badges, sessionSt
           padding: "12px 14px",
         }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8px" }}>
-            <span style={{ color: "var(--white)", fontSize: "13px", fontWeight: 700 }}>🎯 Reto semanal</span>
+            <span style={{ color: "var(--white)", fontSize: "13px", fontWeight: 700 }}><BrandIcon icon="target" size={0.9} /> Reto semanal</span>
             <span style={{ color: "var(--gray)", fontSize: "12px" }}>{currentWeekSessions}/{weeklyGoal} sesiones</span>
           </div>
           <div style={{ height: "8px", background: "var(--bg)", borderRadius: "999px", overflow: "hidden" }}>
@@ -90,7 +91,7 @@ export default function Dashboard({ totalXP, completedLessons, badges, sessionSt
         </div>
 
         {/* Badges */}
-        <h3 className="dashboard-badges-title">🏅 Badges</h3>
+        <h3 className="dashboard-badges-title"><BrandIcon icon="trophy" size={0.95} /> Badges</h3>
         <div className="dashboard-badges-grid">
           {allBadges.map((badge) => {
             const isUnlocked = badges.includes(badge.id);
@@ -100,7 +101,7 @@ export default function Dashboard({ totalXP, completedLessons, badges, sessionSt
                 className={`dashboard-badge ${isUnlocked ? "unlocked" : "locked"}`}
               >
                 <span className="dashboard-badge-icon">
-                  {isUnlocked ? badge.icon : "🔒"}
+                  <BrandIcon icon={isUnlocked ? undefined : "shield"} emoji={isUnlocked ? badge.icon : undefined} size={1.1} />
                 </span>
                 <span className="dashboard-badge-name">{badge.name}</span>
                 <span className="dashboard-badge-desc">

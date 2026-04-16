@@ -10,6 +10,7 @@ import ChatSimulatorMVP from "./components/ChatSimulatorMVP";
 import Dashboard from "./components/Dashboard";
 import AdminPanel from "./components/AdminPanel";
 import ValidationFeedback from "./components/ValidationFeedback";
+import BrandIcon from "./components/BrandIcon";
 
 const conversationModules = import.meta.glob("./data/conversations/*.json", { eager: true });
 const conversationsMap = Object.values(conversationModules).reduce((acc, mod) => {
@@ -362,7 +363,7 @@ function App() {
     return (
       <div style={{ minHeight:"100vh", background:"var(--bg)", display:"flex",
         alignItems:"center", justifyContent:"center" }}>
-        <p style={{ color:"var(--brand)", fontSize:"20px" }}>🎯 Cargando SalesDuo...</p>
+        <p style={{ color:"var(--brand)", fontSize:"20px", display:"flex", alignItems:"center", gap:"10px" }}><BrandIcon icon="target" size={1.1} /> Cargando SalesDuo...</p>
       </div>
     );
   }
@@ -397,14 +398,14 @@ function App() {
           salesDuo
         </span>
         <div className="topbar-stats">
-          <span className="topbar-stat">⭐ <strong>{totalXP}</strong> XP</span>
-          <span className="topbar-stat">🏅 <strong>{badges.length}</strong></span>
-          <span className="topbar-stat">✅ <strong>{completedLessons.length}</strong></span>
+          <span className="topbar-stat"><BrandIcon icon="trophy" size={0.9} /> <strong>{totalXP}</strong> XP</span>
+          <span className="topbar-stat"><BrandIcon icon="trophy" size={0.9} /> <strong>{badges.length}</strong></span>
+          <span className="topbar-stat"><BrandIcon icon="chart" size={0.9} /> <strong>{completedLessons.length}</strong></span>
           <button className="btn-dashboard" onClick={() => setShowDashboard(true)}>
-            📊 Progreso
+            <BrandIcon icon="chart" size={0.85} /> Progreso
           </button>
           <button className="btn-dashboard" onClick={() => setShowQuickValidation(true)}>
-            ✅ Validar
+            <BrandIcon icon="speech" size={0.85} /> Validar
           </button>
           {authUser?.email === "crd713ncb@gmail.com" && (
             <button
@@ -413,7 +414,7 @@ function App() {
                 color:"var(--brand)", borderRadius:"8px", padding:"6px 12px",
                 cursor:"pointer", fontSize:"12px" }}
             >
-              🛡️ Admin
+              <BrandIcon icon="shield" size={0.85} /> Admin
             </button>
           )}
           <button

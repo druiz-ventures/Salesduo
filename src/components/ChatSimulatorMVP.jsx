@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import ValidationFeedback from "./ValidationFeedback";
 import { supabase } from "../supabaseClient";
+import BrandIcon from "./BrandIcon";
 
 // Función para mezclar array aleatoriamente
 const shuffleArray = (arr) => {
@@ -142,12 +143,12 @@ export default function ChatSimulatorMVP({ conversationData, onFinish, onAbort, 
 
   const endResults = {
     success: { 
-      title: "🎉 ¡Excelente!", 
+      title: "¡Excelente!", 
       message: "Respondiste correctamente. Eso es la técnica de venta que funciona.",
       xpEarned: 100 
     },
     failure: { 
-      title: "📉 No esta vez", 
+      title: "No esta vez", 
       message: "Eso no era la respuesta correcta. Repasa la técnica y vuelve a intentarlo.",
       xpEarned: 40 
     },
@@ -158,7 +159,7 @@ export default function ChatSimulatorMVP({ conversationData, onFinish, onAbort, 
     <div className="chat-container">
       <div className="chat-header">
         <h2>{clientAvatar} {clientName}</h2>
-        <span className="chat-score">🏆 {score} pts</span>
+        <span className="chat-score"><BrandIcon icon="trophy" size={0.9} /> {score} pts</span>
       </div>
       <p className="chat-role">{conversationData.clientRole || "Cliente simulado"}</p>
       <p className="chat-context">{conversationData.context}</p>
@@ -176,7 +177,7 @@ export default function ChatSimulatorMVP({ conversationData, onFinish, onAbort, 
           flexWrap: "wrap",
         }}>
           <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-            <span style={{ fontSize: "16px" }}>💰</span>
+            <BrandIcon icon="money" size={0.95} />
             <span style={{ color: "var(--gray2)", fontSize: "12px" }}>Venta:</span>
             <span style={{ color: "var(--white)", fontWeight: "700", fontSize: "14px" }}>
               {fmt(dealValue)}€
@@ -184,7 +185,7 @@ export default function ChatSimulatorMVP({ conversationData, onFinish, onAbort, 
           </div>
           <div style={{ width: "1px", background: "var(--border)" }} />
           <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-            <span style={{ fontSize: "16px" }}>💸</span>
+            <BrandIcon icon="money" size={0.95} />
             <span style={{ color: "var(--gray2)", fontSize: "12px" }}>Tu comisión ({commissionRate}%):</span>
             <span style={{ color: "var(--green)", fontWeight: "800", fontSize: "15px" }}>
               {fmt(commission)}€
@@ -210,7 +211,7 @@ export default function ChatSimulatorMVP({ conversationData, onFinish, onAbort, 
                   color: textColor,
                 }}>
                   <div style={{ fontWeight: "700", marginBottom: "6px", fontSize: "13px" }}>
-                    {msg.correct ? "✅ Correcto" : "❌ Incorrecto"}
+                    <BrandIcon icon={msg.correct ? "trophy" : "shield"} size={0.9} /> {msg.correct ? "Correcto" : "Incorrecto"}
                   </div>
                   <div style={{ fontSize: "13px", lineHeight: "1.5", marginBottom: "8px" }}>
                     {msg.explanation}
@@ -249,7 +250,7 @@ export default function ChatSimulatorMVP({ conversationData, onFinish, onAbort, 
               marginBottom: "4px"
             }}>
               <h3 style={{ margin: "0 0 8px 0", fontSize: "14px", fontWeight: "700", color: "var(--white)" }}>
-                ⬇️ Escoge una opción
+                <BrandIcon icon="target" size={0.85} /> Escoge una opción
               </h3>
             </div>
             {shuffledOptions.map((option) => (
@@ -281,7 +282,7 @@ export default function ChatSimulatorMVP({ conversationData, onFinish, onAbort, 
             className="btn-back"
             style={{ background: "transparent", border: "1px solid var(--border)", color: "var(--gray)", marginTop: "4px" }}
           >
-            ← Abandonar entrenamiento
+            <BrandIcon icon="shield" size={0.8} /> Abandonar entrenamiento
           </button>
         </div>
       )}
@@ -303,7 +304,7 @@ export default function ChatSimulatorMVP({ conversationData, onFinish, onAbort, 
               {endType === "success" ? (
                 <>
                   <div style={{ color: "var(--green)", fontSize: "13px", marginBottom: "4px" }}>
-                    🎉 Comisión ganada
+                    <BrandIcon icon="trophy" size={0.85} /> Comisión ganada
                   </div>
                   <div style={{
                     color: "var(--green)",
@@ -320,7 +321,7 @@ export default function ChatSimulatorMVP({ conversationData, onFinish, onAbort, 
               ) : (
                 <>
                   <div style={{ color: "var(--red)", fontSize: "13px", marginBottom: "4px" }}>
-                    📉 Comisión perdida
+                    <BrandIcon icon="shield" size={0.85} /> Comisión perdida
                   </div>
                   <div style={{
                     color: "var(--red)",
@@ -344,7 +345,7 @@ export default function ChatSimulatorMVP({ conversationData, onFinish, onAbort, 
             className="btn-back"
             style={{ background: "linear-gradient(135deg, var(--brand), var(--brand2))", marginBottom: "10px" }}
           >
-            ⭐ Valorar esta sesión
+            <BrandIcon icon="trophy" size={0.85} /> Valorar esta sesión
           </button>
           <button
             onClick={handleFinish}

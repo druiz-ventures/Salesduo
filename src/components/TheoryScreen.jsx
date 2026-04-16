@@ -1,5 +1,6 @@
 import { useState } from "react";
 import "../App.css";
+import BrandIcon from "./BrandIcon";
 
 export default function TheoryScreen({ lesson, onComplete, onBack }) {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -24,19 +25,19 @@ export default function TheoryScreen({ lesson, onComplete, onBack }) {
 
       {/* Slide */}
       <div className="theory-slide" key={currentSlide}>
-        <div className="theory-emoji">{slide.emoji}</div>
+        <div className="theory-emoji"><BrandIcon emoji={slide.emoji} size={2.2} /></div>
         <h2 className="theory-title">{slide.title}</h2>
         <p className="theory-body">{slide.body}</p>
 
         {slide.highlight && (
           <div className="theory-highlight-box">
-            <span className="theory-highlight-icon">💡</span>
+            <span className="theory-highlight-icon"><BrandIcon icon="speech" size={1} /></span>
             <p className="theory-highlight-text">{slide.highlight}</p>
           </div>
         )}
 
         {slide.technique && (
-          <div className="theory-technique-tag">🎓 {slide.technique}</div>
+          <div className="theory-technique-tag"><BrandIcon icon="cap" size={0.85} /> {slide.technique}</div>
         )}
 
         {slide.examples && slide.examples.length > 0 && (
@@ -47,7 +48,7 @@ export default function TheoryScreen({ lesson, onComplete, onBack }) {
                 className={`theory-example ${ex.type === "correct" ? "example-correct" : "example-wrong"}`}
               >
                 <span className="example-icon">
-                  {ex.type === "correct" ? "✅" : "❌"}
+                  <BrandIcon icon={ex.type === "correct" ? "trophy" : "shield"} size={0.95} />
                 </span>
                 <div className="example-content">
                   {ex.label && <span className="example-label">{ex.label}</span>}
@@ -73,7 +74,7 @@ export default function TheoryScreen({ lesson, onComplete, onBack }) {
           </button>
         ) : (
           <button className="theory-btn-practice" onClick={onComplete}>
-            🎯 Practicar ahora
+            <BrandIcon icon="target" size={0.95} /> Practicar ahora
           </button>
         )}
       </div>

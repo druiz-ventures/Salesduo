@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { supabase } from "../supabaseClient";
+import BrandIcon from "./BrandIcon";
 
 const getOAuthRedirectTo = () => {
   const configuredUrl = (import.meta.env.VITE_PUBLIC_SITE_URL || "").trim();
@@ -65,7 +66,7 @@ export default function AuthScreen() {
     <div style={styles.overlay}>
       <div style={styles.card}>
         {/* Header */}
-        <div style={styles.logo}>🎯</div>
+        <div style={styles.logo}><BrandIcon icon="target" size={2.4} /></div>
         <h1 style={styles.title}>SalesDuo</h1>
         <p style={styles.subtitle}>Entrena tus habilidades de venta con IA</p>
 

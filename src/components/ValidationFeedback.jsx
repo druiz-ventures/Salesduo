@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { supabase } from "../supabaseClient";
+import BrandIcon from "./BrandIcon";
 
 export default function ValidationFeedback({ userId, conversationId, scoreFinal, endType, onComplete }) {
   const [repetirias, setRepetirias] = useState(null);   // true | false | null
@@ -47,7 +48,7 @@ export default function ValidationFeedback({ userId, conversationId, scoreFinal,
   return (
     <div style={s.overlay}>
       <div style={s.card}>
-        <h3 style={s.title}>⭐ Valora esta sesión</h3>
+        <h3 style={s.title}><BrandIcon icon="trophy" size={1} /> Valora esta sesión</h3>
         <p style={s.sub}>Tu opinión nos ayuda a mejorar el entrenamiento.</p>
 
         {/* Pregunta 1 */}
