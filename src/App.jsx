@@ -11,6 +11,7 @@ import Dashboard from "./components/Dashboard";
 import AdminPanel from "./components/AdminPanel";
 import ValidationFeedback from "./components/ValidationFeedback";
 import BrandIcon from "./components/BrandIcon";
+import VoiceLab from "./components/voice/VoiceLab";
 
 const conversationModules = import.meta.glob("./data/conversations/*.json", { eager: true });
 const conversationsMap = Object.values(conversationModules).reduce((acc, mod) => {
@@ -119,6 +120,7 @@ function App() {
   const [sessionStats, setSessionStats] = useState({ total: 0, racha: 0 });
   const [showAdmin, setShowAdmin] = useState(false);
   const [showQuickValidation, setShowQuickValidation] = useState(false);
+  const [showVoiceLab, setShowVoiceLab] = useState(false);
 
   useEffect(() => {
     // MVP: tema fijo oscuro para mantener consistencia visual.
@@ -292,6 +294,7 @@ function App() {
     setShowDashboard(false);
     setShowAdmin(false);
     setShowQuickValidation(false);
+    setShowVoiceLab(false);
     setSelectedConversation(null);
     setSelectedLesson(null);
     setCurrentScreen("menu");
@@ -407,6 +410,9 @@ function App() {
           <button className="btn-dashboard" onClick={() => setShowQuickValidation(true)}>
             <BrandIcon icon="speech" size={0.85} /> Validar
           </button>
+          <button className="btn-dashboard" onClick={() => setShowVoiceLab(true)}>
+            <BrandIcon icon="speech" size={0.85} /> Voz hiperrealista (beta)
+          </button>
           {authUser?.email === "crd713ncb@gmail.com" && (
             <button
               onClick={() => setShowAdmin(true)}
@@ -449,6 +455,13 @@ function App() {
           scoreFinal={0}
           endType="manual"
           onComplete={() => setShowQuickValidation(false)}
+        />
+      )}
+
+      {showVoiceLab && (
+        <VoiceLab
+          salesRole={salesRole}
+          onClose={() => setShowVoiceLab(false)}
         />
       )}
 
