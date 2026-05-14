@@ -12,6 +12,8 @@ import AdminPanel from "./components/AdminPanel";
 import ValidationFeedback from "./components/ValidationFeedback";
 import BrandIcon from "./components/BrandIcon";
 import VoiceLab from "./components/voice/VoiceLab";
+import VoiceOnly from "./components/VoiceOnly";
+import CloserVoiceOnly from "./components/CloserVoiceOnly";
 
 const conversationModules = import.meta.glob("./data/conversations/*.json", { eager: true });
 const conversationsMap = Object.values(conversationModules).reduce((acc, mod) => {
@@ -121,6 +123,25 @@ function App() {
   const [showAdmin, setShowAdmin] = useState(false);
   const [showQuickValidation, setShowQuickValidation] = useState(false);
   const [showVoiceLab, setShowVoiceLab] = useState(false);
+    const urlParams = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : new URLSearchParams('');
+    const isVoiceDemo = urlParams.get('voice_demo') === '1' || urlParams.get('voice_demo') === 'true';
+    const isCloserDemo = urlParams.get('closer_demo') === '1' || urlParams.get('closer_demo') === 'true';
+
+    if (isCloserDemo) {
+      return (
+        <div className="App">
+          <CloserVoiceOnly />
+        </div>
+      );
+    }
+
+    if (isVoiceDemo) {
+      return (
+        <div className="App">
+          <VoiceOnly />
+        </div>
+      );
+    }
 
   useEffect(() => {
     // MVP: tema fijo oscuro para mantener consistencia visual.
