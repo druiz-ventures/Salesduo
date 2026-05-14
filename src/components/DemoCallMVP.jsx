@@ -16,6 +16,21 @@ const BUYER = {
 const WAITLIST_WEBHOOK = ""; // TODO: pegar webhook de Make aquí
 const STRIPE_LINK = "";      // TODO: pegar enlace de Stripe aquí
 
+const MAKE_WEBHOOK_URL = 'https://hook.eu1.make.com/gm4bcobbujwf5o6iewmoerhuy2l9wh9b';
+
+async function sendEventToMake(payload) {
+  try {
+    await fetch(MAKE_WEBHOOK_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+      keepalive: true,
+    });
+  } catch (error) {
+    console.error('Error enviando a Make:', error);
+  }
+}
+
 const SCENARIO = {
   buyerPersona: "",
   context: "",
@@ -288,6 +303,7 @@ export default function DemoCallMVP() {
     await new Promise((r) => setTimeout(r, 1800));
     if (!sessionRef.current) return;
     setPhase("active");
+    sendEventToMake({ event: 'call_started', buyer: BUYER.name, company: BUYER.company, timestamp: new Date().toISOString() });
 
     setBuyerText(SCENARIO.objection);
     setIsSpeaking(true);
@@ -309,6 +325,7 @@ export default function DemoCallMVP() {
     });
     setOutcome(r);
     setPhase("ended");
+    sendEventToMake({ event: 'call_ended', endType: r, turns: turnRef.current, score: scoreRef.current, timestamp: new Date().toISOString() });
   }
 
   function restart() {
@@ -484,6 +501,7 @@ function EndedScreen({ outcome, score, elapsed, highlights, onRestart }) {
     if (WAITLIST_WEBHOOK) {
       fetch(WAITLIST_WEBHOOK, { method: "POST" }).catch(() => {});
     }
+    sendEventToMake({ event: 'waitlist_clicked', timestamp: new Date().toISOString() });
   }
 
   return (
