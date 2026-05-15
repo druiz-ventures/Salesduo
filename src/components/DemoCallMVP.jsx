@@ -15,7 +15,7 @@ const BUYER = {
 
 const WAITLIST_WEBHOOK = ""; // TODO: pegar webhook de Make aquí
 const STRIPE_LINK = "";      // TODO: pegar enlace de Stripe aquí
-const LANDING_URL = "";      // TODO: pegar URL de la landing aquí
+const LANDING_URL = "https://salesduo-landing.vercel.app";
 
 const MAKE_WEBHOOK_URL = 'https://hook.eu1.make.com/gm4bcobbujwf5o6iewmoerhuy2l9wh9b';
 
