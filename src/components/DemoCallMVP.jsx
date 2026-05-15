@@ -15,6 +15,7 @@ const BUYER = {
 
 const WAITLIST_WEBHOOK = ""; // TODO: pegar webhook de Make aquí
 const STRIPE_LINK = "";      // TODO: pegar enlace de Stripe aquí
+const LANDING_URL = "";      // TODO: pegar URL de la landing aquí
 
 const MAKE_WEBHOOK_URL = 'https://hook.eu1.make.com/gm4bcobbujwf5o6iewmoerhuy2l9wh9b';
 
@@ -103,6 +104,9 @@ export default function DemoCallMVP() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [highlights, setHighlights] = useState([]);
   const [history, setHistory] = useState([]);
+  const [tokenData, setTokenData] = useState(null);
+  const [tokenLoading, setTokenLoading] = useState(true);
+  const [demoCompleted, setDemoCompleted] = useState(false);
 
   const sessionRef = useRef(false);
   const recognitionRef = useRef(null);
@@ -116,6 +120,30 @@ export default function DemoCallMVP() {
   useEffect(() => { historyRef.current = history; }, [history]);
   useEffect(() => { scoreRef.current = score; }, [score]);
   useEffect(() => { turnRef.current = turnCount; }, [turnCount]);
+
+  useEffect(() => {
+    const token = new URLSearchParams(window.location.search).get("token");
+    if (!token) {
+      if (LANDING_URL) window.location.href = LANDING_URL;
+      else setTokenLoading(false);
+      return;
+    }
+    supabase
+      .from("demo_tokens")
+      .select("token, email, name, attempts")
+      .eq("token", token)
+      .single()
+      .then(({ data, error: err }) => {
+        if (err || !data) {
+          if (LANDING_URL) window.location.href = LANDING_URL;
+          else setTokenLoading(false);
+          return;
+        }
+        setTokenData(data);
+        if (data.attempts >= 2) setDemoCompleted(true);
+        setTokenLoading(false);
+      });
+  }, []);
 
   useEffect(() => {
     if (phase === "active") {
@@ -134,6 +162,17 @@ export default function DemoCallMVP() {
       clearInterval(timerRef.current);
     };
   }, []);
+
+  async function incrementAttempts() {
+    if (!tokenData) return;
+    const newAttempts = (tokenData.attempts || 0) + 1;
+    await supabase
+      .from("demo_tokens")
+      .update({ attempts: newAttempts })
+      .eq("token", tokenData.token);
+    setTokenData((prev) => ({ ...prev, attempts: newAttempts }));
+    if (newAttempts >= 2) setDemoCompleted(true);
+  }
 
   function stopListening() {
     clearTimeout(silenceTimerRef.current);
@@ -304,7 +343,7 @@ export default function DemoCallMVP() {
     await new Promise((r) => setTimeout(r, 1800));
     if (!sessionRef.current) return;
     setPhase("active");
-    sendEventToMake({ event: 'call_started', buyer: BUYER.name, company: BUYER.company, timestamp: new Date().toISOString() });
+    sendEventToMake({ event: 'call_started', buyer: BUYER.name, company: BUYER.company, email: tokenData?.email, name: tokenData?.name, timestamp: new Date().toISOString() });
 
     setBuyerText(SCENARIO.objection);
     setIsSpeaking(true);
@@ -326,7 +365,8 @@ export default function DemoCallMVP() {
     });
     setOutcome(r);
     setPhase("ended");
-    sendEventToMake({ event: 'call_ended', endType: r, turns: turnRef.current, score: scoreRef.current, timestamp: new Date().toISOString() });
+    sendEventToMake({ event: 'call_ended', endType: r, turns: turnRef.current, score: scoreRef.current, email: tokenData?.email, name: tokenData?.name, timestamp: new Date().toISOString() });
+    incrementAttempts();
   }
 
   function restart() {
@@ -350,6 +390,9 @@ export default function DemoCallMVP() {
     setIsProcessing(false);
   }
 
+  if (tokenLoading) return <LoadingScreen />;
+  if (demoCompleted && phase !== "active" && phase !== "calling") return <DemoCompletedScreen />;
+
   if (phase === "idle") return <IdleScreen onStart={startCall} />;
   if (phase === "calling") return <CallingScreen />;
   if (phase === "ended") {
@@ -360,6 +403,7 @@ export default function DemoCallMVP() {
         elapsed={elapsed}
         highlights={highlights}
         onRestart={restart}
+        canRestart={!demoCompleted}
       />
     );
   }
@@ -446,6 +490,42 @@ export default function DemoCallMVP() {
   );
 }
 
+// ─── Loading Screen ───────────────────────────────────────────────────────────
+function LoadingScreen() {
+  return (
+    <div className="dcm-screen dcm-loading">
+      <div className="dcm-loading-content">
+        <div className="dcm-loading-logo">Sales<span>Duo</span></div>
+        <div className="dcm-loading-spinner" />
+      </div>
+    </div>
+  );
+}
+
+// ─── Demo Completed Screen ────────────────────────────────────────────────────
+function DemoCompletedScreen() {
+  return (
+    <div className="dcm-screen dcm-ended">
+      <div className="dcm-ended-content">
+        <div className="dcm-ended-logo">Sales<span>Duo</span></div>
+        <div className="dcm-result-card">
+          <div className="dcm-outcome-icon neutral">✓</div>
+          <h2 className="dcm-outcome-title">Gracias por probar SalesDuo</h2>
+          <p className="dcm-outcome-desc">Ya has completado tu demo. Si quieres acceder a la plataforma completa, reserva ahora con un 50% de descuento de por vida.</p>
+        </div>
+        <div className="dcm-cta-section">
+          <div className="dcm-cta-reserve-wrap">
+            <span className="dcm-cta-badge">⚡ Early adopter · 50% off for life</span>
+            <a className="dcm-cta-reserve" href={STRIPE_LINK || "#"} target="_blank" rel="noopener noreferrer">
+              Reservar ahora
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ─── Idle Screen ─────────────────────────────────────────────────────────────
 function IdleScreen({ onStart }) {
   return (
@@ -492,7 +572,7 @@ function CallingScreen() {
 }
 
 // ─── Ended Screen ─────────────────────────────────────────────────────────────
-function EndedScreen({ outcome, score, elapsed, highlights, onRestart }) {
+function EndedScreen({ outcome, score, elapsed, highlights, onRestart, canRestart }) {
   const [waitlistDone, setWaitlistDone] = useState(false);
   const isAccepted = outcome === "accepted";
   const isRejected = outcome === "rejected";
@@ -545,9 +625,11 @@ function EndedScreen({ outcome, score, elapsed, highlights, onRestart }) {
             </div>
           )}
 
-          <button className="dcm-restart-btn" onClick={onRestart}>
-            Intentar de nuevo
-          </button>
+          {canRestart && (
+            <button className="dcm-restart-btn" onClick={onRestart}>
+              Intentar de nuevo
+            </button>
+          )}
         </div>
 
         <div className="dcm-cta-section">
