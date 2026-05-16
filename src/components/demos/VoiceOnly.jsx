@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react";
-import "../App.css";
+import "../../App.css";
 // Conversacion simple: usamos un JSON de ejemplo (objecion-precio)
-import convo from "../data/conversations/objecion-precio.json";
+import convo from "../../data/conversations/objecion-precio.json";
 
 export default function VoiceOnly() {
   const [currentNodeId, setCurrentNodeId] = useState(convo?.initialNode || "start");

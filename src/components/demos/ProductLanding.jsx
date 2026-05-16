@@ -1,4 +1,4 @@
-import BrandIcon from "./BrandIcon";
+import BrandIcon from "../BrandIcon";
 
 const defaultHighlights = [];
 

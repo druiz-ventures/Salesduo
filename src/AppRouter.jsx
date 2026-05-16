@@ -1,8 +1,8 @@
 import App from "./App.jsx";
-import VoiceOnly from "./components/VoiceOnly";
-import CloserVoiceOnly from "./components/CloserVoiceOnly";
-import ProductLanding from "./components/ProductLanding";
-import DemoCallMVP from "./components/DemoCallMVP";
+import VoiceOnly from "./components/demos/VoiceOnly";
+import CloserVoiceOnly from "./components/demos/CloserVoiceOnly";
+import ProductLanding from "./components/demos/ProductLanding";
+import DemoCallMVP from "./components/demos/DemoCallMVP";
 
 const truthy = (value) => ["1", "true", "yes", "on"].includes(String(value || "").toLowerCase());
 

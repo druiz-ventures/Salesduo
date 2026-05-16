@@ -12,8 +12,8 @@ import AdminPanel from "./components/AdminPanel";
 import ValidationFeedback from "./components/ValidationFeedback";
 import BrandIcon from "./components/BrandIcon";
 import VoiceLab from "./components/voice/VoiceLab";
-import VoiceOnly from "./components/VoiceOnly";
-import CloserVoiceOnly from "./components/CloserVoiceOnly";
+import VoiceOnly from "./components/demos/VoiceOnly";
+import CloserVoiceOnly from "./components/demos/CloserVoiceOnly";
 
 const conversationModules = import.meta.glob("./data/conversations/*.json", { eager: true });
 const conversationsMap = Object.values(conversationModules).reduce((acc, mod) => {
