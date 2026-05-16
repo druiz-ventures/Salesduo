@@ -404,6 +404,7 @@ export default function DemoCallMVP() {
         highlights={highlights}
         onRestart={restart}
         canRestart={!demoCompleted}
+        tokenData={tokenData}
       />
     );
   }
@@ -504,6 +505,16 @@ function LoadingScreen() {
 
 // ─── Demo Completed Screen ────────────────────────────────────────────────────
 function DemoCompletedScreen() {
+  const [waitlistDone, setWaitlistDone] = useState(false);
+
+  function handleWaitlist() {
+    setWaitlistDone(true);
+    if (WAITLIST_WEBHOOK) {
+      fetch(WAITLIST_WEBHOOK, { method: "POST" }).catch(() => {});
+    }
+    sendEventToMake({ event: 'waitlist_clicked', timestamp: new Date().toISOString() });
+  }
+
   return (
     <div className="dcm-screen dcm-ended">
       <div className="dcm-ended-content">
@@ -520,6 +531,13 @@ function DemoCompletedScreen() {
               Reservar ahora
             </a>
           </div>
+          {waitlistDone ? (
+            <p className="dcm-cta-confirm">¡Genial! En cuanto la aplicación esté disponible serás el primero en saberlo.</p>
+          ) : (
+            <button className="dcm-cta-waitlist" onClick={handleWaitlist}>
+              Apuntarme a la lista de espera
+            </button>
+          )}
         </div>
       </div>
     </div>
@@ -572,8 +590,12 @@ function CallingScreen() {
 }
 
 // ─── Ended Screen ─────────────────────────────────────────────────────────────
-function EndedScreen({ outcome, score, elapsed, highlights, onRestart, canRestart }) {
+function EndedScreen({ outcome, score, elapsed, highlights, onRestart, canRestart, tokenData }) {
   const [waitlistDone, setWaitlistDone] = useState(false);
+  const [rating, setRating] = useState(null); // 'up' | 'down' | null
+  const [feedbackText, setFeedbackText] = useState("");
+  const [feedbackSent, setFeedbackSent] = useState(false);
+  const MAX_CHARS = 500;
   const isAccepted = outcome === "accepted";
   const isRejected = outcome === "rejected";
 
@@ -583,6 +605,29 @@ function EndedScreen({ outcome, score, elapsed, highlights, onRestart, canRestar
       fetch(WAITLIST_WEBHOOK, { method: "POST" }).catch(() => {});
     }
     sendEventToMake({ event: 'waitlist_clicked', timestamp: new Date().toISOString() });
+  }
+
+  function handleRating(value) {
+    setRating(value);
+    if (value === "up") {
+      supabase.from("demo_feedback").insert({
+        token: tokenData?.token,
+        email: tokenData?.email,
+        rating: "positive",
+        comment: null,
+      }).then(() => {});
+    }
+  }
+
+  function handleFeedbackSubmit() {
+    if (!feedbackText.trim()) return;
+    supabase.from("demo_feedback").insert({
+      token: tokenData?.token,
+      email: tokenData?.email,
+      rating: "negative",
+      comment: feedbackText.trim(),
+    }).then(() => {});
+    setFeedbackSent(true);
   }
 
   return (
@@ -624,6 +669,47 @@ function EndedScreen({ outcome, score, elapsed, highlights, onRestart, canRestar
               ))}
             </div>
           )}
+
+          <div className="dcm-rating-section">
+            <p className="dcm-rating-label">¿Cómo ha ido la prueba?</p>
+            <div className="dcm-rating-buttons">
+              <button
+                className={`dcm-rating-btn positive ${rating === "up" ? "selected" : ""}`}
+                onClick={() => handleRating("up")}
+                aria-label="Positivo"
+              >
+                👍
+              </button>
+              <button
+                className={`dcm-rating-btn negative ${rating === "down" ? "selected" : ""}`}
+                onClick={() => handleRating("down")}
+                aria-label="Negativo"
+              >
+                👎
+              </button>
+            </div>
+            {rating === "down" && (
+              <div className="dcm-feedback-box">
+                {feedbackSent ? (
+                  <p className="dcm-feedback-sent">Gracias por tu feedback.</p>
+                ) : (
+                  <>
+                    <textarea
+                      className="dcm-feedback-textarea"
+                      placeholder="¿Qué podríamos mejorar?"
+                      maxLength={MAX_CHARS}
+                      value={feedbackText}
+                      onChange={(e) => setFeedbackText(e.target.value)}
+                    />
+                    <div className="dcm-feedback-chars">{feedbackText.length}/{MAX_CHARS}</div>
+                    <button className="dcm-feedback-submit" onClick={handleFeedbackSubmit}>
+                      Enviar feedback
+                    </button>
+                  </>
+                )}
+              </div>
+            )}
+          </div>
 
           {canRestart && (
             <button className="dcm-restart-btn" onClick={onRestart}>
