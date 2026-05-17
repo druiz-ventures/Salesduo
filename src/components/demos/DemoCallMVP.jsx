@@ -555,6 +555,7 @@ function StripeModal({ email, token, onClose }) {
   const [clientSecret, setClientSecret] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [done, setDone] = useState(false);
 
   useEffect(() => {
     supabase.functions.invoke("create-setup-intent", { body: { email, token } })
@@ -569,31 +570,42 @@ function StripeModal({ email, token, onClose }) {
   }, []);
 
   return (
-    <div className="dcm-stripe-overlay" onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}>
+    <div className="dcm-stripe-overlay">
       <div className="dcm-stripe-modal">
-        <button className="dcm-stripe-close" onClick={onClose} aria-label="Cerrar">✕</button>
-        <div className="dcm-stripe-header">
-          <div className="dcm-stripe-logo">Sales<span>Duo</span></div>
-          <p className="dcm-stripe-subtitle">Reserva tu plaza · 50% off for life</p>
-          <p className="dcm-stripe-note">Introduce tu tarjeta para reservar. No se realizará ningún cargo ahora.</p>
-        </div>
+        {!done && <button className="dcm-stripe-close" onClick={onClose} aria-label="Cerrar">✕</button>}
+        {!done && (
+          <div className="dcm-stripe-header">
+            <div className="dcm-stripe-logo">Sales<span>Duo</span></div>
+            <p className="dcm-stripe-subtitle">Reserva tu plaza · 50% off for life</p>
+            <p className="dcm-stripe-note">Introduce tu tarjeta para reservar. No se realizará ningún cargo ahora.</p>
+          </div>
+        )}
         {loading && <div className="dcm-stripe-loading"><div className="dcm-loading-spinner" /></div>}
         {error && <p className="dcm-stripe-error">{error}</p>}
         {clientSecret && (
           <Elements stripe={stripePromise} options={{ clientSecret, appearance: { theme: "night", variables: { colorPrimary: "#06b6d4" } } }}>
-            <CheckoutForm onClose={onClose} />
+            <CheckoutForm onDone={() => setDone(true)} />
           </Elements>
+        )}
+        {done && (
+          <div className="dcm-stripe-success">
+            <div className="dcm-stripe-success-icon">✓</div>
+            <h3>¡Reserva confirmada!</h3>
+            <p>Hemos guardado tu tarjeta. No se te cobrará nada hasta que decidas activar tu cuenta.</p>
+            <button className="dcm-stripe-done-btn" onClick={() => { window.location.href = LANDING_URL; }}>
+              Volver al inicio
+            </button>
+          </div>
         )}
       </div>
     </div>
   );
 }
 
-function CheckoutForm({ onClose }) {
+function CheckoutForm({ onDone }) {
   const stripe = useStripe();
   const elements = useElements();
   const [processing, setProcessing] = useState(false);
-  const [done, setDone] = useState(false);
   const [error, setError] = useState("");
 
   async function handleSubmit(e) {
@@ -610,19 +622,8 @@ function CheckoutForm({ onClose }) {
       setError(stripeError.message ?? "Error al procesar la tarjeta.");
       setProcessing(false);
     } else {
-      setDone(true);
+      onDone();
     }
-  }
-
-  if (done) {
-    return (
-      <div className="dcm-stripe-success">
-        <div className="dcm-stripe-success-icon">✓</div>
-        <h3>¡Reserva confirmada!</h3>
-        <p>Hemos guardado tu tarjeta. No se te cobrará nada hasta que decidas activar tu cuenta.</p>
-        <button className="dcm-stripe-done-btn" onClick={onClose}>Cerrar</button>
-      </div>
-    );
   }
 
   return (
