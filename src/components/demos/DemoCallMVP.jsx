@@ -146,6 +146,7 @@ export default function DemoCallMVP() {
         setTokenData(data);
         if (data.attempts >= 2) setDemoCompleted(true);
         setTokenLoading(false);
+        sendEventToMake({ event: 'demo_accessed', token: data.token, email: data.email, name: data.name, attempts: data.attempts, timestamp: new Date().toISOString() });
       });
   }, []);
 
@@ -584,7 +585,7 @@ function StripeModal({ email, token, onClose }) {
         {error && <p className="dcm-stripe-error">{error}</p>}
         {clientSecret && (
           <Elements stripe={stripePromise} options={{ clientSecret, appearance: { theme: "night", variables: { colorPrimary: "#06b6d4" } } }}>
-            <CheckoutForm onDone={() => setDone(true)} />
+            <CheckoutForm onDone={() => setDone(true)} email={email} token={token} />
           </Elements>
         )}
         {done && (
@@ -602,7 +603,7 @@ function StripeModal({ email, token, onClose }) {
   );
 }
 
-function CheckoutForm({ onDone }) {
+function CheckoutForm({ onDone, email, token }) {
   const stripe = useStripe();
   const elements = useElements();
   const [processing, setProcessing] = useState(false);
@@ -613,7 +614,7 @@ function CheckoutForm({ onDone }) {
     if (!stripe || !elements) return;
     setProcessing(true);
     setError("");
-    const { error: stripeError } = await stripe.confirmSetup({
+    const { error: stripeError, setupIntent } = await stripe.confirmSetup({
       elements,
       confirmParams: { return_url: window.location.href },
       redirect: "if_required",
@@ -622,6 +623,7 @@ function CheckoutForm({ onDone }) {
       setError(stripeError.message ?? "Error al procesar la tarjeta.");
       setProcessing(false);
     } else {
+      sendEventToMake({ event: 'stripe_reserved', email, token, stripeSetupIntentId: setupIntent?.id, timestamp: new Date().toISOString() });
       onDone();
     }
   }
