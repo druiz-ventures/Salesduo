@@ -1,5 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { supabase } from "../../supabaseClient";
+import { loadStripe } from "@stripe/stripe-js";
+import { Elements, PaymentElement, useStripe, useElements } from "@stripe/react-stripe-js";
+
+const stripePromise = loadStripe("pk_test_51TXmAIJ8SzDql7MTtbdkxllpQBUBL4eUqh9c6yiWmNiSrcMi6UB1dsWFQvg0ctFRzAQxXZJw04yKTFBzTOX7N4lu00B0oTJXNf");
 
 const BrowserSR =
   typeof window !== "undefined"
@@ -391,7 +395,7 @@ export default function DemoCallMVP() {
   }
 
   if (tokenLoading) return <LoadingScreen />;
-  if (demoCompleted && phase !== "active" && phase !== "calling") return <DemoCompletedScreen />;
+  if (demoCompleted && phase !== "active" && phase !== "calling") return <DemoCompletedScreen tokenData={tokenData} />;
 
   if (phase === "idle") return <IdleScreen onStart={startCall} />;
   if (phase === "calling") return <CallingScreen />;
@@ -504,8 +508,9 @@ function LoadingScreen() {
 }
 
 // ─── Demo Completed Screen ────────────────────────────────────────────────────
-function DemoCompletedScreen() {
+function DemoCompletedScreen({ tokenData }) {
   const [waitlistDone, setWaitlistDone] = useState(false);
+  const [stripeOpen, setStripeOpen] = useState(false);
 
   function handleWaitlist() {
     setWaitlistDone(true);
@@ -527,9 +532,9 @@ function DemoCompletedScreen() {
         <div className="dcm-cta-section">
           <div className="dcm-cta-reserve-wrap">
             <span className="dcm-cta-badge">⚡ Early adopter · 50% off for life</span>
-            <a className="dcm-cta-reserve" href={STRIPE_LINK || "#"} target="_blank" rel="noopener noreferrer">
+            <button className="dcm-cta-reserve" onClick={() => setStripeOpen(true)}>
               Reservar ahora
-            </a>
+            </button>
           </div>
           {waitlistDone ? (
             <p className="dcm-cta-confirm">¡Genial! En cuanto la aplicación esté disponible serás el primero en saberlo.</p>
@@ -540,7 +545,94 @@ function DemoCompletedScreen() {
           )}
         </div>
       </div>
+      {stripeOpen && <StripeModal email={tokenData?.email} token={tokenData?.token} onClose={() => setStripeOpen(false)} />}
     </div>
+  );
+}
+
+// ─── Stripe Modal ─────────────────────────────────────────────────────────────
+function StripeModal({ email, token, onClose }) {
+  const [clientSecret, setClientSecret] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    supabase.functions.invoke("create-setup-intent", { body: { email, token } })
+      .then(({ data, error: err }) => {
+        if (err || !data?.clientSecret) {
+          setError("No se pudo conectar con el servidor de pago. Inténtalo de nuevo.");
+        } else {
+          setClientSecret(data.clientSecret);
+        }
+        setLoading(false);
+      });
+  }, []);
+
+  return (
+    <div className="dcm-stripe-overlay" onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}>
+      <div className="dcm-stripe-modal">
+        <button className="dcm-stripe-close" onClick={onClose} aria-label="Cerrar">✕</button>
+        <div className="dcm-stripe-header">
+          <div className="dcm-stripe-logo">Sales<span>Duo</span></div>
+          <p className="dcm-stripe-subtitle">Reserva tu plaza · 50% off for life</p>
+          <p className="dcm-stripe-note">Introduce tu tarjeta para reservar. No se realizará ningún cargo ahora.</p>
+        </div>
+        {loading && <div className="dcm-stripe-loading"><div className="dcm-loading-spinner" /></div>}
+        {error && <p className="dcm-stripe-error">{error}</p>}
+        {clientSecret && (
+          <Elements stripe={stripePromise} options={{ clientSecret, appearance: { theme: "night", variables: { colorPrimary: "#06b6d4" } } }}>
+            <CheckoutForm onClose={onClose} />
+          </Elements>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function CheckoutForm({ onClose }) {
+  const stripe = useStripe();
+  const elements = useElements();
+  const [processing, setProcessing] = useState(false);
+  const [done, setDone] = useState(false);
+  const [error, setError] = useState("");
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    if (!stripe || !elements) return;
+    setProcessing(true);
+    setError("");
+    const { error: stripeError } = await stripe.confirmSetup({
+      elements,
+      confirmParams: { return_url: window.location.href },
+      redirect: "if_required",
+    });
+    if (stripeError) {
+      setError(stripeError.message ?? "Error al procesar la tarjeta.");
+      setProcessing(false);
+    } else {
+      setDone(true);
+    }
+  }
+
+  if (done) {
+    return (
+      <div className="dcm-stripe-success">
+        <div className="dcm-stripe-success-icon">✓</div>
+        <h3>¡Reserva confirmada!</h3>
+        <p>Hemos guardado tu tarjeta. No se te cobrará nada hasta que decidas activar tu cuenta.</p>
+        <button className="dcm-stripe-done-btn" onClick={onClose}>Cerrar</button>
+      </div>
+    );
+  }
+
+  return (
+    <form onSubmit={handleSubmit} className="dcm-stripe-form">
+      <PaymentElement />
+      {error && <p className="dcm-stripe-error">{error}</p>}
+      <button className="dcm-stripe-submit" type="submit" disabled={processing || !stripe}>
+        {processing ? "Procesando..." : "Confirmar reserva"}
+      </button>
+    </form>
   );
 }
 
@@ -592,6 +684,7 @@ function CallingScreen() {
 // ─── Ended Screen ─────────────────────────────────────────────────────────────
 function EndedScreen({ outcome, score, elapsed, highlights, onRestart, canRestart, tokenData }) {
   const [waitlistDone, setWaitlistDone] = useState(false);
+  const [stripeOpen, setStripeOpen] = useState(false);
   const [rating, setRating] = useState(null); // 'up' | 'down' | null
   const [feedbackText, setFeedbackText] = useState("");
   const [feedbackSent, setFeedbackSent] = useState(false);
@@ -721,14 +814,9 @@ function EndedScreen({ outcome, score, elapsed, highlights, onRestart, canRestar
         <div className="dcm-cta-section">
           <div className="dcm-cta-reserve-wrap">
             <span className="dcm-cta-badge">⚡ Early adopter · 50% off for life</span>
-            <a
-              className="dcm-cta-reserve"
-              href={STRIPE_LINK || "#"}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
+            <button className="dcm-cta-reserve" onClick={() => setStripeOpen(true)}>
               Reservar ahora
-            </a>
+            </button>
           </div>
           {waitlistDone ? (
             <p className="dcm-cta-confirm">¡Genial! En cuanto la aplicación esté disponible serás el primero en saberlo.</p>
@@ -739,6 +827,7 @@ function EndedScreen({ outcome, score, elapsed, highlights, onRestart, canRestar
           )}
         </div>
       </div>
+      {stripeOpen && <StripeModal email={tokenData?.email} token={tokenData?.token} onClose={() => setStripeOpen(false)} />}
     </div>
   );
 }
