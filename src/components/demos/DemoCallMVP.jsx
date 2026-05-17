@@ -559,13 +559,22 @@ function StripeModal({ email, token, onClose }) {
   const [done, setDone] = useState(false);
 
   useEffect(() => {
-    supabase.functions.invoke("create-setup-intent", { body: { email, token } })
-      .then(({ data, error: err }) => {
-        if (err || !data?.clientSecret) {
+    fetch("/api/create-setup-intent", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, token }),
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (!data?.clientSecret) {
           setError("No se pudo conectar con el servidor de pago. Inténtalo de nuevo.");
         } else {
           setClientSecret(data.clientSecret);
         }
+        setLoading(false);
+      })
+      .catch(() => {
+        setError("No se pudo conectar con el servidor de pago. Inténtalo de nuevo.");
         setLoading(false);
       });
   }, []);
