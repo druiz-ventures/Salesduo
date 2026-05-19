@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { supabase } from "../../supabaseClient";
 import { loadStripe } from "@stripe/stripe-js";
-import { Elements, PaymentElement, useStripe, useElements } from "@stripe/react-stripe-js";
+import { Elements, CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 
 const stripePromise = loadStripe("pk_test_51TXmAIJ8SzDql7MTtbdkxllpQBUBL4eUqh9c6yiWmNiSrcMi6UB1dsWFQvg0ctFRzAQxXZJw04yKTFBzTOX7N4lu00B0oTJXNf");
 
@@ -517,7 +517,7 @@ function DemoCompletedScreen({ tokenData }) {
     if (WAITLIST_WEBHOOK) {
       fetch(WAITLIST_WEBHOOK, { method: "POST" }).catch(() => {});
     }
-    sendEventToMake({ event: 'waitlist_clicked', timestamp: new Date().toISOString() });
+    sendEventToMake({ event: 'waitlist_clicked', email: tokenData?.email, name: tokenData?.name, timestamp: new Date().toISOString() });
   }
 
   return (
@@ -592,8 +592,8 @@ function StripeModal({ email, token, onClose }) {
         {loading && <div className="dcm-stripe-loading"><div className="dcm-loading-spinner" /></div>}
         {error && <p className="dcm-stripe-error">{error}</p>}
         {clientSecret && (
-          <Elements stripe={stripePromise} options={{ clientSecret, appearance: { theme: "night", variables: { colorPrimary: "#06b6d4" } } }}>
-            <CheckoutForm onDone={() => setDone(true)} email={email} token={token} />
+          <Elements stripe={stripePromise} options={{ clientSecret }}>
+            <CheckoutForm onDone={() => setDone(true)} email={email} token={token} clientSecret={clientSecret} />
           </Elements>
         )}
         {done && (
@@ -611,21 +611,31 @@ function StripeModal({ email, token, onClose }) {
   );
 }
 
-function CheckoutForm({ onDone, email, token }) {
+function CheckoutForm({ onDone, email, token, clientSecret }) {
   const stripe = useStripe();
   const elements = useElements();
   const [processing, setProcessing] = useState(false);
   const [error, setError] = useState("");
+
+  const cardStyle = {
+    style: {
+      base: {
+        color: "#e2e8f0",
+        fontFamily: "inherit",
+        fontSize: "16px",
+        "::placeholder": { color: "#4b5563" },
+      },
+      invalid: { color: "#ef4444" },
+    },
+  };
 
   async function handleSubmit(e) {
     e.preventDefault();
     if (!stripe || !elements) return;
     setProcessing(true);
     setError("");
-    const { error: stripeError, setupIntent } = await stripe.confirmSetup({
-      elements,
-      confirmParams: { return_url: window.location.href },
-      redirect: "if_required",
+    const { error: stripeError, setupIntent } = await stripe.confirmCardSetup(clientSecret, {
+      payment_method: { card: elements.getElement(CardElement) },
     });
     if (stripeError) {
       setError(stripeError.message ?? "Error al procesar la tarjeta.");
@@ -638,7 +648,9 @@ function CheckoutForm({ onDone, email, token }) {
 
   return (
     <form onSubmit={handleSubmit} className="dcm-stripe-form">
-      <PaymentElement />
+      <div className="dcm-card-element-wrap">
+        <CardElement options={cardStyle} />
+      </div>
       {error && <p className="dcm-stripe-error">{error}</p>}
       <button className="dcm-stripe-submit" type="submit" disabled={processing || !stripe}>
         {processing ? "Procesando..." : "Confirmar reserva"}
@@ -708,7 +720,7 @@ function EndedScreen({ outcome, score, elapsed, highlights, onRestart, canRestar
     if (WAITLIST_WEBHOOK) {
       fetch(WAITLIST_WEBHOOK, { method: "POST" }).catch(() => {});
     }
-    sendEventToMake({ event: 'waitlist_clicked', timestamp: new Date().toISOString() });
+    sendEventToMake({ event: 'waitlist_clicked', email: tokenData?.email, name: tokenData?.name, timestamp: new Date().toISOString() });
   }
 
   function handleRating(value) {

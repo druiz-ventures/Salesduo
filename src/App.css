@@ -4145,5 +4145,17 @@ body {
 
 .dcm-stripe-done-btn:hover { border-color: #06b6d4; color: #06b6d4; }
 
+.dcm-card-element-wrap {
+  background: #0f172a;
+  border: 1px solid #1e293b;
+  border-radius: 10px;
+  padding: 14px 16px;
+  transition: border-color 0.2s;
+}
+
+.dcm-card-element-wrap:focus-within {
+  border-color: #06b6d4;
+}
+
 /* fix: dcm-feedback-sent trailing */
 }
