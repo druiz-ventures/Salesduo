@@ -591,7 +591,7 @@ function StripeModal({ email, token, onClose }) {
         )}
         {loading && <div className="dcm-stripe-loading"><div className="dcm-loading-spinner" /></div>}
         {error && <p className="dcm-stripe-error">{error}</p>}
-        {clientSecret && (
+        {clientSecret && !done && (
           <Elements stripe={stripePromise} options={{ clientSecret }}>
             <CheckoutForm onDone={() => setDone(true)} email={email} token={token} clientSecret={clientSecret} />
           </Elements>
@@ -732,6 +732,7 @@ function EndedScreen({ outcome, score, elapsed, highlights, onRestart, canRestar
         rating: "positive",
         comment: null,
       }).then(() => {});
+      sendEventToMake({ event: 'feedback_positive', email: tokenData?.email, name: tokenData?.name, timestamp: new Date().toISOString() });
     }
   }
 
@@ -743,6 +744,7 @@ function EndedScreen({ outcome, score, elapsed, highlights, onRestart, canRestar
       rating: "negative",
       comment: feedbackText.trim(),
     }).then(() => {});
+    sendEventToMake({ event: 'feedback_negative', email: tokenData?.email, name: tokenData?.name, comment: feedbackText.trim(), timestamp: new Date().toISOString() });
     setFeedbackSent(true);
   }
 
