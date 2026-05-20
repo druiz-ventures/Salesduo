@@ -77,6 +77,29 @@ const ACTIVE_ROLE = ACTIVE_ICP.salesRole;
 const BUYER = ACTIVE_ICP.BUYER;
 const SCENARIO = ACTIVE_ICP.SCENARIO;
 
+// ─── ATTEMPTS POR ICP ────────────────────────────────────────────────────────
+// Cada (token, icp) tiene su propio contador en localStorage → así un mismo
+// email puede hacer 2 demos por ICP (closer, inmo, default) sin chocar entre sí.
+// La columna `attempts` en demo_tokens sigue existiendo como contador GLOBAL
+// para analytics (cuántos demos totales hace cada user), pero el gate de
+// lockout se basa en localStorage.
+const MAX_ATTEMPTS_PER_ICP = 2;
+
+function attemptsKey(token, icp) {
+  return `salesduo_attempts_${token}_${icp}`;
+}
+
+function getLocalAttempts(token, icp) {
+  if (typeof window === "undefined") return 0;
+  const v = window.localStorage.getItem(attemptsKey(token, icp));
+  return Number.parseInt(v || "0", 10) || 0;
+}
+
+function setLocalAttempts(token, icp, n) {
+  if (typeof window === "undefined") return;
+  window.localStorage.setItem(attemptsKey(token, icp), String(n));
+}
+
 const WAITLIST_WEBHOOK = ""; // TODO: pegar webhook de Make aquí
 const STRIPE_LINK = "";      // TODO: pegar enlace de Stripe aquí
 const LANDING_URL = "https://salesduo-landing.vercel.app";
@@ -199,9 +222,10 @@ export default function DemoCallMVP() {
           return;
         }
         setTokenData(data);
-        if (data.attempts >= 2) setDemoCompleted(true);
+        const localAttempts = getLocalAttempts(data.token, ACTIVE_ICP_ID);
+        if (localAttempts >= MAX_ATTEMPTS_PER_ICP) setDemoCompleted(true);
         setTokenLoading(false);
-        sendEventToMake({ event: 'demo_accessed', token: data.token, email: data.email, name: data.name, attempts: data.attempts, timestamp: new Date().toISOString() });
+        sendEventToMake({ event: 'demo_accessed', token: data.token, email: data.email, name: data.name, attempts: data.attempts, attemptsByIcp: localAttempts, timestamp: new Date().toISOString() });
       });
   }, []);
 
@@ -225,13 +249,17 @@ export default function DemoCallMVP() {
 
   async function incrementAttempts() {
     if (!tokenData) return;
+    // Global (DB) — sigue contando total para analytics en Supabase
     const newAttempts = (tokenData.attempts || 0) + 1;
     await supabase
       .from("demo_tokens")
       .update({ attempts: newAttempts })
       .eq("token", tokenData.token);
     setTokenData((prev) => ({ ...prev, attempts: newAttempts }));
-    if (newAttempts >= 2) setDemoCompleted(true);
+    // Por ICP (localStorage) — esto es lo que controla el lockout
+    const newLocalAttempts = getLocalAttempts(tokenData.token, ACTIVE_ICP_ID) + 1;
+    setLocalAttempts(tokenData.token, ACTIVE_ICP_ID, newLocalAttempts);
+    if (newLocalAttempts >= MAX_ATTEMPTS_PER_ICP) setDemoCompleted(true);
   }
 
   function stopListening() {
