@@ -10,12 +10,72 @@ const BrowserSR =
     ? window.SpeechRecognition || window.webkitSpeechRecognition
     : null;
 
-const BUYER = {
-  name: "Diego Martínez",
-  title: "Director de Operaciones",
-  company: "ContactPro",
-  initial: "D",
+// ─── ICP CONFIGS ─────────────────────────────────────────────────────────────
+// Cada landing (closer, inmo, default) dispara una simulación distinta.
+// Para añadir un ICP nuevo: añadir entrada aquí, deploy. La landing solo tiene
+// que mandar al user con ?icp=<id> en la URL.
+const ICP_CONFIGS = {
+  closer: {
+    salesRole: "closer",
+    BUYER: {
+      name: "Marta López",
+      title: "Lead cualificado por setter",
+      company: "Programa Optimización Metabólica",
+      initial: "M",
+    },
+    SCENARIO: {
+      buyerPersona:
+        "Eres Marta López, 38 años, mujer, profesional sedentaria con unos 15kg de sobrepeso. Vienes agendada a esta llamada de cierre porque un setter te explicó por encima el 'Programa de Optimización Metabólica' (3.000€, 12 semanas, transformación física integral con nutrición, entrenamiento y coaching). YA HAS PROBADO dos programas anteriores (un gym con entrenador y un curso online) y no te funcionaron porque no mantuviste los hábitos — estás escéptica pero todavía interesada, por eso aceptaste la llamada. Tus objeciones reales irán apareciendo según avance la conversación: 1) 'ya he probado otros programas', 2) 'es caro, tengo que mirarlo con calma', 3) 'déjame consultarlo con mi pareja'. NO sueltes las tres seguidas — déjate llevar por la conversación, pero saca cada una en algún momento si el closer no la ataca antes. Si el closer hace buenas preguntas (te entiende, no te juzga), te abres. Si presiona o salta a vender, te cierras y dices 'mejor déjame pensarlo'.",
+      context:
+        "Llamada de cierre por Zoom de 30 minutos. El closer sabe tu nombre, tu situación general (sobrepeso, sedentaria, has probado cosas) y que vienes cualificada por un setter. Tu trabajo: ser realista — escéptica pero no cerrada. La transformación física te importa, pero el dinero y el miedo a fracasar de nuevo pesan. Tu pareja es un factor secundario que solo sacas si el closer no maneja bien el precio.",
+      objection: "Hola, sí, soy Marta. Hablé con el chico del programa la semana pasada y me agendó contigo. Tú dirás, te escucho.",
+    },
+  },
+  inmo: {
+    salesRole: "closer",
+    BUYER: {
+      name: "Javier Ramírez",
+      title: "Propietario",
+      company: "Piso en Idealista",
+      initial: "J",
+    },
+    SCENARIO: {
+      buyerPersona:
+        "Eres Javier Ramírez, 52 años, propietario de un piso de 3 habitaciones en Madrid (320.000€) anunciado en Idealista desde hace 6 semanas. YA ESTÁS con la inmobiliaria 'Aliseda' (sin exclusiva). Esta semana te han llamado al menos 8 agentes y estás saturado, casi enfadado. NO quieres cambiar de agencia y NO quieres más agentes molestando. Tu agencia actual te ha conseguido 4 visitas en 6 semanas, ninguna cerró — estás algo decepcionado pero no lo vas a admitir fácilmente. Tus objeciones reales: 1) 'ya estoy con otra inmobiliaria, gracias' (la sueltas casi de inmediato), 2) 'mándame info por WhatsApp y ya te diré algo' (cuando el agente insiste), 3) 'la verdad es que estoy pensando venderlo yo directamente, sin comisiones' (solo si el agente sigue insistiendo después de las dos primeras). Tu actitud es SECA pero educada — eres mayor, profesional. Si el agente hace preguntas inteligentes sobre cómo te va con Aliseda, te abres un poco a regañadientes. Si suelta el pitch típico de 'tenemos una cartera enorme de clientes', cuelgas mentalmente y empiezas a responder con monosílabos.",
+      context:
+        "Llamada en frío de un agente inmobiliario que ha visto tu piso en Idealista. El agente quiere conseguir una visita comercial (verte a ti para captarte y firmar nota de encargo). Tu objetivo defensivo: no comprometerte a nada, no quedar con nadie. Si el agente te pide quedar, postergas con 'mejor mándame info'. Solo cederás a una visita si demuestra que entiende tu situación y no es uno más de los 8 que te han llamado esta semana.",
+      objection: "¿Sí? ¿Diga?",
+    },
+  },
+  default: {
+    salesRole: "setter",
+    BUYER: {
+      name: "Diego Martínez",
+      title: "Director de Operaciones",
+      company: "ContactPro",
+      initial: "D",
+    },
+    SCENARIO: {
+      buyerPersona: "",
+      context: "",
+      objection: "Buenos días, soy Diego Martínez. Dígame.",
+    },
+  },
 };
+
+function getActiveICP() {
+  if (typeof window === "undefined") return { id: "default", ...ICP_CONFIGS.default };
+  const params = new URLSearchParams(window.location.search);
+  const icp = (params.get("icp") || "").toLowerCase();
+  if (ICP_CONFIGS[icp]) return { id: icp, ...ICP_CONFIGS[icp] };
+  return { id: "default", ...ICP_CONFIGS.default };
+}
+
+const ACTIVE_ICP = getActiveICP();
+const ACTIVE_ICP_ID = ACTIVE_ICP.id;
+const ACTIVE_ROLE = ACTIVE_ICP.salesRole;
+const BUYER = ACTIVE_ICP.BUYER;
+const SCENARIO = ACTIVE_ICP.SCENARIO;
 
 const WAITLIST_WEBHOOK = ""; // TODO: pegar webhook de Make aquí
 const STRIPE_LINK = "";      // TODO: pegar enlace de Stripe aquí
@@ -23,24 +83,20 @@ const LANDING_URL = "https://salesduo-landing.vercel.app";
 
 const MAKE_WEBHOOK_URL = 'https://hook.eu1.make.com/gm4bcobbujwf5o6iewmoerhuy2l9wh9b';
 
+// Inyecta automáticamente el ICP activo en cada evento → Make sabe siempre
+// desde qué landing entró el user, sin tener que añadirlo en cada call site.
 async function sendEventToMake(payload) {
   try {
     await fetch(MAKE_WEBHOOK_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
+      body: JSON.stringify({ icp: ACTIVE_ICP_ID, ...payload }),
       keepalive: true,
     });
   } catch (error) {
     console.error('Error enviando a Make:', error);
   }
 }
-
-const SCENARIO = {
-  buyerPersona: "",
-  context: "",
-  objection: "Buenos días, soy Diego Martínez. Dígame.",
-};
 
 const MAX_TURNS = 5;
 
@@ -286,7 +342,7 @@ export default function DemoCallMVP() {
         body: {
           conversationHistory: newHistory,
           scenarioContext: SCENARIO,
-          salesRole: "setter",
+          salesRole: ACTIVE_ROLE,
           turnCount: nextTurn,
         },
       });
