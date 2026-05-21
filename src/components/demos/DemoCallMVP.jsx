@@ -234,29 +234,53 @@ export default function DemoCallMVP() {
   useEffect(() => { turnRef.current = turnCount; }, [turnCount]);
 
   useEffect(() => {
-    const token = new URLSearchParams(window.location.search).get("token");
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get("token");
+    // La landing nos pasa email/name en la URL para no depender del row que
+    // crea Make en demo_tokens — así si Make todavía no lo ha insertado
+    // (race) o falla, la app puede crear el token ella misma con upsert.
+    const urlEmail = params.get("e");
+    const urlName = params.get("n");
+
     if (!token) {
       if (LANDING_URL) window.location.href = LANDING_URL;
       else setTokenLoading(false);
       return;
     }
-    supabase
-      .from("demo_tokens")
-      .select("token, email, name, attempts")
-      .eq("token", token)
-      .single()
-      .then(({ data, error: err }) => {
-        if (err || !data) {
-          if (LANDING_URL) window.location.href = LANDING_URL;
-          else setTokenLoading(false);
-          return;
-        }
-        setTokenData(data);
-        const localAttempts = getLocalAttempts(data.token, ACTIVE_ICP_ID);
-        if (localAttempts >= MAX_ATTEMPTS_PER_ICP) setDemoCompleted(true);
-        setTokenLoading(false);
-        sendEventToMake({ event: 'demo_accessed', token: data.token, email: data.email, name: data.name, attempts: data.attempts, attemptsByIcp: localAttempts, timestamp: new Date().toISOString() });
-      });
+
+    (async () => {
+      const { data, error: err } = await supabase
+        .from("demo_tokens")
+        .select("token, email, name, attempts")
+        .eq("token", token)
+        .maybeSingle();
+
+      let row = err ? null : data;
+
+      if (!row && urlEmail) {
+        const { data: upserted, error: upErr } = await supabase
+          .from("demo_tokens")
+          .upsert(
+            { token, email: urlEmail, name: urlName || null, attempts: 0 },
+            { onConflict: "token" },
+          )
+          .select("token, email, name, attempts")
+          .single();
+        if (!upErr) row = upserted;
+      }
+
+      if (!row) {
+        if (LANDING_URL) window.location.href = LANDING_URL;
+        else setTokenLoading(false);
+        return;
+      }
+
+      setTokenData(row);
+      const localAttempts = getLocalAttempts(row.token, ACTIVE_ICP_ID);
+      if (localAttempts >= MAX_ATTEMPTS_PER_ICP) setDemoCompleted(true);
+      setTokenLoading(false);
+      sendEventToMake({ event: 'demo_accessed', token: row.token, email: row.email, name: row.name, attempts: row.attempts, attemptsByIcp: localAttempts, timestamp: new Date().toISOString() });
+    })();
   }, []);
 
   useEffect(() => {
