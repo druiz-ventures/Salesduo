@@ -3879,6 +3879,8 @@ body {
 .dcm-rating-section {
   margin: 20px 0 8px;
   text-align: center;
+  width: 100%;
+  align-self: stretch;
 }
 
 .dcm-rating-label {
@@ -3925,9 +3927,8 @@ body {
 
 .dcm-feedback-box {
   margin-top: 14px;
-  margin-left: -20px;
-  margin-right: -20px;
-  padding: 0 4px;
+  width: 100%;
+  padding: 0;
   animation: dcm-fade-in 0.25s ease;
 }
 
