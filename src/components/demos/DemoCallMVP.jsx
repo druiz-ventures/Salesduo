@@ -312,63 +312,40 @@ export default function DemoCallMVP() {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const token = params.get("token");
-    // La landing nos pasa email/name en la URL para no depender del row que
-    // crea Make en demo_tokens — así si Make todavía no lo ha insertado
-    // (race) o falla, la app puede crear el token ella misma con upsert.
-    const urlEmail = params.get("e");
-    const urlName = params.get("n");
-
-    console.log("[SalesDuo] init", { token, urlEmail, urlName, icp: ACTIVE_ICP_ID });
 
     if (!token) {
-      console.warn("[SalesDuo] sin token en URL → redirect a landing");
       if (LANDING_URL) window.location.href = LANDING_URL;
       else setTokenLoading(false);
       return;
     }
 
+    // Make procesa el cta_form_submit con un rate-limit de 4 runs/min y
+    // puede tardar varios segundos en insertar el row en demo_tokens cuando
+    // hay cola. Reintentamos el select unas cuantas veces antes de rendirnos
+    // → cubre el race condition sin necesitar INSERT desde la app.
+    const MAX_RETRIES = 4;
+    const RETRY_DELAY_MS = 1500;
+
     (async () => {
-      const { data, error: err } = await supabase
-        .from("demo_tokens")
-        .select("token, email, name, attempts")
-        .eq("token", token)
-        .maybeSingle();
-
-      console.log("[SalesDuo] select demo_tokens", { data, err });
-
-      let row = err ? null : data;
-
-      if (!row && urlEmail) {
-        console.log("[SalesDuo] row no existe, intentando upsert con email de URL");
-        const { data: upserted, error: upErr } = await supabase
+      let row = null;
+      for (let i = 0; i < MAX_RETRIES; i++) {
+        const { data } = await supabase
           .from("demo_tokens")
-          .upsert(
-            { token, email: urlEmail, name: urlName || null, attempts: 0 },
-            { onConflict: "token" },
-          )
           .select("token, email, name, attempts")
-          .single();
-        console.log("[SalesDuo] upsert resultado", { upserted, upErr });
-        if (!upErr) row = upserted;
-        else {
-          // Mostramos el error en pantalla en lugar de redirigir a ciegas
-          setTokenLoading(false);
-          setTokenData({
-            __error: true,
-            message: `No se pudo crear/encontrar tu sesión.\n\nDetalle técnico: ${upErr.message || JSON.stringify(upErr)}\n\nProbablemente las políticas RLS de la tabla demo_tokens no permiten INSERT desde la app. Avisa al equipo.`,
-          });
-          return;
+          .eq("token", token)
+          .maybeSingle();
+        if (data) { row = data; break; }
+        if (i < MAX_RETRIES - 1) {
+          await new Promise((r) => setTimeout(r, RETRY_DELAY_MS));
         }
       }
 
       if (!row) {
-        console.warn("[SalesDuo] sin row y sin urlEmail → redirect a landing");
         if (LANDING_URL) window.location.href = LANDING_URL;
         else setTokenLoading(false);
         return;
       }
 
-      console.log("[SalesDuo] OK, token cargado", row);
       setTokenData(row);
       const localAttempts = getLocalAttempts(row.token, ACTIVE_ICP_ID);
       if (localAttempts >= MAX_ATTEMPTS_PER_ICP) setDemoCompleted(true);
@@ -696,7 +673,6 @@ export default function DemoCallMVP() {
   }
 
   if (tokenLoading) return <LoadingScreen />;
-  if (tokenData?.__error) return <TokenErrorScreen message={tokenData.message} />;
   if (demoCompleted && phase !== "active" && phase !== "calling") return <DemoCompletedScreen tokenData={tokenData} />;
 
   if (phase === "idle") return <IdleScreen onStart={startCall} compat={BROWSER_COMPAT} />;
@@ -805,39 +781,6 @@ function LoadingScreen() {
       <div className="dcm-loading-content">
         <div className="dcm-loading-logo">Sales<span>Duo</span></div>
         <div className="dcm-loading-spinner" />
-      </div>
-    </div>
-  );
-}
-
-// ─── Token Error Screen ──────────────────────────────────────────────────────
-// Pantalla temporal de diagnóstico: se muestra cuando la app no puede crear ni
-// encontrar el row en demo_tokens. Útil para que el equipo vea el error real.
-function TokenErrorScreen({ message }) {
-  return (
-    <div className="dcm-screen dcm-loading" style={{ alignItems: "center" }}>
-      <div className="dcm-loading-content" style={{ maxWidth: 480, padding: "0 20px" }}>
-        <div className="dcm-loading-logo">Sales<span>Duo</span></div>
-        <div style={{
-          background: "rgba(239,68,68,.12)",
-          border: "1px solid #ef4444",
-          color: "#fecaca",
-          padding: "16px 18px",
-          borderRadius: 12,
-          fontSize: 14,
-          lineHeight: 1.6,
-          whiteSpace: "pre-wrap",
-          textAlign: "left",
-          margin: "20px 0",
-        }}>
-          {message}
-        </div>
-        <button
-          className="dcm-start-btn"
-          onClick={() => { if (LANDING_URL) window.location.href = LANDING_URL; }}
-        >
-          Volver a la landing
-        </button>
       </div>
     </div>
   );
