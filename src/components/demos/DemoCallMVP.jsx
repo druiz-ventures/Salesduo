@@ -121,7 +121,18 @@ function setLocalAttempts(token, icp, n) {
 
 const WAITLIST_WEBHOOK = ""; // TODO: pegar webhook de Make aquí
 const STRIPE_LINK = "";      // TODO: pegar enlace de Stripe aquí
-const LANDING_URL = "https://salesduo-landing.vercel.app";
+// Devuelve a la landing por la que entró el usuario, NO a la genérica.
+// closer → /closer, inmo → /inmo, b2b/default → / (la principal de B2B)
+const LANDING_BASE_URL = "https://salesduo-landing.vercel.app";
+const LANDING_URL = (() => {
+  switch (ACTIVE_ICP_ID) {
+    case "closer": return `${LANDING_BASE_URL}/closer`;
+    case "inmo":   return `${LANDING_BASE_URL}/inmo`;
+    case "b2b":
+    case "default":
+    default:       return LANDING_BASE_URL;
+  }
+})();
 
 const MAKE_WEBHOOK_URL = 'https://hook.eu1.make.com/gm4bcobbujwf5o6iewmoerhuy2l9wh9b';
 
