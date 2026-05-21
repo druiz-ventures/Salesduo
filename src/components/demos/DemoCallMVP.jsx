@@ -56,17 +56,17 @@ const ICP_CONFIGS = {
   closer: {
     salesRole: "closer",
     BUYER: {
-      name: "Marta López",
+      name: "Carlos López",
       title: "Lead cualificado por setter",
       company: "Programa Optimización Metabólica",
-      initial: "M",
+      initial: "C",
     },
     SCENARIO: {
       buyerPersona:
-        "Eres Marta López, 38 años, mujer, profesional sedentaria con unos 15kg de sobrepeso. Vienes agendada a esta llamada de cierre porque un setter te explicó por encima el 'Programa de Optimización Metabólica' (3.000€, 12 semanas, transformación física integral con nutrición, entrenamiento y coaching). YA HAS PROBADO dos programas anteriores (un gym con entrenador y un curso online) y no te funcionaron porque no mantuviste los hábitos — estás escéptica pero todavía interesada, por eso aceptaste la llamada. Tus objeciones reales irán apareciendo según avance la conversación: 1) 'ya he probado otros programas', 2) 'es caro, tengo que mirarlo con calma', 3) 'déjame consultarlo con mi pareja'. NO sueltes las tres seguidas — déjate llevar por la conversación, pero saca cada una en algún momento si el closer no la ataca antes. Si el closer hace buenas preguntas (te entiende, no te juzga), te abres. Si presiona o salta a vender, te cierras y dices 'mejor déjame pensarlo'.",
+        "Eres Carlos López, 38 años, hombre, profesional sedentario con unos 15kg de sobrepeso. Vienes agendado a esta llamada de cierre porque un setter te explicó por encima el 'Programa de Optimización Metabólica' (3.000€, 12 semanas, transformación física integral con nutrición, entrenamiento y coaching). YA HAS PROBADO dos programas anteriores (un gym con entrenador y un curso online) y no te funcionaron porque no mantuviste los hábitos — estás escéptico pero todavía interesado, por eso aceptaste la llamada. Tus objeciones reales irán apareciendo según avance la conversación: 1) 'ya he probado otros programas', 2) 'es caro, tengo que mirarlo con calma', 3) 'déjame consultarlo con mi pareja'. NO sueltes las tres seguidas — déjate llevar por la conversación, pero saca cada una en algún momento si el closer no la ataca antes. Si el closer hace buenas preguntas (te entiende, no te juzga), te abres. Si presiona o salta a vender, te cierras y dices 'mejor déjame pensarlo'.",
       context:
-        "Llamada de cierre por Zoom de 30 minutos. El closer sabe tu nombre, tu situación general (sobrepeso, sedentaria, has probado cosas) y que vienes cualificada por un setter. Tu trabajo: ser realista — escéptica pero no cerrada. La transformación física te importa, pero el dinero y el miedo a fracasar de nuevo pesan. Tu pareja es un factor secundario que solo sacas si el closer no maneja bien el precio.",
-      objection: "Hola, sí, soy Marta. Hablé con el chico del programa la semana pasada y me agendó contigo. Tú dirás, te escucho.",
+        "Llamada de cierre por Zoom de 30 minutos. El closer sabe tu nombre, tu situación general (sobrepeso, sedentario, has probado cosas) y que vienes cualificado por un setter. Tu trabajo: ser realista — escéptico pero no cerrado. La transformación física te importa, pero el dinero y el miedo a fracasar de nuevo pesan. Tu pareja es un factor secundario que solo sacas si el closer no maneja bien el precio.",
+      objection: "Hola, sí, soy Carlos. Hablé con el chico del programa la semana pasada y me agendó contigo. Tú dirás, te escucho.",
     },
   },
   inmo: {
@@ -201,6 +201,32 @@ function getScoreColor(score) {
   return "#ef4444";
 }
 
+// Ceba el motor de audio durante un gesto de usuario (click "Iniciar llamada").
+// iOS Safari y Chrome móvil bloquean audio.play() si no se llamó al menos una
+// vez dentro del tap original. Sin esto, el primer playTTS (que llega tras un
+// setTimeout de 1.8s) ya está fuera del gesto y queda silencioso.
+let audioUnlocked = false;
+function unlockAudio() {
+  if (audioUnlocked || typeof window === "undefined") return;
+  try {
+    // 1) Cebar HTMLAudioElement con un WAV silencioso de 100ms
+    const silentWav = "data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=";
+    const a = new Audio(silentWav);
+    a.volume = 0;
+    const p = a.play();
+    if (p && typeof p.catch === "function") p.catch(() => {});
+  } catch { /* ignore */ }
+  try {
+    // 2) Cebar SpeechSynthesis con un utterance vacío
+    if (window.speechSynthesis) {
+      const u = new SpeechSynthesisUtterance(" ");
+      u.volume = 0;
+      window.speechSynthesis.speak(u);
+    }
+  } catch { /* ignore */ }
+  audioUnlocked = true;
+}
+
 async function playTTS(text) {
   // Tiempo mínimo basado en longitud del texto. Si TODOS los caminos de audio
   // fallan en silencio (autoplay block, voces no cargadas, etc.) garantiza que
@@ -313,6 +339,17 @@ export default function DemoCallMVP() {
     const params = new URLSearchParams(window.location.search);
     const token = params.get("token");
 
+    // Fallback de email/name desde la URL (base64). La landing los pasa además
+    // del token para que si Make tarda o falla en insertar en demo_tokens, la
+    // app pueda arrancar la demo igualmente sin depender de Supabase.
+    function decodeB64(v) {
+      if (!v) return "";
+      try { return decodeURIComponent(escape(atob(v.replace(/-/g, '+').replace(/_/g, '/')))); }
+      catch { return ""; }
+    }
+    const urlEmail = decodeB64(params.get("e")) || params.get("email") || "";
+    const urlName  = decodeB64(params.get("n")) || params.get("name")  || "";
+
     if (!token) {
       if (LANDING_URL) window.location.href = LANDING_URL;
       else setTokenLoading(false);
@@ -321,8 +358,9 @@ export default function DemoCallMVP() {
 
     // Make procesa el cta_form_submit con un rate-limit de 4 runs/min y
     // puede tardar varios segundos en insertar el row en demo_tokens cuando
-    // hay cola. Reintentamos el select unas cuantas veces antes de rendirnos
-    // → cubre el race condition sin necesitar INSERT desde la app.
+    // hay cola. Reintentamos el select unas cuantas veces, y si aun así no
+    // aparece pero tenemos email/name en la URL, arrancamos la demo igual
+    // (modo "fallback URL") — así no dependemos críticamente de Make.
     const MAX_RETRIES = 4;
     const RETRY_DELAY_MS = 1500;
 
@@ -340,10 +378,18 @@ export default function DemoCallMVP() {
         }
       }
 
+      // Fallback: si no encontramos el row pero tenemos email/name en URL,
+      // construimos un tokenData "virtual" con attempts=0. Stripe, eventos y
+      // gating funcionan igual; lo único que perdemos es el contador global
+      // en Supabase (que sigue contando vía localStorage).
       if (!row) {
-        if (LANDING_URL) window.location.href = LANDING_URL;
-        else setTokenLoading(false);
-        return;
+        if (urlEmail) {
+          row = { token, email: urlEmail, name: urlName || "", attempts: 0 };
+        } else {
+          if (LANDING_URL) window.location.href = LANDING_URL;
+          else setTokenLoading(false);
+          return;
+        }
       }
 
       setTokenData(row);
@@ -590,6 +636,10 @@ export default function DemoCallMVP() {
   }
 
   async function startCall() {
+    // CRÍTICO en móvil: desbloquear audio DENTRO del gesto del usuario.
+    // Si dejamos esto fuera o pasado el setTimeout de abajo, iOS Safari rechaza
+    // audio.play() silenciosamente y el cliente IA no se oye.
+    unlockAudio();
     sessionRef.current = true;
     userStoppedRef.current = false;
     setPhase("calling");
