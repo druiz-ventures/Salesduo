@@ -318,7 +318,10 @@ export default function DemoCallMVP() {
     const urlEmail = params.get("e");
     const urlName = params.get("n");
 
+    console.log("[SalesDuo] init", { token, urlEmail, urlName, icp: ACTIVE_ICP_ID });
+
     if (!token) {
+      console.warn("[SalesDuo] sin token en URL → redirect a landing");
       if (LANDING_URL) window.location.href = LANDING_URL;
       else setTokenLoading(false);
       return;
@@ -331,9 +334,12 @@ export default function DemoCallMVP() {
         .eq("token", token)
         .maybeSingle();
 
+      console.log("[SalesDuo] select demo_tokens", { data, err });
+
       let row = err ? null : data;
 
       if (!row && urlEmail) {
+        console.log("[SalesDuo] row no existe, intentando upsert con email de URL");
         const { data: upserted, error: upErr } = await supabase
           .from("demo_tokens")
           .upsert(
@@ -342,15 +348,27 @@ export default function DemoCallMVP() {
           )
           .select("token, email, name, attempts")
           .single();
+        console.log("[SalesDuo] upsert resultado", { upserted, upErr });
         if (!upErr) row = upserted;
+        else {
+          // Mostramos el error en pantalla en lugar de redirigir a ciegas
+          setTokenLoading(false);
+          setTokenData({
+            __error: true,
+            message: `No se pudo crear/encontrar tu sesión.\n\nDetalle técnico: ${upErr.message || JSON.stringify(upErr)}\n\nProbablemente las políticas RLS de la tabla demo_tokens no permiten INSERT desde la app. Avisa al equipo.`,
+          });
+          return;
+        }
       }
 
       if (!row) {
+        console.warn("[SalesDuo] sin row y sin urlEmail → redirect a landing");
         if (LANDING_URL) window.location.href = LANDING_URL;
         else setTokenLoading(false);
         return;
       }
 
+      console.log("[SalesDuo] OK, token cargado", row);
       setTokenData(row);
       const localAttempts = getLocalAttempts(row.token, ACTIVE_ICP_ID);
       if (localAttempts >= MAX_ATTEMPTS_PER_ICP) setDemoCompleted(true);
@@ -678,6 +696,7 @@ export default function DemoCallMVP() {
   }
 
   if (tokenLoading) return <LoadingScreen />;
+  if (tokenData?.__error) return <TokenErrorScreen message={tokenData.message} />;
   if (demoCompleted && phase !== "active" && phase !== "calling") return <DemoCompletedScreen tokenData={tokenData} />;
 
   if (phase === "idle") return <IdleScreen onStart={startCall} compat={BROWSER_COMPAT} />;
@@ -786,6 +805,39 @@ function LoadingScreen() {
       <div className="dcm-loading-content">
         <div className="dcm-loading-logo">Sales<span>Duo</span></div>
         <div className="dcm-loading-spinner" />
+      </div>
+    </div>
+  );
+}
+
+// ─── Token Error Screen ──────────────────────────────────────────────────────
+// Pantalla temporal de diagnóstico: se muestra cuando la app no puede crear ni
+// encontrar el row en demo_tokens. Útil para que el equipo vea el error real.
+function TokenErrorScreen({ message }) {
+  return (
+    <div className="dcm-screen dcm-loading" style={{ alignItems: "center" }}>
+      <div className="dcm-loading-content" style={{ maxWidth: 480, padding: "0 20px" }}>
+        <div className="dcm-loading-logo">Sales<span>Duo</span></div>
+        <div style={{
+          background: "rgba(239,68,68,.12)",
+          border: "1px solid #ef4444",
+          color: "#fecaca",
+          padding: "16px 18px",
+          borderRadius: 12,
+          fontSize: 14,
+          lineHeight: 1.6,
+          whiteSpace: "pre-wrap",
+          textAlign: "left",
+          margin: "20px 0",
+        }}>
+          {message}
+        </div>
+        <button
+          className="dcm-start-btn"
+          onClick={() => { if (LANDING_URL) window.location.href = LANDING_URL; }}
+        >
+          Volver a la landing
+        </button>
       </div>
     </div>
   );
