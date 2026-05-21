@@ -10,6 +10,44 @@ const BrowserSR =
     ? window.SpeechRecognition || window.webkitSpeechRecognition
     : null;
 
+// Detecta capacidades del navegador. Firefox y algunos móviles antiguos no
+// tienen Web Speech API → mostramos warning en la pantalla idle.
+function detectBrowserCompat() {
+  if (typeof window === "undefined") return { hasSR: true, browser: "", warning: "" };
+  const ua = navigator.userAgent || "";
+  const isFirefox = /Firefox/i.test(ua);
+  const isSafari = /Safari/i.test(ua) && !/Chrome|Chromium|CriOS|Edg/i.test(ua);
+  const isMobile = /Mobi|Android|iPhone|iPad/i.test(ua);
+  const hasSR = !!BrowserSR;
+  const hasMedia = !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia);
+
+  let browser = "tu navegador";
+  if (isFirefox) browser = "Firefox";
+  else if (isSafari) browser = "Safari";
+
+  if (!hasSR || !hasMedia) {
+    return {
+      hasSR,
+      browser,
+      isMobile,
+      warning: isFirefox
+        ? "Firefox no soporta reconocimiento de voz. Abre la demo en Chrome, Edge o Brave para usar el micrófono."
+        : `${browser} no soporta reconocimiento de voz por completo. Recomendamos Chrome, Edge o Brave en ordenador.`,
+    };
+  }
+  if (isSafari) {
+    return {
+      hasSR: true,
+      browser,
+      isMobile,
+      warning: "Safari tiene limitaciones con el micrófono continuo. Si notas cortes, prueba Chrome o Edge.",
+    };
+  }
+  return { hasSR: true, browser, isMobile, warning: "" };
+}
+
+const BROWSER_COMPAT = detectBrowserCompat();
+
 // ─── ICP CONFIGS ─────────────────────────────────────────────────────────────
 // Cada landing (closer, inmo, default) dispara una simulación distinta.
 // Para añadir un ICP nuevo: añadir entrada aquí, deploy. La landing solo tiene
@@ -164,33 +202,59 @@ function getScoreColor(score) {
 }
 
 async function playTTS(text) {
+  // Tiempo mínimo basado en longitud del texto. Si TODOS los caminos de audio
+  // fallan en silencio (autoplay block, voces no cargadas, etc.) garantiza que
+  // el usuario tenga tiempo de leer el texto que aparece en la burbuja.
+  const words = text.trim().split(/\s+/).filter(Boolean).length || 1;
+  const minMs = Math.max(1500, Math.min(12000, words * 280));
+
+  // Camino 1: audio remoto (ElevenLabs vía Supabase function)
   try {
     const { data, error } = await supabase.functions.invoke("text-to-speech", {
       body: { text, voiceId: "851ejYcv2BoNPjrkw93G", modelId: "eleven_flash_v2_5" },
     });
     if (error || !data?.audioBase64) throw new Error("tts-failed");
     const audio = new Audio(`data:${data.mimeType || "audio/mpeg"};base64,${data.audioBase64}`);
-    return new Promise((resolve) => {
+    const playPromise = audio.play();
+    // En Safari/Firefox/Brave-strict, play() puede rechazar por autoplay policy
+    // → caemos al fallback en lugar de resolver con audio mudo.
+    if (playPromise && typeof playPromise.then === "function") {
+      await playPromise;
+    }
+    await new Promise((resolve) => {
       audio.onended = resolve;
       audio.onerror = resolve;
-      audio.play().catch(resolve);
     });
-  } catch {
-    return new Promise((resolve) => {
-      if (!window.speechSynthesis) { resolve(); return; }
-      window.speechSynthesis.cancel();
-      const u = new SpeechSynthesisUtterance(text);
-      u.lang = "es-ES";
-      u.rate = 1.0;
-      u.pitch = 0.95;
-      const voices = window.speechSynthesis.getVoices();
-      const v = voices.find((x) => /es/i.test(x.lang));
-      if (v) u.voice = v;
-      u.onend = resolve;
-      u.onerror = resolve;
-      window.speechSynthesis.speak(u);
+    return;
+  } catch { /* sigue al fallback */ }
+
+  // Camino 2: speechSynthesis del navegador
+  try {
+    if (!window.speechSynthesis) throw new Error("no-synth");
+    await new Promise((resolve) => {
+      try {
+        window.speechSynthesis.cancel();
+        const u = new SpeechSynthesisUtterance(text);
+        u.lang = "es-ES";
+        u.rate = 1.0;
+        u.pitch = 0.95;
+        const voices = window.speechSynthesis.getVoices();
+        const v = voices.find((x) => /es/i.test(x.lang));
+        if (v) u.voice = v;
+        let done = false;
+        const finish = () => { if (!done) { done = true; resolve(); } };
+        u.onend = finish;
+        u.onerror = finish;
+        window.speechSynthesis.speak(u);
+        // Algunos navegadores nunca disparan onend → red de seguridad
+        setTimeout(finish, minMs + 4000);
+      } catch { resolve(); }
     });
-  }
+    return;
+  } catch { /* sigue al fallback */ }
+
+  // Camino 3: solo damos tiempo a leer el texto en pantalla
+  await new Promise((resolve) => setTimeout(resolve, minMs));
 }
 
 function detectOutcomeFromText(text) {
@@ -220,6 +284,8 @@ export default function DemoCallMVP() {
   const [tokenLoading, setTokenLoading] = useState(true);
   const [demoCompleted, setDemoCompleted] = useState(false);
 
+  const [micError, setMicError] = useState("");
+
   const sessionRef = useRef(false);
   const recognitionRef = useRef(null);
   const timerRef = useRef(null);
@@ -228,10 +294,20 @@ export default function DemoCallMVP() {
   const turnRef = useRef(0);
   const silenceTimerRef = useRef(null);
   const pendingTranscriptRef = useRef("");
+  // Distingue parada "por el sistema/usuario" (no autoreintentamos) vs parada
+  // espontánea del navegador (sí autoreintentamos). Safari y Arc cortan el
+  // recognition entre frases aunque continuous=true → sin restart, el botón
+  // mic queda apagado y el usuario tiene que pulsarlo cada vez.
+  const userStoppedRef = useRef(false);
+  const restartTimerRef = useRef(null);
+  const isSpeakingRef = useRef(false);
+  const isProcessingRef = useRef(false);
 
   useEffect(() => { historyRef.current = history; }, [history]);
   useEffect(() => { scoreRef.current = score; }, [score]);
   useEffect(() => { turnRef.current = turnCount; }, [turnCount]);
+  useEffect(() => { isSpeakingRef.current = isSpeaking; }, [isSpeaking]);
+  useEffect(() => { isProcessingRef.current = isProcessing; }, [isProcessing]);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -295,7 +371,10 @@ export default function DemoCallMVP() {
   useEffect(() => {
     return () => {
       sessionRef.current = false;
-      recognitionRef.current?.stop();
+      userStoppedRef.current = true;
+      clearTimeout(silenceTimerRef.current);
+      clearTimeout(restartTimerRef.current);
+      try { recognitionRef.current?.stop(); } catch { /* ignore */ }
       window.speechSynthesis?.cancel();
       clearInterval(timerRef.current);
     };
@@ -317,17 +396,44 @@ export default function DemoCallMVP() {
   }
 
   function stopListening() {
+    userStoppedRef.current = true;
     clearTimeout(silenceTimerRef.current);
     silenceTimerRef.current = null;
-    recognitionRef.current?.stop();
+    clearTimeout(restartTimerRef.current);
+    restartTimerRef.current = null;
+    try { recognitionRef.current?.stop(); } catch { /* ignore */ }
     recognitionRef.current = null;
     setIsListening(false);
   }
 
+  // Programa un restart del recognition. Lo usamos cuando el navegador cierra
+  // el recognition por su cuenta (Safari/Arc/etc) en mitad de una sesión activa.
+  function scheduleRestart(delay = 200) {
+    clearTimeout(restartTimerRef.current);
+    restartTimerRef.current = setTimeout(() => {
+      if (
+        !userStoppedRef.current &&
+        sessionRef.current &&
+        !isSpeakingRef.current &&
+        !isProcessingRef.current &&
+        !recognitionRef.current
+      ) {
+        startListening();
+      }
+    }, delay);
+  }
+
   function startListening() {
-    if (!sessionRef.current || !BrowserSR) return;
+    if (!sessionRef.current) return;
+    if (!BrowserSR) {
+      setMicError("Tu navegador no soporta reconocimiento de voz. Abre la demo en Chrome, Edge o Brave.");
+      return;
+    }
+    userStoppedRef.current = false;
+    setMicError("");
     pendingTranscriptRef.current = "";
     clearTimeout(silenceTimerRef.current);
+    clearTimeout(restartTimerRef.current);
 
     const r = new BrowserSR();
     r.lang = "es-ES";
@@ -344,25 +450,62 @@ export default function DemoCallMVP() {
       silenceTimerRef.current = setTimeout(() => {
         const text = pendingTranscriptRef.current.trim();
         pendingTranscriptRef.current = "";
-        if (text && sessionRef.current) processUserTurn(text);
+        if (text && sessionRef.current) {
+          userStoppedRef.current = true; // vamos a procesar, no autoreintentar
+          processUserTurn(text);
+        }
       }, 1800);
     };
 
-    r.onerror = () => {
+    r.onerror = (event) => {
+      const errType = event?.error || "unknown";
       clearTimeout(silenceTimerRef.current);
-      pendingTranscriptRef.current = "";
-      setIsListening(false);
       recognitionRef.current = null;
+      setIsListening(false);
+
+      if (errType === "not-allowed" || errType === "service-not-allowed") {
+        userStoppedRef.current = true;
+        setMicError("Necesitamos permiso para usar el micrófono. Actívalo en los permisos de tu navegador y vuelve a intentarlo.");
+        return;
+      }
+      if (errType === "audio-capture") {
+        userStoppedRef.current = true;
+        setMicError("No detectamos micrófono. Conecta uno o revisa la configuración de audio.");
+        return;
+      }
+      // no-speech / network / aborted / unknown → reintentar si seguimos activos
+      pendingTranscriptRef.current = "";
+      scheduleRestart(300);
     };
 
     r.onend = () => {
       setIsListening(false);
       recognitionRef.current = null;
+      if (userStoppedRef.current || !sessionRef.current) return;
+      // Si hay texto pendiente sin procesar (silence timer no llegó a disparar),
+      // lo procesamos ahora.
+      const pending = pendingTranscriptRef.current.trim();
+      if (pending) {
+        pendingTranscriptRef.current = "";
+        clearTimeout(silenceTimerRef.current);
+        userStoppedRef.current = true;
+        processUserTurn(pending);
+        return;
+      }
+      // El navegador cerró el recognition sin que lo pidiéramos → reabrir.
+      scheduleRestart(200);
     };
 
     recognitionRef.current = r;
-    r.start();
-    setIsListening(true);
+    try {
+      r.start();
+      setIsListening(true);
+    } catch {
+      // start() puede tirar InvalidStateError si ya hay uno corriendo
+      recognitionRef.current = null;
+      setIsListening(false);
+      scheduleRestart(400);
+    }
   }
 
   function handleMicClick() {
@@ -453,6 +596,7 @@ export default function DemoCallMVP() {
 
   async function startCall() {
     sessionRef.current = true;
+    userStoppedRef.current = false;
     setPhase("calling");
     setElapsed(0);
     setTurnCount(0);
@@ -464,6 +608,7 @@ export default function DemoCallMVP() {
     setFeedback("");
     setOutcome(null);
     setError("");
+    setMicError("");
     setHighlights([]);
 
     const initHistory = [
@@ -535,7 +680,7 @@ export default function DemoCallMVP() {
   if (tokenLoading) return <LoadingScreen />;
   if (demoCompleted && phase !== "active" && phase !== "calling") return <DemoCompletedScreen tokenData={tokenData} />;
 
-  if (phase === "idle") return <IdleScreen onStart={startCall} />;
+  if (phase === "idle") return <IdleScreen onStart={startCall} compat={BROWSER_COMPAT} />;
   if (phase === "calling") return <CallingScreen />;
   if (phase === "ended") {
     return (
@@ -606,6 +751,7 @@ export default function DemoCallMVP() {
       )}
 
       {error && <div className="dcm-error">{error}</div>}
+      {micError && <div className="dcm-error">{micError}</div>}
 
       <div className="dcm-controls">
         {isProcessing ? (
@@ -798,7 +944,8 @@ function CheckoutForm({ onDone, email, token, clientSecret }) {
 }
 
 // ─── Idle Screen ─────────────────────────────────────────────────────────────
-function IdleScreen({ onStart }) {
+function IdleScreen({ onStart, compat }) {
+  const blocked = compat && !compat.hasSR;
   return (
     <div className="dcm-screen dcm-idle">
       <div className="dcm-idle-content">
@@ -808,16 +955,39 @@ function IdleScreen({ onStart }) {
           Practica una llamada en frío real con un comprador con IA. Tu misión: conseguir que acepte
           una demo de 20 minutos en menos de 5 argumentos.
         </p>
+        {compat?.warning && (
+          <div
+            className="dcm-compat-warning"
+            style={{
+              background: blocked ? "rgba(239,68,68,.12)" : "rgba(245,158,11,.12)",
+              border: `1px solid ${blocked ? "#ef4444" : "#f59e0b"}`,
+              color: blocked ? "#fecaca" : "#fde68a",
+              padding: "12px 14px",
+              borderRadius: 10,
+              margin: "12px 0 18px",
+              fontSize: 14,
+              lineHeight: 1.5,
+              textAlign: "left",
+            }}
+          >
+            {blocked ? "⚠️ " : "ℹ️ "}{compat.warning}
+          </div>
+        )}
         <div className="dcm-idle-tips">
           <div className="dcm-tip">Descubre el problema antes de vender</div>
           <div className="dcm-tip">Responde objeciones con datos concretos</div>
           <div className="dcm-tip">Pide la demo cuando hayas aportado valor</div>
           <div className="dcm-tip">Habla con naturalidad, como en una llamada real</div>
         </div>
-        <button className="dcm-start-btn" onClick={onStart}>
-          Iniciar llamada
+        <button
+          className="dcm-start-btn"
+          onClick={onStart}
+          disabled={blocked}
+          style={blocked ? { opacity: 0.5, cursor: "not-allowed" } : undefined}
+        >
+          {blocked ? "No disponible en este navegador" : "Iniciar llamada"}
         </button>
-        <p className="dcm-idle-note">Requiere micrófono · Mejor en Chrome o Edge</p>
+        <p className="dcm-idle-note">Requiere micrófono · Mejor en Chrome, Edge o Brave</p>
       </div>
     </div>
   );
