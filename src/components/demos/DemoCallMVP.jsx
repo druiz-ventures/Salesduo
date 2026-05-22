@@ -1077,16 +1077,22 @@ function EndedScreen({ outcome, score, elapsed, highlights, onRestart, canRestar
   }
 
   function handleRating(value) {
+    // El último click siempre gana. Si pulsa 👍 → 👎 → 👍 nos quedamos con el
+    // último (Make upsertea el campo Feedback con el valor más reciente).
     setRating(value);
-    if (value === "up") {
-      supabase.from("demo_feedback").insert({
-        token: tokenData?.token,
-        email: tokenData?.email,
-        rating: "positive",
-        comment: null,
-      }).then(() => {});
-      sendEventToMake({ event: 'feedback_positive', email: tokenData?.email, name: tokenData?.name, timestamp: new Date().toISOString() });
-    }
+    const isPositive = value === "up";
+    supabase.from("demo_feedback").insert({
+      token: tokenData?.token,
+      email: tokenData?.email,
+      rating: isPositive ? "positive" : "negative",
+      comment: null,
+    }).then(() => {});
+    sendEventToMake({
+      event: isPositive ? 'feedback_positive' : 'feedback_negative',
+      email: tokenData?.email,
+      name: tokenData?.name,
+      timestamp: new Date().toISOString(),
+    });
   }
 
   function handleFeedbackSubmit() {
@@ -1097,6 +1103,8 @@ function EndedScreen({ outcome, score, elapsed, highlights, onRestart, canRestar
       rating: "negative",
       comment: feedbackText.trim(),
     }).then(() => {});
+    // Re-dispara feedback_negative con el comentario (Make upsertea el campo
+    // Comentario sin tocar el resto). El click de 👎 ya dejó el thumb seteado.
     sendEventToMake({ event: 'feedback_negative', email: tokenData?.email, name: tokenData?.name, comment: feedbackText.trim(), timestamp: new Date().toISOString() });
     setFeedbackSent(true);
   }
