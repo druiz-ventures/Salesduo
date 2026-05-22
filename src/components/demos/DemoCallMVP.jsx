@@ -874,13 +874,13 @@ function DemoCompletedScreen({ tokenData }) {
           )}
         </div>
       </div>
-      {stripeOpen && <StripeModal email={tokenData?.email} token={tokenData?.token} onClose={() => setStripeOpen(false)} />}
+      {stripeOpen && <StripeModal email={tokenData?.email} name={tokenData?.name} token={tokenData?.token} onClose={() => setStripeOpen(false)} />}
     </div>
   );
 }
 
 // ─── Stripe Modal ─────────────────────────────────────────────────────────────
-function StripeModal({ email, token, onClose }) {
+function StripeModal({ email, name, token, onClose }) {
   const [clientSecret, setClientSecret] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -922,7 +922,7 @@ function StripeModal({ email, token, onClose }) {
         {error && <p className="dcm-stripe-error">{error}</p>}
         {clientSecret && !done && (
           <Elements stripe={stripePromise} options={{ clientSecret }}>
-            <CheckoutForm onDone={() => setDone(true)} email={email} token={token} clientSecret={clientSecret} />
+            <CheckoutForm onDone={() => setDone(true)} email={email} name={name} token={token} clientSecret={clientSecret} />
           </Elements>
         )}
         {done && (
@@ -940,7 +940,7 @@ function StripeModal({ email, token, onClose }) {
   );
 }
 
-function CheckoutForm({ onDone, email, token, clientSecret }) {
+function CheckoutForm({ onDone, email, name, token, clientSecret }) {
   const stripe = useStripe();
   const elements = useElements();
   const [processing, setProcessing] = useState(false);
@@ -970,7 +970,7 @@ function CheckoutForm({ onDone, email, token, clientSecret }) {
       setError(stripeError.message ?? "Error al procesar la tarjeta.");
       setProcessing(false);
     } else {
-      sendEventToMake({ event: 'stripe_reserved', email, token, stripeSetupIntentId: setupIntent?.id, timestamp: new Date().toISOString() });
+      sendEventToMake({ event: 'stripe_reserved', email, name, token, stripeSetupIntentId: setupIntent?.id, timestamp: new Date().toISOString() });
       onDone();
     }
   }
@@ -1205,7 +1205,7 @@ function EndedScreen({ outcome, score, elapsed, highlights, onRestart, canRestar
           )}
         </div>
       </div>
-      {stripeOpen && <StripeModal email={tokenData?.email} token={tokenData?.token} onClose={() => setStripeOpen(false)} />}
+      {stripeOpen && <StripeModal email={tokenData?.email} name={tokenData?.name} token={tokenData?.token} onClose={() => setStripeOpen(false)} />}
     </div>
   );
 }
