@@ -684,7 +684,10 @@ export default function DemoCallMVP() {
     await new Promise((r) => setTimeout(r, 1800));
     if (!sessionRef.current) return;
     setPhase("active");
-    sendEventToMake({ event: 'call_started', buyer: BUYER.name, company: BUYER.company, email: tokenData?.email, name: tokenData?.name, timestamp: new Date().toISOString() });
+    // Nota: NO disparamos 'call_started' a Make a propósito. Ese evento no
+    // matchea ninguna rama del escenario y solo consume operaciones del plan
+    // free. Si más adelante quieres tracking de "cuántas llamadas se inician
+    // pero no se completan", añadimos una rama en Make y descomentamos esto.
 
     setBuyerText(SCENARIO.objection);
     setIsSpeaking(true);
