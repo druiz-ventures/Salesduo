@@ -504,7 +504,7 @@ export default function DemoCallMVP() {
           userStoppedRef.current = true; // vamos a procesar, no autoreintentar
           processUserTurn(text);
         }
-      }, 1800);
+      }, 1400);
     };
 
     r.onerror = (event) => {
@@ -1045,6 +1045,7 @@ function IdleScreen({ onStart, compat }) {
           {blocked ? "No disponible en este navegador" : "Iniciar llamada"}
         </button>
         <p className="dcm-idle-note">Requiere micrófono · Mejor en Chrome, Edge o Brave</p>
+        <p className="dcm-idle-note">🎧 Usa auriculares o busca un lugar tranquilo para mejores resultados</p>
       </div>
     </div>
   );
