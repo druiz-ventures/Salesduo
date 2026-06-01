@@ -872,7 +872,7 @@ function DemoCompletedScreen({ tokenData }) {
         </div>
         <div className="dcm-cta-section">
           <div className="dcm-cta-reserve-wrap">
-            <span className="dcm-cta-badge">⚡ Early adopter (Plan Basic) · 50% off for life</span>
+            <span className="dcm-cta-badge">⚡ 50% off for life (Plan Basic)</span>
             <button className="dcm-cta-reserve" onClick={() => setStripeOpen(true)}>
               Reservar ahora
             </button>
@@ -1211,7 +1211,7 @@ function EndedScreen({ outcome, score, elapsed, highlights, onRestart, canRestar
 
         <div className="dcm-cta-section">
           <div className="dcm-cta-reserve-wrap">
-            <span className="dcm-cta-badge">⚡ Early adopter (Plan Basic) · 50% off for life</span>
+            <span className="dcm-cta-badge">⚡ 50% off for life (Plan Basic)</span>
             <button className="dcm-cta-reserve" onClick={() => setStripeOpen(true)}>
               Reservar ahora
             </button>
