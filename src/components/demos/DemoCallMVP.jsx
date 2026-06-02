@@ -872,7 +872,6 @@ function DemoCompletedScreen({ tokenData }) {
         </div>
         <div className="dcm-cta-section">
           <div className="dcm-cta-reserve-wrap">
-            <span className="dcm-cta-badge">⚡ 50% off for life (Plan Basic)</span>
             <button className="dcm-cta-reserve" onClick={() => setStripeOpen(true)}>
               Reservar ahora
             </button>
@@ -926,7 +925,7 @@ function StripeModal({ email, name, token, onClose }) {
         {!done && (
           <div className="dcm-stripe-header">
             <div className="dcm-stripe-logo">Sales<span>Duo</span></div>
-            <p className="dcm-stripe-subtitle">Reserva tu plaza · 50% off for life</p>
+            <p className="dcm-stripe-subtitle">Reserva tu plaza</p>
             <p className="dcm-stripe-note">Introduce tu tarjeta para reservar. No se realizará ningún cargo ahora.</p>
           </div>
         )}
@@ -1212,7 +1211,6 @@ function EndedScreen({ outcome, score, elapsed, highlights, onRestart, canRestar
 
         <div className="dcm-cta-section">
           <div className="dcm-cta-reserve-wrap">
-            <span className="dcm-cta-badge">⚡ 50% off for life (Plan Basic)</span>
             <button className="dcm-cta-reserve" onClick={() => setStripeOpen(true)}>
               Reservar ahora
             </button>
