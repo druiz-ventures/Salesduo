@@ -55,6 +55,7 @@ const BROWSER_COMPAT = detectBrowserCompat();
 const ICP_CONFIGS = {
   closer: {
     salesRole: "closer",
+    objective: "Conseguir que Carlos cierre el Programa de Optimización Metabólica (3.000€)",
     BUYER: {
       name: "Carlos López",
       title: "Lead cualificado por setter",
@@ -71,6 +72,7 @@ const ICP_CONFIGS = {
   },
   inmo: {
     salesRole: "closer",
+    objective: "Conseguir una visita de captación con Javier (sin exclusiva)",
     BUYER: {
       name: "Javier Ramírez",
       title: "Propietario",
@@ -96,6 +98,7 @@ const ICP_CONFIGS = {
   },
   b2b: {
     salesRole: "setter",
+    objective: "Convencer a Diego de agendar una demo de 20 minutos",
     BUYER: {
       name: "Diego Martínez",
       title: "Director de Operaciones",
@@ -110,9 +113,35 @@ const ICP_CONFIGS = {
       objection: "Buenos días, soy Diego Martínez. Dígame.",
     },
   },
+  movistar: {
+    salesRole: "closer",
+    objective: "Conseguir que María acepte un upgrade de tarifa o un nuevo terminal",
+    BUYER: {
+      name: "María Fernández",
+      title: "Clienta Movistar",
+      company: "Consulta de factura",
+      initial: "M",
+    },
+    SCENARIO: {
+      buyerPersona:
+        "Eres María Fernández, 45 años, autónoma (pequeña gestoría contable). Llevas 6 años con Movistar. Tu tarifa era 35€/mes con una oferta de permanencia de 2 años que acaba de terminar, y este mes la factura ha subido a 45€ sin previo aviso. Llamas SOLO para saber por qué ha subido y si te pueden devolver al precio anterior — NO tienes intención de comprar nada. " +
+        "Tu situación real (que el comercial puede descubrir si pregunta bien): tienes un iPhone 11 con la batería al 72% que se apaga a mediodía cuando lo usas mucho, usas el móvil constantemente para trabajar (WhatsApp con clientes, email, Excel), y tus 20GB de datos se agotan antes de fin de mes. Necesitas más batería y más datos pero no lo reconoces a la primera. " +
+        "TUS OBJECIONES REALES (en orden, una por turno): " +
+        "1) CIERRE INMEDIATO — 'Mira, solo llamo por lo de la factura, no me interesa que me ofrezcan nada' (casi al instante, antes de cualquier pitch). " +
+        "2) RESISTENCIA ECONÓMICA — 'Es que si ya me ha subido la factura, no me puedo permitir gastar más' (cuando el comercial ofrece algo). " +
+        "3) NEGACIÓN DE NECESIDAD — 'Mi móvil va bien, no necesito cambiarlo' (si hablan de terminal; no admites lo de la batería a la primera). " +
+        "4) POSTERGACIÓN — 'Déjame pensarlo, estas cosas no me gustan decidirlas por teléfono' (cuando piden decisión). " +
+        "5) APERTURA CONDICIONAL (solo si el comercial detecta el problema de batería y datos, y ofrece solución con precio mensual claro y sin permanencia larga) — 'Bueno... ¿y cuánto me quedaría la cuota exactamente?' (el ÚNICO camino al sí). " +
+        "Tu actitud: educada pero directa. Si el comercial resuelve bien la duda de la factura Y hace buenas preguntas sobre cómo usas el móvil (sin asumir que necesitas algo), te abres un poco. Si suelta el pitch de 'tenemos ofertas increíbles' antes de escucharte, cierras la conversación y dices que ya llamarás si lo necesitas.",
+      context:
+        "Llamada inbound a atención al cliente de Movistar. Tú eres el cliente que ha llamado por una subida de factura. El comercial tiene que: 1) resolver tu duda (la subida es por fin de la promoción de permanencia que ya no está vigente), 2) detectar si hay oportunidad de upsell (terminal nuevo, más datos, tarifa Fusión). Tu objetivo: resolver la duda y colgar sin comprar nada. Solo cederás si el comercial demuestra entender tu situación real y presenta una solución que realmente te resuelva un problema concreto.",
+      objection: "Buenos días, sí, llamo porque este mes me ha llegado la factura con 10 euros más de lo habitual y no entiendo por qué ha subido.",
+    },
+  },
   default: {
     // Fallback para URLs sin ?icp= explícito → mismo cliente que b2b
     salesRole: "setter",
+    objective: "Convencer a Diego de agendar una demo de 20 minutos",
     BUYER: {
       name: "Diego Martínez",
       title: "Director de Operaciones",
@@ -173,11 +202,12 @@ const STRIPE_LINK = "";      // TODO: pegar enlace de Stripe aquí
 const LANDING_BASE_URL = "https://salesduo-landing.vercel.app";
 const LANDING_URL = (() => {
   switch (ACTIVE_ICP_ID) {
-    case "closer": return `${LANDING_BASE_URL}/closer`;
-    case "inmo":   return `${LANDING_BASE_URL}/inmo`;
+    case "closer":   return `${LANDING_BASE_URL}/closer`;
+    case "inmo":     return `${LANDING_BASE_URL}/inmo`;
+    case "movistar": return `${LANDING_BASE_URL}/movistar`; // TODO: crear landing
     case "b2b":
     case "default":
-    default:       return LANDING_BASE_URL;
+    default:         return LANDING_BASE_URL;
   }
 })();
 
@@ -853,7 +883,7 @@ export default function DemoCallMVP() {
   if (demoCompleted && phase !== "active" && phase !== "calling") return <DemoCompletedScreen tokenData={tokenData} />;
 
   if (phase === "idle") return <IdleScreen onStart={startCall} compat={BROWSER_COMPAT} />;
-  if (phase === "calling") return <CallingScreen />;
+  if (phase === "calling") return <CallingScreen buyer={BUYER} />;
   if (phase === "ended") {
     return (
       <EndedScreen
@@ -931,7 +961,7 @@ export default function DemoCallMVP() {
             <span className="dcm-spinner" /> Procesando...
           </div>
         ) : isSpeaking ? (
-          <div className="dcm-buyer-speaking-msg">Diego está hablando...</div>
+          <div className="dcm-buyer-speaking-msg">{BUYER.name} está hablando...</div>
         ) : (
           <button
             className={`dcm-mic-btn ${isListening ? "active" : ""}`}
@@ -945,7 +975,7 @@ export default function DemoCallMVP() {
       </div>
 
       <div className="dcm-objective">
-        <span className="dcm-obj-label">Objetivo:</span> Convencer a Diego de agendar una demo de 20 minutos
+        <span className="dcm-obj-label">Objetivo:</span> {ACTIVE_ICP.objective}
       </div>
     </div>
   );
@@ -1166,7 +1196,7 @@ function IdleScreen({ onStart, compat }) {
 }
 
 // ─── Calling Screen ───────────────────────────────────────────────────────────
-function CallingScreen() {
+function CallingScreen({ buyer }) {
   return (
     <div className="dcm-screen dcm-calling">
       <div className="dcm-calling-content">
@@ -1174,10 +1204,10 @@ function CallingScreen() {
           <div className="dcm-ring-circle r1" />
           <div className="dcm-ring-circle r2" />
           <div className="dcm-ring-circle r3" />
-          <div className="dcm-calling-avatar-inner">D</div>
+          <div className="dcm-calling-avatar-inner">{buyer?.initial || "?"}</div>
         </div>
-        <div className="dcm-calling-name">Diego Martínez</div>
-        <div className="dcm-calling-company">Distribuciones Altair</div>
+        <div className="dcm-calling-name">{buyer?.name}</div>
+        <div className="dcm-calling-company">{buyer?.company}</div>
         <div className="dcm-calling-status">Llamando...</div>
       </div>
     </div>
