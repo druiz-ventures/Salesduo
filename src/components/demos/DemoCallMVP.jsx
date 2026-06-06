@@ -215,18 +215,22 @@ function getScoreColor(score) {
 // vez dentro del tap original. Sin esto, el primer playTTS (que llega tras un
 // setTimeout de 1.8s) ya está fuera del gesto y queda silencioso.
 let audioUnlocked = false;
+// Elemento <audio> creado y reproducido durante el gesto del usuario.
+// iOS Safari bloquea new Audio().play() fuera de un gesto → reutilizamos
+// siempre este mismo elemento (iOS lo mantiene "desbloqueado" de por vida).
+let ttsAudioEl = null;
+
 function unlockAudio() {
   if (audioUnlocked || typeof window === "undefined") return;
   try {
-    // 1) Cebar HTMLAudioElement con un WAV silencioso de 100ms
+    // Cebar HTMLAudioElement con un WAV silencioso y guardarlo para reutilizarlo
     const silentWav = "data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=";
-    const a = new Audio(silentWav);
-    a.volume = 0;
-    const p = a.play();
+    ttsAudioEl = new Audio(silentWav);
+    ttsAudioEl.volume = 0;
+    const p = ttsAudioEl.play();
     if (p && typeof p.catch === "function") p.catch(() => {});
   } catch { /* ignore */ }
   try {
-    // 2) Cebar SpeechSynthesis con un utterance vacío
     if (window.speechSynthesis) {
       const u = new SpeechSynthesisUtterance(" ");
       u.volume = 0;
@@ -238,8 +242,7 @@ function unlockAudio() {
 
 async function playTTS(text) {
   // Tiempo mínimo basado en longitud del texto. Si TODOS los caminos de audio
-  // fallan en silencio (autoplay block, voces no cargadas, etc.) garantiza que
-  // el usuario tenga tiempo de leer el texto que aparece en la burbuja.
+  // fallan en silencio garantiza que el usuario tenga tiempo de leer el texto.
   const words = text.trim().split(/\s+/).filter(Boolean).length || 1;
   const minMs = Math.max(1500, Math.min(12000, words * 280));
 
@@ -249,10 +252,15 @@ async function playTTS(text) {
       body: { text, voiceId: "851ejYcv2BoNPjrkw93G", modelId: "eleven_flash_v2_5" },
     });
     if (error || !data?.audioBase64) throw new Error("tts-failed");
-    const audio = new Audio(`data:${data.mimeType || "audio/mpeg"};base64,${data.audioBase64}`);
+
+    // Reutilizamos el elemento desbloqueado en unlockAudio() en lugar de crear
+    // uno nuevo — en iOS Safari, new Audio().play() fuera del gesto falla y cae
+    // al fallback de speechSynthesis (voz de robot).
+    const audio = ttsAudioEl || new Audio();
+    audio.src = `data:${data.mimeType || "audio/mpeg"};base64,${data.audioBase64}`;
+    audio.volume = 1;
+
     const playPromise = audio.play();
-    // En Safari/Firefox/Brave-strict, play() puede rechazar por autoplay policy
-    // → caemos al fallback en lugar de resolver con audio mudo.
     if (playPromise && typeof playPromise.then === "function") {
       await playPromise;
     }
