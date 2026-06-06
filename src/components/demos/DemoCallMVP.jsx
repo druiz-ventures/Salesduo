@@ -5,45 +5,45 @@ import { Elements, CardElement, useStripe, useElements } from "@stripe/react-str
 
 const stripePromise = loadStripe("pk_test_51TXmAIJ8SzDql7MTtbdkxllpQBUBL4eUqh9c6yiWmNiSrcMi6UB1dsWFQvg0ctFRzAQxXZJw04yKTFBzTOX7N4lu00B0oTJXNf");
 
-const BrowserSR =
-  typeof window !== "undefined"
-    ? window.SpeechRecognition || window.webkitSpeechRecognition
-    : null;
-
-// Detecta capacidades del navegador. Firefox y algunos móviles antiguos no
-// tienen Web Speech API → mostramos warning en la pantalla idle.
+// Detecta soporte de getUserMedia + MediaRecorder (pipeline propio de grabación).
+// Firefox y Safari modernos soportan ambos → ya no bloqueamos por navegador.
 function detectBrowserCompat() {
-  if (typeof window === "undefined") return { hasSR: true, browser: "", warning: "" };
+  if (typeof window === "undefined") return { hasMedia: true, warning: "" };
   const ua = navigator.userAgent || "";
-  const isFirefox = /Firefox/i.test(ua);
   const isSafari = /Safari/i.test(ua) && !/Chrome|Chromium|CriOS|Edg/i.test(ua);
-  const isMobile = /Mobi|Android|iPhone|iPad/i.test(ua);
-  const hasSR = !!BrowserSR;
-  const hasMedia = !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia);
+  const hasMedia =
+    !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) &&
+    typeof MediaRecorder !== "undefined";
 
-  let browser = "tu navegador";
-  if (isFirefox) browser = "Firefox";
-  else if (isSafari) browser = "Safari";
-
-  if (!hasSR || !hasMedia) {
+  if (!hasMedia) {
     return {
-      hasSR,
-      browser,
-      isMobile,
-      warning: isFirefox
-        ? "Firefox no soporta reconocimiento de voz. Abre la demo en Chrome, Edge o Brave para usar el micrófono."
-        : `${browser} no soporta reconocimiento de voz por completo. Recomendamos Chrome, Edge o Brave en ordenador.`,
+      hasMedia: false,
+      warning: "Tu navegador no soporta grabación de audio. Usa Chrome, Edge, Safari 15+ o Firefox.",
     };
   }
   if (isSafari) {
     return {
-      hasSR: true,
-      browser,
-      isMobile,
-      warning: "Safari tiene limitaciones con el micrófono continuo. Si notas cortes, prueba Chrome o Edge.",
+      hasMedia: true,
+      warning: "Safari puede requerir confirmar permisos de micrófono. Si la demo no arranca, prueba Chrome o Edge.",
     };
   }
-  return { hasSR: true, browser, isMobile, warning: "" };
+  return { hasMedia: true, warning: "" };
+}
+
+// Devuelve el mimeType más capaz que soporta el navegador.
+// Safari no soporta webm/opus → cae a mp4; el Edge Function mapea mp4 → m4a.
+function getSupportedMimeType() {
+  const candidates = [
+    "audio/webm;codecs=opus",
+    "audio/webm",
+    "audio/mp4",
+    "audio/ogg;codecs=opus",
+    "audio/wav",
+  ];
+  for (const t of candidates) {
+    if (typeof MediaRecorder !== "undefined" && MediaRecorder.isTypeSupported(t)) return t;
+  }
+  return "";
 }
 
 const BROWSER_COMPAT = detectBrowserCompat();
@@ -322,21 +322,19 @@ export default function DemoCallMVP() {
   const [micError, setMicError] = useState("");
 
   const sessionRef = useRef(false);
-  const recognitionRef = useRef(null);
   const timerRef = useRef(null);
   const historyRef = useRef([]);
   const scoreRef = useRef(0);
   const turnRef = useRef(0);
-  const silenceTimerRef = useRef(null);
-  const pendingTranscriptRef = useRef("");
-  // Distingue parada "por el sistema/usuario" (no autoreintentamos) vs parada
-  // espontánea del navegador (sí autoreintentamos). Safari y Arc cortan el
-  // recognition entre frases aunque continuous=true → sin restart, el botón
-  // mic queda apagado y el usuario tiene que pulsarlo cada vez.
-  const userStoppedRef = useRef(false);
-  const restartTimerRef = useRef(null);
   const isSpeakingRef = useRef(false);
   const isProcessingRef = useRef(false);
+  // Pipeline de audio propio (getUserMedia → MediaRecorder → STT)
+  const mediaStreamRef = useRef(null);
+  const mediaRecorderRef = useRef(null);
+  const audioChunksRef = useRef([]);
+  const audioContextRef = useRef(null);
+  const analyserRef = useRef(null);
+  const vadIntervalRef = useRef(null);
 
   useEffect(() => { historyRef.current = history; }, [history]);
   useEffect(() => { scoreRef.current = score; }, [score]);
@@ -421,10 +419,10 @@ export default function DemoCallMVP() {
   useEffect(() => {
     return () => {
       sessionRef.current = false;
-      userStoppedRef.current = true;
-      clearTimeout(silenceTimerRef.current);
-      clearTimeout(restartTimerRef.current);
-      try { recognitionRef.current?.stop(); } catch { /* ignore */ }
+      clearInterval(vadIntervalRef.current);
+      try { mediaRecorderRef.current?.stop(); } catch { /* ignore */ }
+      mediaStreamRef.current?.getTracks().forEach((t) => t.stop());
+      audioContextRef.current?.close().catch(() => {});
       window.speechSynthesis?.cancel();
       clearInterval(timerRef.current);
     };
@@ -446,124 +444,234 @@ export default function DemoCallMVP() {
   }
 
   function stopListening() {
-    userStoppedRef.current = true;
-    clearTimeout(silenceTimerRef.current);
-    silenceTimerRef.current = null;
-    clearTimeout(restartTimerRef.current);
-    restartTimerRef.current = null;
-    try { recognitionRef.current?.stop(); } catch { /* ignore */ }
-    recognitionRef.current = null;
+    clearInterval(vadIntervalRef.current);
+    vadIntervalRef.current = null;
+    if (mediaRecorderRef.current && mediaRecorderRef.current.state !== "inactive") {
+      try { mediaRecorderRef.current.stop(); } catch { /* ignore */ }
+    }
+    mediaRecorderRef.current = null;
+    if (mediaStreamRef.current) {
+      mediaStreamRef.current.getTracks().forEach((t) => t.stop());
+      mediaStreamRef.current = null;
+    }
+    if (audioContextRef.current) {
+      audioContextRef.current.close().catch(() => {});
+      audioContextRef.current = null;
+    }
+    analyserRef.current = null;
+    audioChunksRef.current = [];
     setIsListening(false);
   }
 
-  // Programa un restart del recognition. Lo usamos cuando el navegador cierra
-  // el recognition por su cuenta (Safari/Arc/etc) en mitad de una sesión activa.
-  function scheduleRestart(delay = 200) {
-    clearTimeout(restartTimerRef.current);
-    restartTimerRef.current = setTimeout(() => {
-      if (
-        !userStoppedRef.current &&
-        sessionRef.current &&
-        !isSpeakingRef.current &&
-        !isProcessingRef.current &&
-        !recognitionRef.current
-      ) {
-        startListening();
-      }
-    }, delay);
-  }
-
-  function startListening() {
+  async function startListening() {
     if (!sessionRef.current) return;
-    if (!BrowserSR) {
-      setMicError("Tu navegador no soporta reconocimiento de voz. Abre la demo en Chrome, Edge o Brave.");
+    if (isSpeakingRef.current || isProcessingRef.current) return;
+    if (mediaRecorderRef.current) return; // ya grabando
+
+    setMicError("");
+
+    let stream;
+    try {
+      stream = await navigator.mediaDevices.getUserMedia({
+        audio: {
+          echoCancellation: true,
+          noiseSuppression: true,
+          autoGainControl: true,
+          channelCount: 1,        // mono — óptimo para STT, descarta ruido estéreo
+          sampleRate: 16000,      // 16kHz — frecuencia nativa de modelos de voz
+        },
+      });
+    } catch (err) {
+      const name = err?.name || "";
+      if (name === "NotAllowedError" || name === "PermissionDeniedError") {
+        setMicError("Necesitamos permiso para usar el micrófono. Actívalo en los permisos de tu navegador.");
+      } else if (name === "NotFoundError") {
+        setMicError("No detectamos micrófono. Conecta uno o revisa la configuración de audio.");
+      } else {
+        setMicError("Error al acceder al micrófono. Inténtalo de nuevo.");
+      }
       return;
     }
-    userStoppedRef.current = false;
-    setMicError("");
-    pendingTranscriptRef.current = "";
-    clearTimeout(silenceTimerRef.current);
-    clearTimeout(restartTimerRef.current);
 
-    const r = new BrowserSR();
-    r.lang = "es-ES";
-    r.continuous = true;
-    r.interimResults = false;
+    if (!sessionRef.current) {
+      stream.getTracks().forEach((t) => t.stop());
+      return;
+    }
 
-    r.onresult = (e) => {
-      for (let i = e.resultIndex; i < e.results.length; i++) {
-        if (e.results[i].isFinal) {
-          pendingTranscriptRef.current += e.results[i][0].transcript + " ";
+    mediaStreamRef.current = stream;
+
+    // AudioContext para VAD — resume() necesario en Safari: sin él el contexto
+    // arranca en "suspended" y getByteTimeDomainData devuelve todo 128 (silencio).
+    const ctx = new AudioContext();
+    audioContextRef.current = ctx;
+    try { await ctx.resume(); } catch { /* Safari puede ignorarlo, continuamos */ }
+    const source = ctx.createMediaStreamSource(stream);
+    const analyser = ctx.createAnalyser();
+    analyser.fftSize = 1024;
+    source.connect(analyser);
+    analyserRef.current = analyser;
+
+    // MediaRecorder con el mejor formato soportado
+    const mimeType = getSupportedMimeType();
+    const recorder = new MediaRecorder(stream, mimeType ? { mimeType } : {});
+    mediaRecorderRef.current = recorder;
+    audioChunksRef.current = [];
+
+    recorder.ondataavailable = (e) => {
+      if (e.data && e.data.size > 0) audioChunksRef.current.push(e.data);
+    };
+    // Sin timeslice: todos los datos llegan en un único ondataavailable al hacer stop().
+    // Con timeslice=100ms Safari genera fragmentos de mp4 que OpenAI STT no decodifica bien.
+    recorder.start();
+    setIsListening(true);
+
+    // VAD: detección de silencio por RMS
+    // - SILENCE_THRESHOLD: nivel mínimo de RMS que cuenta como "habla"
+    // - MIN_SPEECH_MS: ms mínimos de habla detectada antes de empezar a contar silencio
+    //   (evita que un ruido puntual + pausa dispare la transcripción)
+    // - SILENCE_DURATION_MS: ms de silencio continuado tras habla para cortar
+    //   2200ms es similar a Google Voice — aguanta pausas naturales al pensar
+    const SILENCE_THRESHOLD = 0.018; // más alto = ignora más ruido ambiente/lejano
+    const MIN_SPEECH_MS = 500;
+    const SILENCE_DURATION_MS = 2800;
+    const CHECK_INTERVAL_MS = 100;
+    const minSpeechSamples = MIN_SPEECH_MS / CHECK_INTERVAL_MS;
+    const silenceSamplesNeeded = SILENCE_DURATION_MS / CHECK_INTERVAL_MS;
+    let silenceSamples = 0;
+    let speechSamples = 0;
+
+    // Timer de seguridad: máximo 45s por turno (cubre argumentos de venta largos).
+    const maxRecordingTimer = setTimeout(() => {
+      if (mediaRecorderRef.current) {
+        clearInterval(vadIntervalRef.current);
+        vadIntervalRef.current = null;
+        stopAndTranscribe();
+      }
+    }, 45000);
+
+    vadIntervalRef.current = setInterval(() => {
+      if (!analyserRef.current || !sessionRef.current) {
+        clearTimeout(maxRecordingTimer);
+        return;
+      }
+      const buf = new Uint8Array(analyser.fftSize);
+      analyser.getByteTimeDomainData(buf);
+      let sumSq = 0;
+      for (let i = 0; i < buf.length; i++) {
+        const v = (buf[i] - 128) / 128;
+        sumSq += v * v;
+      }
+      const rms = Math.sqrt(sumSq / buf.length);
+
+      if (rms > SILENCE_THRESHOLD) {
+        speechSamples++;
+        silenceSamples = 0;
+      } else if (speechSamples >= minSpeechSamples) {
+        // Solo contamos silencio una vez que haya habla mínima detectada
+        silenceSamples++;
+        if (silenceSamples >= silenceSamplesNeeded) {
+          clearTimeout(maxRecordingTimer);
+          clearInterval(vadIntervalRef.current);
+          vadIntervalRef.current = null;
+          stopAndTranscribe();
         }
       }
-      clearTimeout(silenceTimerRef.current);
-      silenceTimerRef.current = setTimeout(() => {
-        const text = pendingTranscriptRef.current.trim();
-        pendingTranscriptRef.current = "";
-        if (text && sessionRef.current) {
-          userStoppedRef.current = true; // vamos a procesar, no autoreintentar
-          processUserTurn(text);
-        }
-      }, 1400);
-    };
+    }, CHECK_INTERVAL_MS);
+  }
 
-    r.onerror = (event) => {
-      const errType = event?.error || "unknown";
-      clearTimeout(silenceTimerRef.current);
-      recognitionRef.current = null;
-      setIsListening(false);
+  async function stopAndTranscribe() {
+    clearInterval(vadIntervalRef.current);
+    vadIntervalRef.current = null;
 
-      if (errType === "not-allowed" || errType === "service-not-allowed") {
-        userStoppedRef.current = true;
-        setMicError("Necesitamos permiso para usar el micrófono. Actívalo en los permisos de tu navegador y vuelve a intentarlo.");
-        return;
-      }
-      if (errType === "audio-capture") {
-        userStoppedRef.current = true;
-        setMicError("No detectamos micrófono. Conecta uno o revisa la configuración de audio.");
-        return;
-      }
-      // no-speech / network / aborted / unknown → reintentar si seguimos activos
-      pendingTranscriptRef.current = "";
-      scheduleRestart(300);
-    };
+    const recorder = mediaRecorderRef.current;
+    const mimeType = recorder?.mimeType || "audio/webm";
 
-    r.onend = () => {
-      setIsListening(false);
-      recognitionRef.current = null;
-      if (userStoppedRef.current || !sessionRef.current) return;
-      // Si hay texto pendiente sin procesar (silence timer no llegó a disparar),
-      // lo procesamos ahora.
-      const pending = pendingTranscriptRef.current.trim();
-      if (pending) {
-        pendingTranscriptRef.current = "";
-        clearTimeout(silenceTimerRef.current);
-        userStoppedRef.current = true;
-        processUserTurn(pending);
-        return;
-      }
-      // El navegador cerró el recognition sin que lo pidiéramos → reabrir.
-      scheduleRestart(200);
-    };
+    // Esperar el último ondataavailable antes de leer los chunks
+    if (recorder && recorder.state !== "inactive") {
+      await new Promise((resolve) => {
+        recorder.onstop = resolve;
+        try { recorder.stop(); } catch { resolve(); }
+      });
+    }
 
-    recognitionRef.current = r;
+    // Limpiar recursos de audio
+    mediaRecorderRef.current = null;
+    if (mediaStreamRef.current) {
+      mediaStreamRef.current.getTracks().forEach((t) => t.stop());
+      mediaStreamRef.current = null;
+    }
+    if (audioContextRef.current) {
+      audioContextRef.current.close().catch(() => {});
+      audioContextRef.current = null;
+    }
+    analyserRef.current = null;
+    setIsListening(false);
+
+    const chunks = [...audioChunksRef.current];
+    audioChunksRef.current = [];
+
+    console.log("[STT] chunks:", chunks.length, "mimeType:", mimeType);
+    if (!chunks.length || !sessionRef.current) {
+      console.warn("[STT] sin chunks o sesión terminada, abortando");
+      return;
+    }
+
+    // Blob → base64 vía FileReader (eficiente con buffers grandes)
+    const blob = new Blob(chunks, { type: mimeType });
+    console.log("[STT] blob size:", blob.size, "bytes");
+    let audioBase64;
     try {
-      r.start();
-      setIsListening(true);
-    } catch {
-      // start() puede tirar InvalidStateError si ya hay uno corriendo
-      recognitionRef.current = null;
-      setIsListening(false);
-      scheduleRestart(400);
+      audioBase64 = await new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result.split(",")[1]);
+        reader.onerror = reject;
+        reader.readAsDataURL(blob);
+      });
+    } catch (e) {
+      console.error("[STT] FileReader error:", e);
+      return;
+    }
+
+    if (!sessionRef.current) return;
+
+    // Indicar que estamos procesando (STT + IA comparten el mismo spinner)
+    setIsProcessing(true);
+    isProcessingRef.current = true;
+
+    try {
+      console.log("[STT] enviando a edge function, base64 length:", audioBase64?.length);
+      const { data, error: sttErr } = await supabase.functions.invoke("speech-to-text", {
+        body: { audioBase64, mimeType, language: "es" },
+      });
+
+      console.log("[STT] respuesta:", { data, error: sttErr });
+      const text = data?.text?.trim();
+      if (sttErr || !text) {
+        console.warn("[STT] texto vacío o error, reiniciando escucha");
+        setIsProcessing(false);
+        isProcessingRef.current = false;
+        if (sessionRef.current && !isSpeakingRef.current) setTimeout(startListening, 400);
+        return;
+      }
+
+      console.log("[STT] texto transcrito:", text);
+      // processUserTurn toma el control del estado isProcessing a partir de aquí
+      setIsProcessing(false);
+      isProcessingRef.current = false;
+      processUserTurn(text);
+    } catch (e) {
+      console.error("[STT] excepción:", e);
+      setIsProcessing(false);
+      isProcessingRef.current = false;
+      if (sessionRef.current && !isSpeakingRef.current) setTimeout(startListening, 400);
     }
   }
 
   function handleMicClick() {
     if (isListening) {
-      const text = pendingTranscriptRef.current.trim();
-      pendingTranscriptRef.current = "";
-      stopListening();
-      if (text && sessionRef.current) processUserTurn(text);
+      clearInterval(vadIntervalRef.current);
+      vadIntervalRef.current = null;
+      stopAndTranscribe();
     } else {
       startListening();
     }
@@ -599,7 +707,7 @@ export default function DemoCallMVP() {
       return;
     }
 
-    setTimeout(startListening, 400);
+    setTimeout(startListening, 600);
   }
 
   async function processUserTurn(text) {
@@ -650,7 +758,6 @@ export default function DemoCallMVP() {
     // audio.play() silenciosamente y el cliente IA no se oye.
     unlockAudio();
     sessionRef.current = true;
-    userStoppedRef.current = false;
     setPhase("calling");
     setElapsed(0);
     setTurnCount(0);
@@ -694,7 +801,7 @@ export default function DemoCallMVP() {
     await playTTS(SCENARIO.objection);
     setIsSpeaking(false);
     if (!sessionRef.current) return;
-    setTimeout(startListening, 400);
+    setTimeout(startListening, 600);
   }
 
   function doEndCall(result) {
@@ -1001,7 +1108,7 @@ function CheckoutForm({ onDone, email, name, token, clientSecret }) {
 
 // ─── Idle Screen ─────────────────────────────────────────────────────────────
 function IdleScreen({ onStart, compat }) {
-  const blocked = compat && !compat.hasSR;
+  const blocked = compat && !compat.hasMedia;
   return (
     <div className="dcm-screen dcm-idle">
       <div className="dcm-idle-content">
