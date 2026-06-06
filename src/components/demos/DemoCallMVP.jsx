@@ -56,6 +56,13 @@ const ICP_CONFIGS = {
   closer: {
     salesRole: "closer",
     objective: "Conseguir que Carlos cierre el Programa de Optimización Metabólica (3.000€)",
+    outcome: {
+      acceptedTitle: "¡Cierre conseguido!",
+      rejectedTitle: "Cierre rechazado",
+      acceptedDesc: "Carlos ha decidido unirse al programa. Buen trabajo manejando sus objeciones.",
+      rejectedDesc: "Carlos no se convenció esta vez. Analiza qué objeciones no trabajaste bien.",
+    },
+    successPhrases: ["me apunto", "vamos adelante", "sí, lo hago", "me has convencido", "acepto el programa", "me uno al programa", "lo contrato"],
     BUYER: {
       name: "Carlos López",
       title: "Lead cualificado por setter",
@@ -73,6 +80,13 @@ const ICP_CONFIGS = {
   inmo: {
     salesRole: "closer",
     objective: "Conseguir una visita de captación con Javier (sin exclusiva)",
+    outcome: {
+      acceptedTitle: "¡Captación conseguida!",
+      rejectedTitle: "Captación rechazada",
+      acceptedDesc: "Javier ha aceptado una visita. Te diferenciaste de los otros 8 agentes que le llamaron.",
+      rejectedDesc: "Javier no quiso quedar esta vez. Analiza qué objeciones no manejaste bien.",
+    },
+    successPhrases: ["cuando quedamos", "puedes venir", "tráeme a quien tengas", "de acuerdo, ven", "vale, quedo contigo"],
     BUYER: {
       name: "Javier Ramírez",
       title: "Propietario",
@@ -99,6 +113,13 @@ const ICP_CONFIGS = {
   b2b: {
     salesRole: "setter",
     objective: "Convencer a Diego de agendar una demo de 20 minutos",
+    outcome: {
+      acceptedTitle: "¡Demo conseguida!",
+      rejectedTitle: "Demo rechazada",
+      acceptedDesc: "Diego ha aceptado agendar la demo de 20 minutos. Bien hecho.",
+      rejectedDesc: "Diego no se convenció esta vez. Analiza qué argumentos faltaron.",
+    },
+    successPhrases: ["agendamos", "sí, podemos agendar", "te doy un hueco", "demo de 20", "agendemos", "me parece bien la demo"],
     BUYER: {
       name: "Diego Martínez",
       title: "Director de Operaciones",
@@ -115,26 +136,33 @@ const ICP_CONFIGS = {
   },
   movistar: {
     salesRole: "closer",
-    objective: "Conseguir que María acepte un upgrade de tarifa o un nuevo terminal",
+    objective: "Conseguir que Roberto acepte un upgrade de tarifa o un nuevo terminal",
+    outcome: {
+      acceptedTitle: "¡Venta conseguida!",
+      rejectedTitle: "Venta rechazada",
+      acceptedDesc: "Roberto ha aceptado el cambio de producto. Bien hecho detectando su necesidad real.",
+      rejectedDesc: "Roberto no se convenció esta vez. Analiza si resolviste su queja antes de intentar vender.",
+    },
+    successPhrases: ["acepto el cambio", "me quedo con eso", "sí, cámbiame", "de acuerdo con la oferta", "adelante con el cambio", "me lo pones", "ponme la tarifa", "me interesa el terminal"],
     BUYER: {
-      name: "María Fernández",
-      title: "Clienta Movistar",
+      name: "Roberto Sánchez",
+      title: "Cliente Movistar",
       company: "Consulta de factura",
-      initial: "M",
+      initial: "R",
     },
     SCENARIO: {
       buyerPersona:
-        "Eres María Fernández, 45 años, autónoma (pequeña gestoría contable). Llevas 6 años con Movistar. Tu tarifa era 35€/mes con una oferta de permanencia de 2 años que acaba de terminar, y este mes la factura ha subido a 45€ sin previo aviso. Llamas SOLO para saber por qué ha subido y si te pueden devolver al precio anterior — NO tienes intención de comprar nada. " +
-        "Tu situación real (que el comercial puede descubrir si pregunta bien): tienes un iPhone 11 con la batería al 72% que se apaga a mediodía cuando lo usas mucho, usas el móvil constantemente para trabajar (WhatsApp con clientes, email, Excel), y tus 20GB de datos se agotan antes de fin de mes. Necesitas más batería y más datos pero no lo reconoces a la primera. " +
-        "TUS OBJECIONES REALES (en orden, una por turno): " +
-        "1) CIERRE INMEDIATO — 'Mira, solo llamo por lo de la factura, no me interesa que me ofrezcan nada' (casi al instante, antes de cualquier pitch). " +
-        "2) RESISTENCIA ECONÓMICA — 'Es que si ya me ha subido la factura, no me puedo permitir gastar más' (cuando el comercial ofrece algo). " +
-        "3) NEGACIÓN DE NECESIDAD — 'Mi móvil va bien, no necesito cambiarlo' (si hablan de terminal; no admites lo de la batería a la primera). " +
-        "4) POSTERGACIÓN — 'Déjame pensarlo, estas cosas no me gustan decidirlas por teléfono' (cuando piden decisión). " +
-        "5) APERTURA CONDICIONAL (solo si el comercial detecta el problema de batería y datos, y ofrece solución con precio mensual claro y sin permanencia larga) — 'Bueno... ¿y cuánto me quedaría la cuota exactamente?' (el ÚNICO camino al sí). " +
-        "Tu actitud: educada pero directa. Si el comercial resuelve bien la duda de la factura Y hace buenas preguntas sobre cómo usas el móvil (sin asumir que necesitas algo), te abres un poco. Si suelta el pitch de 'tenemos ofertas increíbles' antes de escucharte, cierras la conversación y dices que ya llamarás si lo necesitas.",
+        "Eres Roberto Sánchez, 48 años, autónomo (pequeña empresa de reformas y construcción). Llevas 6 años con Movistar. Tu tarifa era 35€/mes con una oferta de permanencia de 2 años que acaba de terminar, y este mes la factura ha subido a 45€ sin previo aviso. Llamas SOLO para saber por qué ha subido y si te pueden devolver al precio anterior — NO tienes intención de comprar nada. " +
+        "Tu situación real (que el comercial puede descubrir si pregunta bien): tienes un Samsung Galaxy S20 con la batería al 68% que no llega a final del día en obra, usas el móvil constantemente para coordinar a tus trabajadores (llamadas, WhatsApp, fotos de obra, albaranes), y tus 20GB de datos se agotan antes de fin de mes porque compartes muchas fotos de trabajo. Necesitas más batería y más datos pero no lo reconoces a la primera. " +
+        "TUS OBJECIONES REALES (en orden, una por turno, no varias de golpe): " +
+        "1) CIERRE INMEDIATO — 'Mira, llamo solo por lo de la factura, no me interesa que me ofrezcan nada más' (casi al instante, antes de cualquier pitch). " +
+        "2) RESISTENCIA ECONÓMICA — 'Es que si ya me ha subido la factura, ahora no me pienso gastar más' (cuando el comercial ofrece algo). " +
+        "3) NEGACIÓN DE NECESIDAD — 'El móvil funciona bien, no necesito cambiarlo' (si hablan de terminal nuevo; lo de la batería no lo admites a la primera). " +
+        "4) POSTERGACIÓN — 'Déjame pensarlo, estas cosas no me gusta decidirlas por teléfono' (cuando te piden decisión). " +
+        "5) APERTURA CONDICIONAL (SOLO si el comercial detecta el problema de batería y datos, y ofrece una solución con el precio mensual claro y sin permanencia larga) — 'Bueno... ¿y cuánto me quedaría la cuota exactamente?' (el ÚNICO camino al sí). " +
+        "Tu actitud: directa y seca, eres hombre de obra y no tienes mucha paciencia. Si el comercial resuelve bien la duda de la factura Y hace buenas preguntas sobre cómo usas el móvil (sin asumir que necesitas algo), te abres un poco. Si suelta el pitch de 'tenemos ofertas increíbles' antes de escucharte, cortas y dices que ya llamarás si lo necesitas.",
       context:
-        "Llamada inbound a atención al cliente de Movistar. Tú eres el cliente que ha llamado por una subida de factura. El comercial tiene que: 1) resolver tu duda (la subida es por fin de la promoción de permanencia que ya no está vigente), 2) detectar si hay oportunidad de upsell (terminal nuevo, más datos, tarifa Fusión). Tu objetivo: resolver la duda y colgar sin comprar nada. Solo cederás si el comercial demuestra entender tu situación real y presenta una solución que realmente te resuelva un problema concreto.",
+        "Llamada inbound a atención al cliente de Movistar. Tú eres el cliente que ha llamado por una subida de factura. El comercial tiene que: 1) resolver tu duda (la subida es por fin de la promoción de permanencia), 2) detectar si hay oportunidad de upsell (terminal nuevo, más datos). Tu objetivo defensivo: resolver la duda y colgar sin comprar nada. Solo cederás si el comercial entiende tu situación real y presenta una solución concreta.",
       objection: "Buenos días, sí, llamo porque este mes me ha llegado la factura con 10 euros más de lo habitual y no entiendo por qué ha subido.",
     },
   },
@@ -142,6 +170,13 @@ const ICP_CONFIGS = {
     // Fallback para URLs sin ?icp= explícito → mismo cliente que b2b
     salesRole: "setter",
     objective: "Convencer a Diego de agendar una demo de 20 minutos",
+    outcome: {
+      acceptedTitle: "¡Demo conseguida!",
+      rejectedTitle: "Demo rechazada",
+      acceptedDesc: "Diego ha aceptado agendar la demo de 20 minutos. Bien hecho.",
+      rejectedDesc: "Diego no se convenció esta vez. Analiza qué argumentos faltaron.",
+    },
+    successPhrases: ["agendamos", "sí, podemos agendar", "te doy un hueco", "demo de 20", "agendemos", "me parece bien la demo"],
     BUYER: {
       name: "Diego Martínez",
       title: "Director de Operaciones",
@@ -171,6 +206,8 @@ const ACTIVE_ICP_ID = ACTIVE_ICP.id;
 const ACTIVE_ROLE = ACTIVE_ICP.salesRole;
 const BUYER = ACTIVE_ICP.BUYER;
 const SCENARIO = ACTIVE_ICP.SCENARIO;
+const ACTIVE_OUTCOME = ACTIVE_ICP.outcome;
+const SUCCESS_PHRASES = ACTIVE_ICP.successPhrases || [];
 
 // ─── ATTEMPTS POR ICP ────────────────────────────────────────────────────────
 // Cada (token, icp) tiene su propio contador en localStorage → así un mismo
@@ -331,9 +368,11 @@ async function playTTS(text) {
 }
 
 function detectOutcomeFromText(text) {
+  // Usa las frases de éxito específicas del ICP activo — evita falsos positivos
+  // con frases conversacionales genéricas ("hablamos", "sí, adelante", etc.)
+  if (!SUCCESS_PHRASES.length) return null;
   const t = String(text || "").toLowerCase();
-  const accepted = ["agendamos", "me has convencido", "sí, podemos agendar", "hablamos", "te doy un hueco", "demo de 20", "puedo darte", "agendemos", "me parece bien la demo", "sí, adelante"];
-  if (accepted.some((w) => t.includes(w))) return "accepted";
+  if (SUCCESS_PHRASES.some((w) => t.includes(w))) return "accepted";
   return null;
 }
 
@@ -1276,13 +1315,17 @@ function EndedScreen({ outcome, score, elapsed, highlights, onRestart, canRestar
             {isAccepted ? "✓" : isRejected ? "✗" : "~"}
           </div>
           <h2 className="dcm-outcome-title">
-            {isAccepted ? "¡Demo conseguida!" : isRejected ? "Demo rechazada" : "Llamada finalizada"}
+            {isAccepted
+              ? (ACTIVE_OUTCOME?.acceptedTitle || "¡Conseguido!")
+              : isRejected
+              ? (ACTIVE_OUTCOME?.rejectedTitle || "Rechazado")
+              : "Llamada finalizada"}
           </h2>
           <p className="dcm-outcome-desc">
             {isAccepted
-              ? "Diego ha aceptado agendar la demo de 20 minutos. Bien hecho."
+              ? (ACTIVE_OUTCOME?.acceptedDesc || "¡Bien hecho!")
               : isRejected
-              ? "Diego no se convenció esta vez. Analiza qué argumentos faltaron."
+              ? (ACTIVE_OUTCOME?.rejectedDesc || "Analiza qué argumentos faltaron.")
               : "La llamada terminó sin un cierre claro. Intenta cerrar antes de agotar los turnos."}
           </p>
 
