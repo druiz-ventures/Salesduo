@@ -4159,9 +4159,6 @@ body {
   border-color: #06b6d4;
 }
 
-/* fix: dcm-feedback-sent trailing */
-}
-
 /* ── Instructions Modal ── */
 .dcm-instructions-overlay {
   position: fixed;
