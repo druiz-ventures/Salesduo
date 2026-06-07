@@ -400,6 +400,9 @@ export default function DemoCallMVP() {
   const [tokenData, setTokenData] = useState(null);
   const [tokenLoading, setTokenLoading] = useState(true);
   const [demoCompleted, setDemoCompleted] = useState(false);
+  const [showInstructions, setShowInstructions] = useState(false);
+  const [instructionsAccepted, setInstructionsAccepted] = useState(false);
+  const [callNumber, setCallNumber] = useState(1);
 
   const [micError, setMicError] = useState("");
 
@@ -834,11 +837,21 @@ export default function DemoCallMVP() {
     }
   }
 
+  function handleStartButtonClick() {
+    if (!instructionsAccepted) {
+      setShowInstructions(true);
+    } else {
+      startCall();
+    }
+  }
+
   async function startCall() {
     // CRÍTICO en móvil: desbloquear audio DENTRO del gesto del usuario.
     // Si dejamos esto fuera o pasado el setTimeout de abajo, iOS Safari rechaza
     // audio.play() silenciosamente y el cliente IA no se oye.
     unlockAudio();
+    const currentLocalAttempts = getLocalAttempts(tokenData?.token, ACTIVE_ICP_ID);
+    setCallNumber(currentLocalAttempts >= 1 ? 2 : 1);
     sessionRef.current = true;
     setPhase("calling");
     setElapsed(0);
@@ -890,6 +903,7 @@ export default function DemoCallMVP() {
     sessionRef.current = false;
     stopListening();
     window.speechSynthesis?.cancel();
+    if (ttsAudioEl) { ttsAudioEl.pause(); ttsAudioEl.currentTime = 0; }
     clearInterval(timerRef.current);
     const r = result || "neutral";
     setScore((s) => {
@@ -906,6 +920,7 @@ export default function DemoCallMVP() {
     sessionRef.current = false;
     stopListening();
     window.speechSynthesis?.cancel();
+    if (ttsAudioEl) { ttsAudioEl.pause(); ttsAudioEl.currentTime = 0; }
     clearInterval(timerRef.current);
     setPhase("idle");
     setElapsed(0);
@@ -926,7 +941,14 @@ export default function DemoCallMVP() {
   if (tokenLoading) return <LoadingScreen />;
   if (demoCompleted && phase !== "active" && phase !== "calling") return <DemoCompletedScreen tokenData={tokenData} />;
 
-  if (phase === "idle") return <IdleScreen onStart={startCall} compat={BROWSER_COMPAT} />;
+  if (phase === "idle") return (
+    <>
+      <IdleScreen onStart={handleStartButtonClick} compat={BROWSER_COMPAT} />
+      {showInstructions && (
+        <InstructionsModal onAccept={() => { setShowInstructions(false); setInstructionsAccepted(true); startCall(); }} />
+      )}
+    </>
+  );
   if (phase === "calling") return <CallingScreen buyer={BUYER} />;
   if (phase === "ended") {
     return (
@@ -967,6 +989,15 @@ export default function DemoCallMVP() {
         {!isSpeaking && buyerText && <span>"{buyerText}"</span>}
         {!isSpeaking && !buyerText && <span className="dcm-muted">Esperando...</span>}
       </div>
+
+      <ScriptHint
+        callNumber={callNumber}
+        turnCount={turnCount}
+        buyerText={buyerText}
+        isSpeaking={isSpeaking}
+        isListening={isListening}
+        icpId={ACTIVE_ICP_ID}
+      />
 
       <div className="dcm-progress-section">
         <div className="dcm-progress-label">
@@ -1418,6 +1449,76 @@ function EndedScreen({ outcome, score, elapsed, highlights, onRestart, canRestar
         </div>
       </div>
       {stripeOpen && <StripeModal email={tokenData?.email} name={tokenData?.name} token={tokenData?.token} onClose={() => setStripeOpen(false)} />}
+    </div>
+  );
+}
+
+// ─── Guion fijo por ICP (segunda llamada) ────────────────────────────────────
+// Índice = turnCount en el momento en que el cliente acaba de hablar
+const ICP_SCRIPTS = {
+  movistar: [
+    // Turno 0 — Roberto llama por la factura subida
+    "Gracias Roberto, le explico: tenía una oferta de permanencia de 2 años que venció este mes, por eso ha vuelto al precio normal. ¿Me permite un momento para ver qué opciones tenemos?",
+    // Turno 1 — Roberto puede deflexionar ("llamo por la factura, no por ofertas")
+    "Claro, primero resolvemos la factura. Dicho esto, ¿cómo le va con el móvil últimamente? ¿Tiene algún problema con la batería o con los datos?",
+    // Turno 2 — Roberto admite problema de batería o datos
+    "Tiene sentido, con ese uso es normal notarlo. ¿Los datos también se le agotan antes de fin de mes?",
+    // Turno 3 — Roberto confirma el problema (punto de apertura)
+    "Perfecto. Tengo una tarifa sin permanencia a 39€ con 50GB. Le soluciona los dos problemas. ¿Le cuento qué incluye?",
+    // Turno 4 — Roberto pone objeción de precio ("no quiero gastar más")
+    "Entiendo. Son 4€ más al mes, pero con 50GB en lugar de 20GB y sin permanencia. ¿Le cuadraría eso?",
+    // Turno 5 — Roberto pide tiempo ("déjame pensarlo")
+    "Totalmente normal. Esta condición sin permanencia es de esta semana. ¿Hay algo que le genere dudas que le pueda aclarar ahora?",
+    // Turno 6 — Roberto pregunta precio final
+    "39€/mes, sin permanencia, con 50GB. Si lo activa hoy incluye cambio de terminal. ¿Lo procesamos?",
+    // Turno 7 — Cierre
+    "Perfecto Roberto. Le confirmo: 39€/mes, 50GB, sin permanencia. ¿Quiere que le procese el cambio ahora?",
+  ],
+  closer: [],
+  inmo: [],
+  b2b: [],
+  default: [],
+};
+
+// ─── InstructionsModal ────────────────────────────────────────────────────────
+function InstructionsModal({ onAccept }) {
+  return (
+    <div className="dcm-instructions-overlay">
+      <div className="dcm-instructions-modal">
+        <h2 className="dcm-instructions-title">Instrucciones de la demo</h2>
+        <div className="dcm-instructions-item">
+          <div className="dcm-instructions-label">Primera llamada</div>
+          <p className="dcm-instructions-text">
+            Practicarás la simulación sin conocimiento previo. Verás los argumentos y objeciones reales tal y como aparecen en una llamada.
+          </p>
+        </div>
+        <div className="dcm-instructions-item">
+          <div className="dcm-instructions-label">Segunda llamada</div>
+          <p className="dcm-instructions-text">
+            Al darle a «Intentar de nuevo», recibirás el guion de lo que habrías aprendido usando SalesDuo. Solo tendrás que leerlo y verás cómo consigues cerrar la venta.
+          </p>
+        </div>
+        <button className="dcm-instructions-accept" onClick={onAccept}>
+          Aceptar
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// ─── ScriptHint ───────────────────────────────────────────────────────────────
+function ScriptHint({ callNumber, turnCount, buyerText, isSpeaking, icpId }) {
+  if (callNumber !== 2) return null;
+  if (!buyerText || isSpeaking) return null;
+
+  const script = ICP_SCRIPTS[icpId] || ICP_SCRIPTS.default;
+  const hint = script[turnCount];
+  if (!hint) return null;
+
+  return (
+    <div className="dcm-script-hint">
+      <div className="dcm-script-hint-label">📖 Qué decir ahora:</div>
+      <div className="dcm-script-hint-text">"{hint}"</div>
     </div>
   );
 }

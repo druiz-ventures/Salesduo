@@ -4161,3 +4161,111 @@ body {
 
 /* fix: dcm-feedback-sent trailing */
 }
+
+/* ── Instructions Modal ── */
+.dcm-instructions-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1100;
+  padding: 20px;
+  backdrop-filter: blur(4px);
+}
+
+.dcm-instructions-modal {
+  background: #0f172a;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  padding: 32px 28px;
+  width: 100%;
+  max-width: 420px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.dcm-instructions-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #f1f5f9;
+  margin: 0;
+  text-align: center;
+}
+
+.dcm-instructions-item {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.dcm-instructions-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: #06b6d4;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.dcm-instructions-text {
+  font-size: 14px;
+  color: #94a3b8;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.dcm-instructions-accept {
+  background: linear-gradient(135deg, #06b6d4, #3b82f6);
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  padding: 14px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.2s;
+  width: 100%;
+}
+
+.dcm-instructions-accept:hover {
+  opacity: 0.9;
+}
+
+/* ── Script Hint (segunda llamada) ── */
+.dcm-script-hint {
+  background: rgba(6, 182, 212, 0.08);
+  border: 1px solid rgba(6, 182, 212, 0.3);
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin: 0 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  animation: scriptHintIn 0.3s ease;
+}
+
+@keyframes scriptHintIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.dcm-script-hint-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: #06b6d4;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.dcm-script-hint-text {
+  font-size: 15px;
+  color: #e2e8f0;
+  line-height: 1.6;
+  font-style: italic;
+}
