@@ -55,6 +55,7 @@ const BROWSER_COMPAT = detectBrowserCompat();
 const ICP_CONFIGS = {
   closer: {
     salesRole: "closer",
+    maxTurns: 6,
     objective: "Conseguir que Carlos cierre el Programa de Optimización Metabólica (3.000€)",
     outcome: {
       acceptedTitle: "¡Cierre conseguido!",
@@ -79,6 +80,7 @@ const ICP_CONFIGS = {
   },
   inmo: {
     salesRole: "closer",
+    maxTurns: 7,
     objective: "Conseguir una visita de captación con Javier (sin exclusiva)",
     outcome: {
       acceptedTitle: "¡Captación conseguida!",
@@ -112,6 +114,7 @@ const ICP_CONFIGS = {
   },
   b2b: {
     salesRole: "setter",
+    maxTurns: 5,
     objective: "Convencer a Diego de agendar una demo de 20 minutos",
     outcome: {
       acceptedTitle: "¡Demo conseguida!",
@@ -136,6 +139,7 @@ const ICP_CONFIGS = {
   },
   movistar: {
     salesRole: "closer",
+    maxTurns: 8,
     objective: "Conseguir que Roberto acepte un upgrade de tarifa o un nuevo terminal",
     outcome: {
       acceptedTitle: "¡Venta conseguida!",
@@ -169,6 +173,7 @@ const ICP_CONFIGS = {
   default: {
     // Fallback para URLs sin ?icp= explícito → mismo cliente que b2b
     salesRole: "setter",
+    maxTurns: 5,
     objective: "Convencer a Diego de agendar una demo de 20 minutos",
     outcome: {
       acceptedTitle: "¡Demo conseguida!",
@@ -265,7 +270,7 @@ async function sendEventToMake(payload) {
   }
 }
 
-const MAX_TURNS = 5;
+const MAX_TURNS = ACTIVE_ICP.maxTurns || 5;
 
 function formatTime(s) {
   return `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(s % 60).padStart(2, "0")}`;
