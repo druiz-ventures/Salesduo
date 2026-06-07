@@ -845,13 +845,13 @@ export default function DemoCallMVP() {
     }
   }
 
-  async function startCall() {
+  async function startCall(explicitCallNumber = null) {
     // CRÍTICO en móvil: desbloquear audio DENTRO del gesto del usuario.
     // Si dejamos esto fuera o pasado el setTimeout de abajo, iOS Safari rechaza
     // audio.play() silenciosamente y el cliente IA no se oye.
     unlockAudio();
     const currentLocalAttempts = getLocalAttempts(tokenData?.token, ACTIVE_ICP_ID);
-    setCallNumber(currentLocalAttempts >= 1 ? 2 : 1);
+    setCallNumber(explicitCallNumber ?? (currentLocalAttempts >= 1 ? 2 : 1));
     sessionRef.current = true;
     setPhase("calling");
     setElapsed(0);
@@ -922,20 +922,12 @@ export default function DemoCallMVP() {
     window.speechSynthesis?.cancel();
     if (ttsAudioEl) { ttsAudioEl.pause(); ttsAudioEl.currentTime = 0; }
     clearInterval(timerRef.current);
-    setPhase("idle");
-    setElapsed(0);
-    setTurnCount(0);
-    setScore(0);
-    setBuyerText("");
-    setUserText("");
-    setFeedback("");
-    setOutcome(null);
-    setError("");
-    setHighlights([]);
-    setHistory([]);
     setIsListening(false);
     setIsSpeaking(false);
     setIsProcessing(false);
+    // Arranca la segunda llamada directamente sin pasar por idle.
+    // startCall() resetea el resto del estado (score, history, etc.).
+    startCall(2);
   }
 
   if (tokenLoading) return <LoadingScreen />;
