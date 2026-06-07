@@ -1489,13 +1489,13 @@ function InstructionsModal({ onAccept }) {
         <div className="dcm-instructions-item">
           <div className="dcm-instructions-label">Primera llamada</div>
           <p className="dcm-instructions-text">
-            Practicarás la simulación sin conocimiento previo. Verás los argumentos y objeciones reales tal y como aparecen en una llamada.
+            Practicarás la simulación sin los conocimientos. ¿Qué aprenderías en <span style={{color:"#06b6d4",fontWeight:700}}>SalesDuo</span>?
           </p>
         </div>
         <div className="dcm-instructions-item">
           <div className="dcm-instructions-label">Segunda llamada</div>
           <p className="dcm-instructions-text">
-            Al darle a «Intentar de nuevo», recibirás el guion de lo que habrías aprendido usando SalesDuo. Solo tendrás que leerlo y verás cómo consigues cerrar la venta.
+            Al darle a «Intentar de nuevo», recibirás el guion de lo que habrías aprendido usando <span style={{color:"#06b6d4",fontWeight:700}}>SalesDuo</span>.
           </p>
         </div>
         <button className="dcm-instructions-accept" onClick={onAccept}>
