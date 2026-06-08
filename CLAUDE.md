@@ -120,10 +120,32 @@ Plan: una landing + una demo por ICP, distribución orgánica primero en grupos 
 ICPs priorizados para Fase 1:
 1. **Closer de infoproductos** — vertical: programa de transformación física high-ticket ("Programa Optimización Metabólica", 3.000€, cierre por Zoom). Cliente ya cualificado por un setter. Objeciones típicas: "he probado otros cursos y no me sirvió", "es caro", "no sé si tendré tiempo".
 2. **Agente inmobiliario** (Engel, RE/MAX) — prospección en frío para conseguir visita o captación. Más agresivo que closer. No limitar a España.
+3. **Telemarketing / call center** (`?icp=movistar`) — llamada inbound de cliente que reclama factura subida. El agente resuelve la queja y hace upsell de tarifa. Landing en `../landing/salesduo-landing/telemarketing/`.
 
 ICPs en pipeline (no construir aún): setter (necesita demo de chat antigua), AE software, emprendedor sin perfil de ventas.
 
-Personalización de la demo por ICP: parámetro `?icp=closer|inmo` en URL → la app carga un system prompt distinto desde Supabase (tabla de ICPs con prompt por ICP).
+Personalización de la demo por ICP: parámetro `?icp=closer|inmo|movistar` en URL → la app carga un system prompt distinto desde Supabase (tabla de ICPs con prompt por ICP).
+
+## Flujo de dos llamadas (DemoCallMVP.jsx)
+
+Cada usuario tiene **2 demos por ICP** (`MAX_ATTEMPTS_PER_ICP = 2`), contadas en localStorage.
+
+### Modal de instrucciones
+- Al pulsar "Iniciar llamada" por primera vez aparece `InstructionsModal` explicando la dinámica de las dos llamadas.
+- Al pulsar "Aceptar" en el modal → la **primera llamada arranca directamente**.
+- Las siguientes veces que se pulse "Iniciar llamada" en la misma sesión van directamente a la llamada (sin modal).
+
+### Primera llamada
+- `callNumber = 1` — sin guion visible. El usuario practica sin ayuda.
+
+### Segunda llamada
+- Al pulsar "Intentar de nuevo" en la pantalla de resultados → **arranca la segunda llamada directamente** (sin pasar por idle).
+- `callNumber = 2` (forzado explícitamente en `restart()`) → se muestra `ScriptHint` bajo el bubble del cliente.
+- `ScriptHint` muestra la frase del guion correspondiente al `turnCount` actual, tomada de `ICP_SCRIPTS[icpId]`.
+- Guion completo implementado solo para `movistar` (8 turnos). Los demás ICPs tienen array vacío (sin hint).
+
+### Fix de audio al colgar
+- `doEndCall()` y `restart()` llaman a `ttsAudioEl.pause()` + `currentTime = 0` para cortar el audio inmediatamente.
 
 ## Notas operativas
 
