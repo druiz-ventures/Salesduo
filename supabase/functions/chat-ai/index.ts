@@ -4,7 +4,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
 const ANTHROPIC_API_KEY = Deno.env.get("ANTHROPIC_API_KEY") ?? "";
-const ANTHROPIC_MODEL = Deno.env.get("ANTHROPIC_MODEL") ?? "claude-3-5-haiku-20241022";
+const ANTHROPIC_MODEL = Deno.env.get("ANTHROPIC_MODEL") ?? "claude-haiku-4-5-20251001";
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL") ?? "";
 const SUPABASE_ANON_KEY = Deno.env.get("SUPABASE_ANON_KEY") ?? "";
 const REQUIRE_AUTH = (Deno.env.get("REQUIRE_AUTH") ?? "false").toLowerCase() === "true";
@@ -15,7 +15,7 @@ const corsHeaders = {
 };
 
 const buildProviderFallback = (reason: string, status: number | null = null) => ({
-  clientMessage: "Perdona, se ha cortado un momento la conexión. Si te parece, retomamos: ¿qué resultado concreto te gustaría conseguir con esto en los próximos 90 días?",
+  clientMessage: "Perdona, creo que se ha cortado un momento. ¿Me puedes repetir lo que has dicho?",
   feedback: "Tu respuesta se registró, pero la IA no pudo evaluarla. " + reason,
   matchType: "nomatch",
   scoreImpact: 0,
@@ -30,9 +30,9 @@ const getCandidateModels = () => {
   const configured = (ANTHROPIC_MODEL || "").trim();
   const candidates = [
     configured,
-    "claude-3-5-haiku-20241022",
-    "claude-3-haiku-20240307",
-    "claude-3-5-sonnet-20241022",
+    "claude-haiku-4-5-20251001",
+    "claude-sonnet-4-6",
+    "claude-opus-4-8",
   ].filter(Boolean);
 
   return [...new Set(candidates)];
@@ -198,7 +198,7 @@ ${roleScoreRules}
         },
         body: JSON.stringify({
           model: candidateModel,
-          max_tokens: 400,
+          max_tokens: 800,
           system: systemPrompt,
           messages: conversationHistory,
         }),
@@ -246,6 +246,7 @@ ${roleScoreRules}
 
     const data = await response.json();
     const rawText = data.content?.[0]?.text ?? "{}";
+    console.log("chat-ai stop_reason:", data.stop_reason, "rawText length:", rawText.length);
 
     // Parsear JSON de respuesta
     let parsed;
@@ -276,7 +277,7 @@ ${roleScoreRules}
   } catch (err) {
     console.error("chat-ai unhandled error", err);
     return new Response(JSON.stringify({
-      clientMessage: "Perdona, hubo un fallo técnico puntual. Si te parece, seguimos: ¿qué prioridad tiene este problema para ti ahora mismo?",
+      clientMessage: "Perdona, creo que no te he escuchado bien. ¿Me puedes repetir eso?",
       feedback: "Tu respuesta se ha guardado, pero no se pudo completar la evaluación por un error interno temporal. Reintenta en unos segundos.",
       matchType: "nomatch",
       scoreImpact: 0,
