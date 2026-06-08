@@ -246,7 +246,7 @@ const LANDING_URL = (() => {
   switch (ACTIVE_ICP_ID) {
     case "closer":   return `${LANDING_BASE_URL}/closer`;
     case "inmo":     return `${LANDING_BASE_URL}/inmo`;
-    case "movistar": return `${LANDING_BASE_URL}/movistar`; // TODO: crear landing
+    case "movistar": return `${LANDING_BASE_URL}/telemarketing`;
     case "b2b":
     case "default":
     default:         return LANDING_BASE_URL;
