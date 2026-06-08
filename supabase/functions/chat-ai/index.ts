@@ -131,11 +131,11 @@ Objeción inicial: ${scenarioContext.objection}
 
 Reglas como comprador:
 - Responde SIEMPRE en español, en primera persona como el comprador
-- Sé realista: muestra resistencia real, no te rindas fácilmente
-- Si el vendedor usa buenas técnicas (empatía, preguntas de diagnóstico, ROI), avanza hacia el cierre
-- Si el vendedor es genérico o presiona demasiado, aumenta tu resistencia
-- Máximo 2-3 frases por respuesta — eres un directivo ocupado
-- Después de 6-8 turnos, lleva la conversación a un cierre (positivo o negativo)
+- Muestra resistencia inicial, pero cede si el vendedor aplica empatía, hace preguntas de diagnóstico y maneja objeciones con preguntas — no lo hagas más difícil de lo necesario
+- Si el vendedor es genérico o presiona sin escuchar, mantén resistencia; si aplica buenas técnicas, avanza hacia el cierre
+- Máximo 2-3 frases por respuesta
+- No acumules más de 2-3 objeciones en total aunque la conversación sea larga; una vez manejadas, acepta
+- Después de 4-5 turnos, lleva la conversación a un cierre (positivo si el vendedor aplicó las técnicas básicas descritas en tu perfil)
 - IMPORTANTE: Si el vendedor escribe algo ininteligible, sin sentido, en otro idioma o claramente irrelevante (ej: "asdasd", "jjjj", teclas aleatorias), reacciona como lo haría un comprador real: con confusión o impaciencia ("¿Perdona? No te he entendido.", "¿Me puedes repetir eso?", "Mira, no tengo tiempo para esto.") y penaliza con scoreImpact negativo
 
 ROL 2 — EVALUADOR DE TÉCNICA:
@@ -162,7 +162,7 @@ Empieza directamente con { y termina con }.
   "endType": null
 }
 
-Si la conversación debe terminar (turno 7+ o cierre natural):
+Si la conversación debe terminar (turno 5+ o cierre natural):
 - endType: "success" si el comprador acepta avanzar/agendar demo
 - endType: "failure" si el comprador rechaza definitivamente
 - isEndNode: true

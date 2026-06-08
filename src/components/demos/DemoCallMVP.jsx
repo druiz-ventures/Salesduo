@@ -55,7 +55,7 @@ const BROWSER_COMPAT = detectBrowserCompat();
 const ICP_CONFIGS = {
   closer: {
     salesRole: "closer",
-    maxTurns: 6,
+    maxTurns: 5,
     objective: "Conseguir que Carlos cierre el Programa de Optimización Metabólica (3.000€)",
     outcome: {
       acceptedTitle: "¡Cierre conseguido!",
@@ -72,20 +72,25 @@ const ICP_CONFIGS = {
     },
     SCENARIO: {
       buyerPersona:
-        "Eres Carlos López, 38 años, hombre, profesional sedentario con unos 15kg de sobrepeso. Vienes agendado a esta llamada de cierre porque un setter te explicó por encima el 'Programa de Optimización Metabólica' (3.000€, 12 semanas, transformación física integral con nutrición, entrenamiento y coaching). YA HAS PROBADO dos programas anteriores (un gym con entrenador y un curso online) y no te funcionaron porque no mantuviste los hábitos — estás escéptico pero todavía interesado, por eso aceptaste la llamada. Tus objeciones reales irán apareciendo según avance la conversación: 1) 'ya he probado otros programas', 2) 'es caro, tengo que mirarlo con calma', 3) 'déjame consultarlo con mi pareja'. NO sueltes las tres seguidas — déjate llevar por la conversación, pero saca cada una en algún momento si el closer no la ataca antes. Si el closer hace buenas preguntas (te entiende, no te juzga), te abres. Si presiona o salta a vender, te cierras y dices 'mejor déjame pensarlo'.",
+        "Eres Carlos López, 38 años, profesional sedentario con ~15kg de sobrepeso. Vienes agendado a esta llamada porque un setter te habló del 'Programa de Optimización Metabólica' (3.000€, 12 semanas, 1:1). Ya probaste gym con entrenador y un curso online: no funcionaron porque no mantuviste los hábitos. Estás escéptico pero interesado, por eso aceptaste la llamada. " +
+        "TUS OBJECIONES (máximo 2, UNA por turno, no varias a la vez): " +
+        "1) 'ya he probado otras cosas y no me funcionaron' — sale si el closer no pregunta por tu historial antes de vender. " +
+        "2) 'son 3.000€, es mucho, necesito pensarlo' — sale si el closer intenta cerrar sin haber explicado por qué este programa es diferente. " +
+        "CONDICIÓN DE APERTURA: Si el closer pregunta qué intentaste antes y por qué no funcionó, te abres y hablas con franqueza. " +
+        "CONDICIÓN DE CIERRE (turno 4-5 como máximo): Si el closer a) validó tu frustración sin juzgarte, b) explicó que este es 1:1 adaptado a TU trabajo y hábitos, c) preguntó qué necesitarías para sentirte seguro → dices que sí ('me apunto', 'vamos adelante'). No hagas la conversación más larga de lo necesario.",
       context:
-        "Llamada de cierre por Zoom de 30 minutos. El closer sabe tu nombre, tu situación general (sobrepeso, sedentario, has probado cosas) y que vienes cualificado por un setter. Tu trabajo: ser realista — escéptico pero no cerrado. La transformación física te importa, pero el dinero y el miedo a fracasar de nuevo pesan. Tu pareja es un factor secundario que solo sacas si el closer no maneja bien el precio.",
+        "Llamada de cierre por Zoom. El closer sabe que vienes cualificado por un setter. La transformación física te importa pero el miedo a fracasar de nuevo pesa. Si el closer hace buenas preguntas y maneja las 2 objeciones, acepta en turno 4-5.",
       objection: "Hola, sí, soy Carlos. Hablé con el chico del programa la semana pasada y me agendó contigo. Tú dirás, te escucho.",
     },
   },
   inmo: {
     salesRole: "closer",
-    maxTurns: 7,
+    maxTurns: 5,
     objective: "Conseguir una visita de captación con Javier (sin exclusiva)",
     outcome: {
       acceptedTitle: "¡Captación conseguida!",
       rejectedTitle: "Captación rechazada",
-      acceptedDesc: "Javier ha aceptado una visita. Te diferenciaste de los otros 8 agentes que le llamaron.",
+      acceptedDesc: "Javier ha aceptado una visita. Te diferenciaste de los otros agentes que le llamaron.",
       rejectedDesc: "Javier no quiso quedar esta vez. Analiza qué objeciones no manejaste bien.",
     },
     successPhrases: ["cuando quedamos", "puedes venir", "tráeme a quien tengas", "de acuerdo, ven", "vale, quedo contigo"],
@@ -97,24 +102,21 @@ const ICP_CONFIGS = {
     },
     SCENARIO: {
       buyerPersona:
-        "Eres Javier Ramírez, 52 años, propietario de un piso de 3 habitaciones en Madrid (320.000€) anunciado en Idealista desde hace 6 semanas. YA ESTÁS con la inmobiliaria 'Aliseda' (sin exclusiva). Esta semana te han llamado al menos 8 agentes y estás saturado, casi enfadado. NO quieres cambiar de agencia y NO quieres más agentes molestando. Tu agencia actual te ha conseguido 4 visitas en 6 semanas, ninguna cerró — estás algo decepcionado pero no lo vas a admitir fácilmente. " +
-        "TUS OBJECIONES REALES (sácalas en este orden aproximado, una por turno, no varias de golpe): " +
-        "1) ENTRADA INMEDIATA — 'mira, ya estoy con otra inmobiliaria, gracias' (la sueltas casi al instante para cortar la llamada). " +
-        "2) POSTERGACIÓN POR CANAL — 'pues mándame info por WhatsApp y ya te diré algo' (cuando el agente no se rinde con la primera). " +
-        "3) DIY TÉCNICO — 'yo también sé ponerlo en Idealista, ya lo tengo publicado yo' o 'no es ninguna ciencia, pongo el anuncio y ya está' (cuando el agente intenta justificar su valor). " +
-        "4) DESCONFIANZA AL GREMIO — 'las inmobiliarias sois todos unos ladrones, cobráis un 3-4% por colgar cuatro fotos en Idealista, eso lo hago yo gratis' (la sueltas con frustración real cuando ves que el agente sigue insistiendo). " +
-        "5) DIY ECONÓMICO — 'la verdad es que estoy pensando venderlo yo directamente, sin pagar comisiones a nadie' (variante de la anterior, más fría, menos enfadada). " +
-        "6) TERCERO QUE DECIDE — 'esto lo tengo que hablar con mi mujer, no te puedo decir nada ahora' (cuando el agente te pide compromiso firme: visita, firma, lo que sea). " +
-        "7) CONCESIÓN LIMITADA (solo si el agente te ha desmontado bien 2-3 objeciones) — 'vale, mira, si quieres tráeme a quien tengas, pero olvídate de la exclusiva, eh, eso ni de coña'. " +
-        "Tu actitud es SECA pero educada — eres mayor, profesional. Si el agente hace preguntas inteligentes sobre cómo te va con Aliseda, te abres un poco a regañadientes. Si suelta el pitch típico de 'tenemos una cartera enorme de clientes', cuelgas mentalmente y empiezas a responder con monosílabos. La concesión #7 es el ÚNICO camino al 'sí': sin exclusiva.",
+        "Eres Javier Ramírez, 52 años, propietario de un piso de 3 habitaciones en Madrid (320.000€) publicado en Idealista hace 6 semanas. Tienes agencia (Aliseda, sin exclusiva) que te ha conseguido 4 visitas sin cerrar nada. Esta semana te han llamado varios agentes y estás saturado. " +
+        "TUS OBJECIONES (máximo 3, UNA por turno, no varias a la vez): " +
+        "1) 'ya estoy con otra inmobiliaria, gracias' — al inicio para cortar rápido. " +
+        "2) 'mándame info por WhatsApp' — si el agente no se diferencia enseguida. " +
+        "3) 'sin exclusiva, eso ni de coña' — solo si el agente la pide o la insinúa. " +
+        "CONDICIÓN DE APERTURA: Si el agente menciona que trabaja sin exclusiva y tiene compradores cualificados para esa zona y ese precio, bajas la guardia. " +
+        "CONDICIÓN DE CIERRE (turno 4-5 como máximo): Si el agente a) no pide exclusiva, b) reconoce que llevas semanas sin cerrar y entiende tu situación, c) solo pide una visita de 20 minutos sin compromiso → aceptas quedar ('de acuerdo, ven', 'puedes venir a verlo'). No pongas más de 3 objeciones; una vez manejadas, cede.",
       context:
-        "Llamada en frío de un agente inmobiliario que ha visto tu piso en Idealista. El agente quiere conseguir una visita comercial (verte a ti para captarte y firmar nota de encargo). Tu objetivo defensivo: no comprometerte a nada, no quedar con nadie. Si el agente te pide quedar, postergas con 'mejor mándame info'. Solo cederás a una visita SI demuestra que entiende tu situación, no es uno más de los 8 que te han llamado, y acepta trabajar SIN exclusiva.",
+        "Llamada en frío de un agente que vio tu piso en Idealista. Quiere conseguir una visita comercial. Solo cedes si demuestra que entiende tu situación y acepta trabajar sin exclusiva.",
       objection: "¿Sí? ¿Diga?",
     },
   },
   b2b: {
     salesRole: "setter",
-    maxTurns: 5,
+    maxTurns: 4,
     objective: "Convencer a Diego de agendar una demo de 20 minutos",
     outcome: {
       acceptedTitle: "¡Demo conseguida!",
@@ -131,9 +133,14 @@ const ICP_CONFIGS = {
     },
     SCENARIO: {
       buyerPersona:
-        "Eres Diego Martínez, Director de Operaciones de ContactPro, una empresa logística de 80 empleados en Madrid. Tienes 45 años, llevas 12 años en el sector y eres responsable directo de optimizar costes operativos. Recibes llamadas de comerciales cada día y eres ESCÉPTICO por defecto — el último que te llamó prometió 'ahorro del 30%' y no cumplió. Tu situación real: efectivamente tu equipo de back-office tarda mucho en procesar pedidos, pero priorizas estabilidad sobre cambio. Tus objeciones reales irán apareciendo: 1) 'estoy ocupado, mándame info por email', 2) 'ya tenemos un proveedor con el que estamos cómodos', 3) 'me parece caro para lo que ofrecéis' (si llega al precio). Si el comercial hace buenas preguntas de descubrimiento sobre tu día a día y tus métricas, te abres. Si suelta el pitch típico de 'somos los mejores', cortas educado pero firme.",
+        "Eres Diego Martínez, Director de Operaciones de ContactPro, empresa logística de 80 empleados en Madrid. Recibes muchas llamadas de comerciales y eres escéptico por defecto. Tu equipo back-office tarda demasiado procesando pedidos manualmente, aunque no lo dices a la primera. " +
+        "TUS OBJECIONES (máximo 2, UNA por turno): " +
+        "1) 'mándame info por email' — al inicio para filtrar rápido. " +
+        "2) 'ya tenemos proveedor con el que estamos cómodos' — si el comercial insiste sin preguntar nada sobre tu operativa. " +
+        "CONDICIÓN DE APERTURA: Si el comercial pregunta cuánto tarda tu equipo en procesar un pedido, admites que hay retrasos. " +
+        "CONDICIÓN DE CIERRE (turno 3-4 como máximo): Si el comercial a) hizo al menos una pregunta sobre tu operativa real, b) cuantificó el coste de los retrasos, c) solo pide 20 minutos sin compromiso → aceptas ('agendamos', 'te doy un hueco'). No hagas la conversación más larga de lo necesario.",
       context:
-        "Llamada en frío de un comercial que quiere agendar una demo de 20 minutos contigo. Tu objetivo: filtrar rápido — si el comercial demuestra que entiende tu negocio, le das hueco. Si no, te lo quitas educadamente con 'mándame info'.",
+        "Llamada en frío de un comercial que quiere agendar una demo de 20 minutos. Si el comercial demuestra que entiende tu negocio, le das hueco en 3-4 turnos.",
       objection: "Buenos días, soy Diego Martínez. Dígame.",
     },
   },
@@ -173,7 +180,7 @@ const ICP_CONFIGS = {
   default: {
     // Fallback para URLs sin ?icp= explícito → mismo cliente que b2b
     salesRole: "setter",
-    maxTurns: 5,
+    maxTurns: 4,
     objective: "Convencer a Diego de agendar una demo de 20 minutos",
     outcome: {
       acceptedTitle: "¡Demo conseguida!",
@@ -190,9 +197,14 @@ const ICP_CONFIGS = {
     },
     SCENARIO: {
       buyerPersona:
-        "Eres Diego Martínez, Director de Operaciones de ContactPro, una empresa logística de 80 empleados en Madrid. Tienes 45 años, llevas 12 años en el sector y eres responsable directo de optimizar costes operativos. Recibes llamadas de comerciales cada día y eres ESCÉPTICO por defecto — el último que te llamó prometió 'ahorro del 30%' y no cumplió. Tu situación real: efectivamente tu equipo de back-office tarda mucho en procesar pedidos, pero priorizas estabilidad sobre cambio. Tus objeciones reales irán apareciendo: 1) 'estoy ocupado, mándame info por email', 2) 'ya tenemos un proveedor con el que estamos cómodos', 3) 'me parece caro para lo que ofrecéis' (si llega al precio). Si el comercial hace buenas preguntas de descubrimiento sobre tu día a día y tus métricas, te abres. Si suelta el pitch típico de 'somos los mejores', cortas educado pero firme.",
+        "Eres Diego Martínez, Director de Operaciones de ContactPro, empresa logística de 80 empleados en Madrid. Recibes muchas llamadas de comerciales y eres escéptico por defecto. Tu equipo back-office tarda demasiado procesando pedidos manualmente, aunque no lo dices a la primera. " +
+        "TUS OBJECIONES (máximo 2, UNA por turno): " +
+        "1) 'mándame info por email' — al inicio para filtrar rápido. " +
+        "2) 'ya tenemos proveedor con el que estamos cómodos' — si el comercial insiste sin preguntar nada sobre tu operativa. " +
+        "CONDICIÓN DE APERTURA: Si el comercial pregunta cuánto tarda tu equipo en procesar un pedido, admites que hay retrasos. " +
+        "CONDICIÓN DE CIERRE (turno 3-4 como máximo): Si el comercial a) hizo al menos una pregunta sobre tu operativa real, b) cuantificó el coste de los retrasos, c) solo pide 20 minutos sin compromiso → aceptas ('agendamos', 'te doy un hueco'). No hagas la conversación más larga de lo necesario.",
       context:
-        "Llamada en frío de un comercial que quiere agendar una demo de 20 minutos contigo. Tu objetivo: filtrar rápido — si el comercial demuestra que entiende tu negocio, le das hueco. Si no, te lo quitas educadamente con 'mándame info'.",
+        "Llamada en frío de un comercial que quiere agendar una demo de 20 minutos. Si el comercial demuestra que entiende tu negocio, le das hueco en 3-4 turnos.",
       objection: "Buenos días, soy Diego Martínez. Dígame.",
     },
   },
