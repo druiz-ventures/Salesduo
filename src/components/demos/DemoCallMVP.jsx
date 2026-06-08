@@ -1451,13 +1451,13 @@ const ICP_SCRIPTS = {
   movistar: [
     // Turno 0 — Roberto llama por la factura subida
     "Gracias Roberto, le explico: tenía una oferta de permanencia de 2 años que venció este mes, por eso ha vuelto al precio normal. ¿Me permite un momento para ver qué opciones tenemos?",
-    // Turno 1 — Roberto puede deflexionar ("llamo por la factura, no por ofertas")
+    // Turno 1 — Roberto deflexiona ("llamo por la factura, no por ofertas")
     "Claro, primero resolvemos la factura. Dicho esto, ¿cómo le va con el móvil últimamente? ¿Tiene algún problema con la batería o con los datos?",
     // Turno 2 — Roberto admite problema de batería o datos
     "Tiene sentido, con ese uso es normal notarlo. ¿Los datos también se le agotan antes de fin de mes?",
     // Turno 3 — Roberto confirma el problema (punto de apertura)
     "Perfecto. Tengo una tarifa sin permanencia a 39€ con 50GB. Le soluciona los dos problemas. ¿Le cuento qué incluye?",
-    // Turno 4 — Roberto pone objeción de precio ("no quiero gastar más")
+    // Turno 4 — Roberto objeta precio ("no quiero gastar más")
     "Entiendo. Son 4€ más al mes, pero con 50GB en lugar de 20GB y sin permanencia. ¿Le cuadraría eso?",
     // Turno 5 — Roberto pide tiempo ("déjame pensarlo")
     "Totalmente normal. Esta condición sin permanencia es de esta semana. ¿Hay algo que le genere dudas que le pueda aclarar ahora?",
@@ -1466,10 +1466,56 @@ const ICP_SCRIPTS = {
     // Turno 7 — Cierre
     "Perfecto Roberto. Le confirmo: 39€/mes, 50GB, sin permanencia. ¿Quiere que le procese el cambio ahora?",
   ],
-  closer: [],
-  inmo: [],
-  b2b: [],
-  default: [],
+  closer: [
+    // Turno 0 — Carlos se abre: "Hablé con el chico del programa, tú dirás"
+    "Carlos, encantado. Antes de contarte nada del programa, cuéntame: ¿qué has intentado hasta ahora para perder los kilos y por qué crees que no funcionó?",
+    // Turno 1 — Carlos saca "ya he probado otros programas"
+    "Lo entiendo perfectamente, y no te pido que te fíes de este. Solo cuéntame: de todo lo que probaste, ¿qué fue lo que más cerca te puso del resultado?",
+    // Turno 2 — Carlos menciona el precio: "3.000€ es mucho"
+    "Tiene sentido. ¿Puedo preguntarte cuánto llevas invertido en total entre gym, cursos y lo que has probado hasta ahora?",
+    // Turno 3 — Carlos se abre o pregunta cómo funciona el programa
+    "Exactamente por eso funciona diferente: no es un plan genérico, son 12 semanas 1:1 diseñadas para tu trabajo y tu día a día. ¿Qué te impediría mantenerlo esta vez?",
+    // Turno 4 — Carlos saca "tengo que consultarlo con mi pareja"
+    "Normal que lo quieras comentar. ¿Qué crees que te diría tu pareja si vieras resultados reales en las primeras 4 semanas?",
+    // Turno 5 — Cierre
+    "Carlos, llevas tiempo buscando esto. ¿Qué necesitas escuchar hoy para sentirte seguro dando el paso?",
+  ],
+  inmo: [
+    // Turno 0 — Javier descuelga: "¿Sí? ¿Diga?"
+    "Javier, buenos días. He visto tu piso en Idealista y llevo semanas con compradores para esa zona y ese precio. No te voy a pedir exclusiva ni a robarte el tiempo. ¿Me das 2 minutos?",
+    // Turno 1 — Javier corta: "ya estoy con otra inmobiliaria"
+    "Perfecto, no quiero que cambies de agencia. Solo trabajar en paralelo, sin coste ni exclusiva. ¿Llevas mucho tiempo con ellos?",
+    // Turno 2 — Javier posterga: "mándame info por WhatsApp"
+    "Claro que te mando algo. Antes, cuéntame rápido: ¿cuántas visitas has tenido hasta ahora con ellos y cómo han ido?",
+    // Turno 3 — Javier minimiza: "yo también sé poner anuncios en Idealista"
+    "Totalmente, Idealista lo dominas. La diferencia no es el anuncio, es el filtro de compradores y la negociación. ¿Has tenido visitas que no llegaron a oferta?",
+    // Turno 4 — Javier se enfada: "sois todos unos ladrones"
+    "Entiendo la queja, y es justa si el agente solo cuelga fotos. Yo trabajo diferente: solo te presento compradores ya filtrados y cualificados. ¿Cuánto tiempo llevas publicado?",
+    // Turno 5 — Javier posterga con tercero: "lo tengo que hablar con mi mujer"
+    "Sin problema. No te pido que firmes nada, solo una visita al piso, 20 minutos. Si no ves valor, no seguimos. ¿Qué día te va bien esta semana?",
+    // Turno 6 — Concesión final o cierre
+    "Javier, sin exclusiva, sin permanencia. Si te traigo un comprador serio esta semana, ¿cuándo podemos hablar de los siguientes pasos?",
+  ],
+  b2b: [
+    // Turno 0 — Diego descuelga: "Buenos días, soy Diego. Dígame."
+    "Diego, buenos días. Trabajo con empresas de logística de tu tamaño que tienen equipo back-office procesando pedidos manualmente. ¿Es vuestro caso también?",
+    // Turno 1 — Diego posterga: "mándame info por email"
+    "Te lo mando sin problema. Antes, una pregunta rápida: ¿cuánto tarda ahora mismo tu equipo en procesar un pedido desde que entra hasta que queda asignado?",
+    // Turno 2 — Diego objeta proveedor: "ya tenemos uno con el que estamos cómodos"
+    "Me alegra que estéis cómodos. ¿Ese proveedor os da reportes de tiempo por operario, o solo el resumen mensual?",
+    // Turno 3 — Diego se abre un poco
+    "Exactamente lo que escucho en empresas de tu sector. Ese retraso suele costar 2-4 horas por operario a la semana. ¿Os afecta en los plazos de entrega?",
+    // Turno 4 — Cierre para la demo
+    "Diego, no te pido decisión, solo 20 minutos esta semana para mostrarte cómo lo usamos con una empresa de tu sector. ¿El martes o el miércoles te va mejor?",
+  ],
+  default: [
+    // Igual que b2b (el fallback usa el mismo escenario)
+    "Diego, buenos días. Trabajo con empresas de logística de tu tamaño que tienen equipo back-office procesando pedidos manualmente. ¿Es vuestro caso también?",
+    "Te lo mando sin problema. Antes, una pregunta rápida: ¿cuánto tarda ahora mismo tu equipo en procesar un pedido desde que entra hasta que queda asignado?",
+    "Me alegra que estéis cómodos. ¿Ese proveedor os da reportes de tiempo por operario, o solo el resumen mensual?",
+    "Exactamente lo que escucho en empresas de tu sector. Ese retraso suele costar 2-4 horas por operario a la semana. ¿Os afecta en los plazos de entrega?",
+    "Diego, no te pido decisión, solo 20 minutos esta semana para mostrarte cómo lo usamos con una empresa de tu sector. ¿El martes o el miércoles te va mejor?",
+  ],
 };
 
 // ─── InstructionsModal ────────────────────────────────────────────────────────
