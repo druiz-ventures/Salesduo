@@ -20,6 +20,7 @@ const buildProviderFallback = (reason: string, status: number | null = null) => 
   matchType: "nomatch",
   scoreImpact: 0,
   technique: "Sin evaluación (fallback técnico)",
+  suggestedReply: "",
   isEndNode: false,
   endType: null,
   _providerStatus: status,
@@ -147,6 +148,14 @@ Analiza la última respuesta del vendedor y evalúa:
 
 ${roleRules}
 
+ROL 3 — COACH DE VENTAS (campo "suggestedReply"):
+Además de responder como comprador, actúa como un coach experto y redacta en "suggestedReply" la MEJOR frase que el vendedor debería decir AHORA para responder a tu "clientMessage" de este turno:
+- Debe responder ESPECÍFICAMENTE a lo que acabas de decir como comprador — nunca una frase genérica ni de plantilla.
+- Aplica la técnica correcta según el momento (pregunta de diagnóstico, manejo de objeción con pregunta/reencuadre, cuantificar impacto/ROI, o cierre con siguiente paso).
+- Natural y humana, como la diría un vendedor top en una llamada real. Máximo 1-2 frases. En español. Lista para leerse en voz alta.
+- Coherente con el rol (${roleMode}) descrito arriba.
+- Aunque la llamada termine (isEndNode), incluye igualmente la frase de cierre ideal.
+
 REGLA CRÍTICA DE FORMATO:
 Tu respuesta DEBE ser ÚNICAMENTE el objeto JSON válido que se muestra abajo.
 NO incluyas texto antes ni después. NO uses bloques markdown (\`\`\`). NO añadas explicaciones.
@@ -158,6 +167,7 @@ Empieza directamente con { y termina con }.
   "matchType": "positive" | "negative" | "nomatch",
   "scoreImpact": número entre -30 y +40,
   "technique": "Nombre de la técnica detectada o 'Sin técnica identificada'",
+  "suggestedReply": "La MEJOR respuesta que el vendedor debería decir AHORA para responder a tu clientMessage de este turno (ver ROL 3)",
   "isEndNode": false,
   "endType": null
 }
@@ -282,6 +292,7 @@ ${roleScoreRules}
       matchType: "nomatch",
       scoreImpact: 0,
       technique: "Sin evaluación (error interno)",
+      suggestedReply: "",
       isEndNode: false,
       endType: null,
       _debugError: String(err?.message || err),

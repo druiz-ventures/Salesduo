@@ -308,7 +308,38 @@ function unlockAudio() {
       window.speechSynthesis.speak(u);
     }
   } catch { /* ignore */ }
+  // Neutraliza las teclas multimedia del sistema (Play/Pause del Mac, botones de
+  // auriculares…). Sin esto, al pulsar Play tras colgar, el navegador "reanuda"
+  // el último <audio> (ttsAudioEl) y la IA vuelve a hablar con su último mensaje.
+  try {
+    if ("mediaSession" in navigator) {
+      const noop = () => {};
+      navigator.mediaSession.setActionHandler("play", noop);
+      navigator.mediaSession.setActionHandler("pause", noop);
+      navigator.mediaSession.setActionHandler("previoustrack", noop);
+      navigator.mediaSession.setActionHandler("nexttrack", noop);
+    }
+  } catch { /* ignore */ }
   audioUnlocked = true;
+}
+
+// Suelta el audio del TTS: lo pausa y le quita el src para que las teclas
+// multimedia no tengan nada que reanudar. Se llama al colgar, reiniciar y
+// desmontar. No re-bloquea iOS: el desbloqueo del gesto persiste aunque el
+// elemento se quede sin src (playTTS le vuelve a asignar src en cada turno).
+function releaseTts() {
+  try {
+    if (ttsAudioEl) {
+      ttsAudioEl.pause();
+      ttsAudioEl.removeAttribute("src");
+      ttsAudioEl.load();
+    }
+  } catch { /* ignore */ }
+  try {
+    if (typeof navigator !== "undefined" && "mediaSession" in navigator) {
+      navigator.mediaSession.playbackState = "none";
+    }
+  } catch { /* ignore */ }
 }
 
 async function playTTS(text) {
@@ -380,6 +411,34 @@ function detectOutcomeFromText(text) {
   return null;
 }
 
+// Normaliza texto para comparar: minúsculas, sin acentos ni signos de puntuación.
+function normalizeForMatch(s) {
+  return String(s || "")
+    .toLowerCase()
+    .normalize("NFD").replace(/[̀-ͯ]/g, "") // quita acentos
+    .replace(/[^a-z0-9ñ\s]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+// Similitud por solapamiento de palabras (coeficiente de Dice sobre tokens
+// únicos), 0..1. Sirve para comprobar si lo que el STT transcribió se parece a
+// la frase del guion que el usuario debía leer. Palabras compartidas altas =
+// te ha oído bien; bajas = te ha oído mal (o dijiste otra cosa).
+function speechSimilarity(heard, expected) {
+  const a = new Set(normalizeForMatch(heard).split(" ").filter(Boolean));
+  const b = new Set(normalizeForMatch(expected).split(" ").filter(Boolean));
+  if (!a.size || !b.size) return 0;
+  let shared = 0;
+  for (const w of a) if (b.has(w)) shared++;
+  return (2 * shared) / (a.size + b.size);
+}
+
+// Umbral mínimo de parecido para dar por buena la transcripción en la 2ª
+// llamada. Leyendo el guion con un STT decente se supera de sobra (~0.7-0.9);
+// una transcripción mal oída se queda muy por debajo.
+const SCRIPT_MATCH_THRESHOLD = 0.45;
+
 // ─── Main Component ──────────────────────────────────────────────────────────
 export default function DemoCallMVP() {
   const [phase, setPhase] = useState("idle"); // idle | calling | active | ended
@@ -404,6 +463,13 @@ export default function DemoCallMVP() {
   const [callNumber, setCallNumber] = useState(1);
 
   const [micError, setMicError] = useState("");
+  // Aviso "no te he entendido, repite" — visible cuando el STT no oye bien o
+  // (en la 2ª llamada) cuando lo transcrito no coincide con el guion.
+  const [heardError, setHeardError] = useState("");
+  // Guion dinámico (2ª llamada): la mejor respuesta que el usuario puede dar a
+  // lo que Diego acaba de decir, generada por la IA en cada turno. El turno 0
+  // se siembra con la línea fija del ICP (el saludo del comprador es fijo).
+  const [dynamicHint, setDynamicHint] = useState("");
 
   const sessionRef = useRef(false);
   const timerRef = useRef(null);
@@ -412,6 +478,9 @@ export default function DemoCallMVP() {
   const turnRef = useRef(0);
   const isSpeakingRef = useRef(false);
   const isProcessingRef = useRef(false);
+  const callNumberRef = useRef(1);
+  // Espejo de dynamicHint para leerlo dentro de callbacks async (el portero).
+  const hintRef = useRef("");
   // Pipeline de audio propio (getUserMedia → MediaRecorder → STT)
   const mediaStreamRef = useRef(null);
   const mediaRecorderRef = useRef(null);
@@ -425,6 +494,7 @@ export default function DemoCallMVP() {
   useEffect(() => { turnRef.current = turnCount; }, [turnCount]);
   useEffect(() => { isSpeakingRef.current = isSpeaking; }, [isSpeaking]);
   useEffect(() => { isProcessingRef.current = isProcessing; }, [isProcessing]);
+  useEffect(() => { callNumberRef.current = callNumber; }, [callNumber]);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -508,6 +578,7 @@ export default function DemoCallMVP() {
       mediaStreamRef.current?.getTracks().forEach((t) => t.stop());
       audioContextRef.current?.close().catch(() => {});
       window.speechSynthesis?.cancel();
+      releaseTts();
       clearInterval(timerRef.current);
     };
   }, []);
@@ -615,9 +686,9 @@ export default function DemoCallMVP() {
     //   (evita que un ruido puntual + pausa dispare la transcripción)
     // - SILENCE_DURATION_MS: ms de silencio continuado tras habla para cortar
     //   2200ms es similar a Google Voice — aguanta pausas naturales al pensar
-    const SILENCE_THRESHOLD = 0.018; // más alto = ignora más ruido ambiente/lejano
+    const SILENCE_THRESHOLD = 0.015; // más alto = ignora más ruido ambiente/lejano, pero corta antes la voz floja
     const MIN_SPEECH_MS = 500;
-    const SILENCE_DURATION_MS = 2800;
+    const SILENCE_DURATION_MS = 3500; // pausa continuada antes de cortar; subido para no cortar a mitad de frase al leer el guion
     const CHECK_INTERVAL_MS = 100;
     const minSpeechSamples = MIN_SPEECH_MS / CHECK_INTERVAL_MS;
     const silenceSamplesNeeded = SILENCE_DURATION_MS / CHECK_INTERVAL_MS;
@@ -734,12 +805,30 @@ export default function DemoCallMVP() {
         console.warn("[STT] texto vacío o error, reiniciando escucha");
         setIsProcessing(false);
         isProcessingRef.current = false;
+        setHeardError("No te he oído bien. Vuelve a intentarlo, por favor.");
         if (sessionRef.current && !isSpeakingRef.current) setTimeout(startListening, 400);
         return;
       }
 
+      // Portero del guion (solo 2ª llamada): si lo transcrito no se parece a la
+      // frase que tocaba leer, NO avanzamos el turno. Así, si la IA te oye mal,
+      // el guion no salta: te pedimos que repitas. En la 1ª llamada no hay guion
+      // contra el que comparar, así que este control no aplica.
+      if (callNumberRef.current === 2) {
+        const expected = hintRef.current;
+        if (expected && speechSimilarity(text, expected) < SCRIPT_MATCH_THRESHOLD) {
+          console.warn("[STT] transcripción no coincide con el guion, pido repetir:", text);
+          setIsProcessing(false);
+          isProcessingRef.current = false;
+          setHeardError("No te he entendido bien. Vuelve a leer la frase del guion, por favor.");
+          if (sessionRef.current && !isSpeakingRef.current) setTimeout(startListening, 400);
+          return;
+        }
+      }
+
       console.log("[STT] texto transcrito:", text);
       // processUserTurn toma el control del estado isProcessing a partir de aquí
+      setHeardError("");
       setIsProcessing(false);
       isProcessingRef.current = false;
       processUserTurn(text);
@@ -823,6 +912,13 @@ export default function DemoCallMVP() {
       turnRef.current = nextTurn;
       setIsProcessing(false);
 
+      // Guion dinámico: la mejor respuesta a lo que Diego acaba de decir en este
+      // turno. Se mostrará cuando Diego termine de hablar. Si la IA no la manda
+      // (fallback), queda vacío y no se muestra hint ese turno.
+      const nextHint = data.suggestedReply || "";
+      setDynamicHint(nextHint);
+      hintRef.current = nextHint;
+
       await processBuyerTurn(
         data.clientMessage,
         data.feedback || "",
@@ -864,7 +960,13 @@ export default function DemoCallMVP() {
     setOutcome(null);
     setError("");
     setMicError("");
+    setHeardError("");
     setHighlights([]);
+    // Turno 0: el saludo del comprador es fijo, así que el guion arranca con la
+    // primera línea del ICP. A partir del turno 1 lo sustituye suggestedReply.
+    const firstHint = (ICP_SCRIPTS[ACTIVE_ICP_ID] || ICP_SCRIPTS.default)[0] || "";
+    setDynamicHint(firstHint);
+    hintRef.current = firstHint;
 
     const initHistory = [
       { role: "user", content: "[INICIO DE LLAMADA EN FRIO]" },
@@ -902,7 +1004,7 @@ export default function DemoCallMVP() {
     sessionRef.current = false;
     stopListening();
     window.speechSynthesis?.cancel();
-    if (ttsAudioEl) { ttsAudioEl.pause(); ttsAudioEl.currentTime = 0; }
+    releaseTts();
     clearInterval(timerRef.current);
     const r = result || "neutral";
     setScore((s) => {
@@ -919,7 +1021,7 @@ export default function DemoCallMVP() {
     sessionRef.current = false;
     stopListening();
     window.speechSynthesis?.cancel();
-    if (ttsAudioEl) { ttsAudioEl.pause(); ttsAudioEl.currentTime = 0; }
+    releaseTts();
     clearInterval(timerRef.current);
     setIsListening(false);
     setIsSpeaking(false);
@@ -983,11 +1085,9 @@ export default function DemoCallMVP() {
 
       <ScriptHint
         callNumber={callNumber}
-        turnCount={turnCount}
         buyerText={buyerText}
         isSpeaking={isSpeaking}
-        isListening={isListening}
-        icpId={ACTIVE_ICP_ID}
+        hint={dynamicHint}
       />
 
       <div className="dcm-progress-section">
@@ -1020,6 +1120,7 @@ export default function DemoCallMVP() {
 
       {error && <div className="dcm-error">{error}</div>}
       {micError && <div className="dcm-error">{micError}</div>}
+      {heardError && <div className="dcm-error dcm-heard-error">{heardError}</div>}
 
       <div className="dcm-controls">
         {isProcessing ? (
@@ -1544,12 +1645,9 @@ function InstructionsModal({ onAccept }) {
 }
 
 // ─── ScriptHint ───────────────────────────────────────────────────────────────
-function ScriptHint({ callNumber, turnCount, buyerText, isSpeaking, icpId }) {
+function ScriptHint({ callNumber, buyerText, isSpeaking, hint }) {
   if (callNumber !== 2) return null;
   if (!buyerText || isSpeaking) return null;
-
-  const script = ICP_SCRIPTS[icpId] || ICP_SCRIPTS.default;
-  const hint = script[turnCount];
   if (!hint) return null;
 
   return (
