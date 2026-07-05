@@ -21,6 +21,7 @@ const buildProviderFallback = (reason: string, status: number | null = null) => 
   scoreImpact: 0,
   technique: "Sin evaluación (fallback técnico)",
   suggestedReply: "",
+  needsRetry: true,
   isEndNode: false,
   endType: null,
   _providerStatus: status,
@@ -137,7 +138,7 @@ Reglas como comprador:
 - Máximo 2-3 frases por respuesta
 - No acumules más de 2-3 objeciones en total aunque la conversación sea larga; una vez manejadas, acepta
 - Después de 4-5 turnos, lleva la conversación a un cierre (positivo si el vendedor aplicó las técnicas básicas descritas en tu perfil)
-- IMPORTANTE: Si el vendedor escribe algo ininteligible, sin sentido, en otro idioma o claramente irrelevante (ej: "asdasd", "jjjj", teclas aleatorias), reacciona como lo haría un comprador real: con confusión o impaciencia ("¿Perdona? No te he entendido.", "¿Me puedes repetir eso?", "Mira, no tengo tiempo para esto.") y penaliza con scoreImpact negativo
+- IMPORTANTE: Si el vendedor escribe algo ininteligible, sin sentido, en otro idioma o claramente irrelevante (ej: "asdasd", "jjjj", teclas aleatorias), pídele que te lo repita de forma natural, marca "needsRetry": true y scoreImpact 0 (ver REGLA DE REPETICIÓN — probablemente es un fallo de transcripción de voz, no del vendedor)
 
 ROL 2 — EVALUADOR DE TÉCNICA:
 Analiza la última respuesta del vendedor y evalúa:
@@ -156,6 +157,13 @@ Además de responder como comprador, actúa como un coach experto y redacta en "
 - Coherente con el rol (${roleMode}) descrito arriba.
 - Aunque la llamada termine (isEndNode), incluye igualmente la frase de cierre ideal.
 
+REGLA DE REPETICIÓN (campo "needsRetry"):
+Esta simulación usa reconocimiento de voz, así que a veces llega texto mal transcrito. Marca "needsRetry": true SOLO si el mensaje del vendedor es ininteligible, incoherente, está en otro idioma, es una palabra suelta sin sentido, o parece claramente un error de transcripción (p. ej. te llama por un nombre que no es el tuyo, o dice algo que no tiene NADA que ver con la conversación). En ese caso:
+- En "clientMessage" pide de forma natural que te lo repita ("Perdona, no te he oído bien, ¿me lo repites?").
+- "scoreImpact": 0 — NO penalices: es un fallo de audio, no del vendedor.
+- "isEndNode": false, "endType": null — NO lo trates como turno real ni como cierre.
+En CUALQUIER otro caso (respuesta coherente, aunque sea floja, genérica o mejorable), "needsRetry": false y evalúa con normalidad. No abuses de needsRetry: solo para lo que de verdad no se entiende.
+
 REGLA CRÍTICA DE FORMATO:
 Tu respuesta DEBE ser ÚNICAMENTE el objeto JSON válido que se muestra abajo.
 NO incluyas texto antes ni después. NO uses bloques markdown (\`\`\`). NO añadas explicaciones.
@@ -168,6 +176,7 @@ Empieza directamente con { y termina con }.
   "scoreImpact": número entre -30 y +40,
   "technique": "Nombre de la técnica detectada o 'Sin técnica identificada'",
   "suggestedReply": "La MEJOR respuesta que el vendedor debería decir AHORA para responder a tu clientMessage de este turno (ver ROL 3)",
+  "needsRetry": true | false,
   "isEndNode": false,
   "endType": null
 }
@@ -181,7 +190,8 @@ Criterios de puntuación:
 ${roleScoreRules}
 - Empatía + redirección: +20 a +30
 - Argumento genérico sin personalizar: 0 a +10
-- Respuesta ininteligible o irrelevante: -20`;
+- Respuesta irrelevante pero coherente: -20
+- Respuesta ininteligible (fallo de voz): scoreImpact 0 y needsRetry true, no penalices`;
 
     // Validación temprana para evitar falsos "fallos temporales" cuando falta configuración.
     if (!ANTHROPIC_API_KEY) {
@@ -293,6 +303,7 @@ ${roleScoreRules}
       scoreImpact: 0,
       technique: "Sin evaluación (error interno)",
       suggestedReply: "",
+      needsRetry: true,
       isEndNode: false,
       endType: null,
       _debugError: String(err?.message || err),

@@ -905,6 +905,23 @@ export default function DemoCallMVP() {
 
       if (aiErr || !data?.clientMessage) throw new Error(aiErr?.message || "Sin respuesta de la IA");
 
+      // Repetición sin coste: si la IA no ha entendido (fallo de voz o entrada
+      // ininteligible), Diego pide que repitas y NO consumimos turno, historial
+      // ni guion. Así un "no te oí bien" no gasta uno de los pocos argumentos y
+      // la llamada no se corta antes de tiempo. Se lee la misma frase del guion.
+      if (data.needsRetry) {
+        setIsProcessing(false);
+        setHeardError("");
+        setUserText("");
+        setIsSpeaking(true);
+        setBuyerText(data.clientMessage);
+        await playTTS(data.clientMessage);
+        setIsSpeaking(false);
+        if (!sessionRef.current) return;
+        setTimeout(startListening, 600);
+        return;
+      }
+
       const updatedHistory = [...newHistory, { role: "assistant", content: JSON.stringify(data) }];
       setHistory(updatedHistory);
       historyRef.current = updatedHistory;
